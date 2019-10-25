@@ -74,15 +74,15 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LibraryPath>$(SolutionDir)deps\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)include;$(SolutionDir)include\deps;$(SolutionDir)deps\include;$(SolutionDir)include\sleepy_discord\IncludeNonexistent;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)sd\deps\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)sd\include;$(SolutionDir)sd\include\deps;$(SolutionDir)sd\deps\include;$(SolutionDir)sd\include\sleepy_discord\IncludeNonexistent;$(IncludePath)</IncludePath>
     <OutDir>./build/</OutDir>
     <IntDir>./intermediates/</IntDir>
     <TargetName>$(SolutionName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)include;$(SolutionDir)include\deps;$(SolutionDir)deps\include;$(SolutionDir)include\sleepy_discord\IncludeNonexistent;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)$(Configuration);$(SolutionDir)deps\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)sd\include;$(SolutionDir)sd\include\deps;$(SolutionDir)sd\deps\include;$(SolutionDir)sd\include\sleepy_discord\IncludeNonexistent;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)sd\deps\lib;$(LibraryPath)</LibraryPath>
     <OutDir>./build/</OutDir>
     <IntDir>./intermediates/</IntDir>
     <TargetName>$(SolutionName)</TargetName>
