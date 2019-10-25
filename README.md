@@ -1,0 +1,1 @@
+The API wrapper this uses, "Sleepy Discord", was such a fucking nightmare to install that it took me like, 10 or something times of me giving up before I said fuck it and deleted everything before I FINALLY got it to fucking work lmfao

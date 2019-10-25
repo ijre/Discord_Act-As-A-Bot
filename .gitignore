@@ -1,0 +1,4 @@
+.vs
+intermediates
+build
+*.vcxproj.*
