@@ -19,7 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="main.cpp">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">26444</DisableSpecificWarnings>
+    </ClCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -78,7 +80,7 @@
     <IncludePath>$(SolutionDir)sd\include;$(SolutionDir)sd\include\deps;$(SolutionDir)sd\deps\include;$(SolutionDir)sd\include\sleepy_discord\IncludeNonexistent;$(IncludePath)</IncludePath>
     <OutDir>./build/</OutDir>
     <IntDir>./intermediates/</IntDir>
-    <TargetName>$(SolutionName)</TargetName>
+    <TargetName>Hatsune_Miku</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(SolutionDir)sd\include;$(SolutionDir)sd\include\deps;$(SolutionDir)sd\deps\include;$(SolutionDir)sd\include\sleepy_discord\IncludeNonexistent;$(IncludePath)</IncludePath>
@@ -107,6 +109,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <DisableSpecificWarnings>26444</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

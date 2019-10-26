@@ -11,8 +11,17 @@ std::string idGet()
 	return id;
 }
 
-using namespace SleepyDiscord;
+bool find(std::string string)
+{
+	std::size_t find = string.find("hydro");
+	std::size_t find2 = string.find("hydrate");
+	std::size_t find3 = string.find("water");
 
+	return (find != std::string::npos || find2 != std::string::npos || find3 != std::string::npos);
+}
+
+
+using namespace SleepyDiscord;
 class ClientClass : public DiscordClient
 {
 public:
@@ -20,9 +29,13 @@ public:
 	void onMessage(Message message)
 	{
 		ClientClass client(idGet(), 2);
-		if (message.author.bot == true)
+		if (message.author.bot)
 			return;
-		if (message.content == ("~!control"))
+
+		if (find(message.content))
+			sendMessage(message.channelID, "Stay hydrated! uwu");
+
+		if (message.content == "~!control")
 		{
 			std::string output;
 			std::cout << "\nready, type quit to exit\n";
@@ -34,7 +47,7 @@ public:
 
 				if (output == "quit")
 					break;
-				if (GetAsyncKeyState(VK_RETURN) && (output != "quit"))
+				if (GetAsyncKeyState(VK_RETURN) && output != "quit")
 				{
 					sendMessage(message.channelID, output);
 					client.sendTyping(message.channelID);
