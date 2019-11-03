@@ -52,7 +52,7 @@ namespace SleepyDiscord {
 			return _url;
 		}
 		const std::string bucket(RequestMethod method);
-		inline operator const std::string&() {
+		inline operator const std::string& () {
 			return url();
 		}
 	private:
@@ -78,113 +78,113 @@ namespace SleepyDiscord {
 		const Route path(const char* source, std::initializer_list<std::string> values = {});
 
 		//channel functions
-		ObjectResponse<Channel     > getChannel              (Snowflake<Channel> channelID);
-		ObjectResponse<Channel     > editChannel             (Snowflake<Channel> channelID, std::string name = "", std::string topic = "");
-		ObjectResponse<Channel     > editChannelName         (Snowflake<Channel> channelID, std::string name);
-		ObjectResponse<Channel     > editChannelTopic        (Snowflake<Channel> channelID, std::string topic);
-		ObjectResponse<Channel     > deleteChannel           (Snowflake<Channel> channelID);
-		enum GetMessagesKey {na, around, before, after, limit};
-		ArrayResponse <Message     > getMessages             (Snowflake<Channel> channelID, GetMessagesKey when, Snowflake<Message> messageID, uint8_t limit = 0);
-		ObjectResponse<Message     > getMessage              (Snowflake<Channel> channelID, Snowflake<Message> messageID);                                                    //to do add more then one message return
-		ObjectResponse<Message     > sendMessage             (Snowflake<Channel> channelID, std::string message, bool tts = false);
-		ObjectResponse<Message     > uploadFile              (Snowflake<Channel> channelID, std::string fileLocation, std::string message);
-		bool                         addReaction             (Snowflake<Channel> channelID, Snowflake<Message> messageID, std::string emoji);
-		bool                         removeReaction          (Snowflake<Channel> channelID, Snowflake<Message> messageID, std::string emoji, Snowflake<User> userID = "@me");
-		ArrayResponse <Reaction    > getReactions            (Snowflake<Channel> channelID, Snowflake<Message> messageID, std::string emoji);
-		void                         removeAllReactions      (Snowflake<Channel> channelID, Snowflake<Message> messageID);
-		ObjectResponse<Message     > editMessage             (Snowflake<Channel> channelID, Snowflake<Message> messageID, std::string newMessage);
-		bool                         deleteMessage           (Snowflake<Channel> channelID, Snowflake<Message> messageID);
-		bool                         bulkDeleteMessages      (Snowflake<Channel> channelID, std::vector<Snowflake<Message>> messageIDs);
+		ObjectResponse<Channel     > getChannel(Snowflake<Channel> channelID);
+		ObjectResponse<Channel     > editChannel(Snowflake<Channel> channelID, std::string name = "", std::string topic = "");
+		ObjectResponse<Channel     > editChannelName(Snowflake<Channel> channelID, std::string name);
+		ObjectResponse<Channel     > editChannelTopic(Snowflake<Channel> channelID, std::string topic);
+		ObjectResponse<Channel     > deleteChannel(Snowflake<Channel> channelID);
+		enum GetMessagesKey { na, around, before, after, limit };
+		ArrayResponse <Message     > getMessages(Snowflake<Channel> channelID, GetMessagesKey when, Snowflake<Message> messageID, uint8_t limit = 0);
+		ObjectResponse<Message     > getMessage(Snowflake<Channel> channelID, Snowflake<Message> messageID);                                                    //to do add more then one message return
+		ObjectResponse<Message     > sendMessage(Snowflake<Channel> channelID, std::string message, bool tts = false);
+		ObjectResponse<Message     > uploadFile(Snowflake<Channel> channelID, std::string fileLocation, std::string message);
+		bool                         addReaction(Snowflake<Channel> channelID, Snowflake<Message> messageID, std::string emoji);
+		bool                         removeReaction(Snowflake<Channel> channelID, Snowflake<Message> messageID, std::string emoji, Snowflake<User> userID = "@me");
+		ArrayResponse <Reaction    > getReactions(Snowflake<Channel> channelID, Snowflake<Message> messageID, std::string emoji);
+		void                         removeAllReactions(Snowflake<Channel> channelID, Snowflake<Message> messageID);
+		ObjectResponse<Message     > editMessage(Snowflake<Channel> channelID, Snowflake<Message> messageID, std::string newMessage);
+		bool                         deleteMessage(Snowflake<Channel> channelID, Snowflake<Message> messageID);
+		bool                         bulkDeleteMessages(Snowflake<Channel> channelID, std::vector<Snowflake<Message>> messageIDs);
 		/*allow is a bitwise value of all allowed permissions
 		deny is a bitwise value of all deisallowed permissions
 		type is "member" for a user or "role" for a role*/
-		bool                         editChannelPermissions  (Snowflake<Channel> channelID, Snowflake<Overwrite> overwriteID, int allow, int deny, std::string type);           //to do test this
-		ArrayResponse <Invite      > getChannelInvites       (Snowflake<Channel> channelID);
-		ObjectResponse<Invite      > createChannelInvite     (Snowflake<Channel> channelID, const uint64_t maxAge = 0, const uint64_t maxUses = 0, const bool temporary = false, const bool unique = false);
-		bool                         removeChannelPermission (Snowflake<Channel> channelID, std::string ID);
-		bool                         sendTyping              (Snowflake<Channel> channelID);
-		ArrayResponse <Message     > getPinnedMessages       (Snowflake<Channel> channelID);
-		bool                         pinMessage              (Snowflake<Channel> channelID, Snowflake<Message> messageID);
-		bool                         unpinMessage            (Snowflake<Channel> channelID, Snowflake<Message> messageID);
-		void                         addRecipient            (Snowflake<Channel> channelID, Snowflake<User> userID);
-		void                         removeRecipient         (Snowflake<Channel> channelID, Snowflake<User> userID);
+		bool                         editChannelPermissions(Snowflake<Channel> channelID, Snowflake<Overwrite> overwriteID, int allow, int deny, std::string type);           //to do test this
+		ArrayResponse <Invite      > getChannelInvites(Snowflake<Channel> channelID);
+		ObjectResponse<Invite      > createChannelInvite(Snowflake<Channel> channelID, const uint64_t maxAge = 0, const uint64_t maxUses = 0, const bool temporary = false, const bool unique = false);
+		bool                         removeChannelPermission(Snowflake<Channel> channelID, std::string ID);
+		bool                         sendTyping(Snowflake<Channel> channelID);
+		ArrayResponse <Message     > getPinnedMessages(Snowflake<Channel> channelID);
+		bool                         pinMessage(Snowflake<Channel> channelID, Snowflake<Message> messageID);
+		bool                         unpinMessage(Snowflake<Channel> channelID, Snowflake<Message> messageID);
+		void                         addRecipient(Snowflake<Channel> channelID, Snowflake<User> userID);
+		void                         removeRecipient(Snowflake<Channel> channelID, Snowflake<User> userID);
 		//IntelliSense Help
 		/*functions with more then one name to make life easy for users that use IntelliSense*/
-		inline bool                  deleteReaction          (Snowflake<Channel> channelID, Snowflake<Message> messageID, std::string emoji) { return removeReaction(channelID, messageID, emoji); }
-		inline void                  deleteAllReactions      (Snowflake<Channel> channelID, Snowflake<Message> messageID) { removeAllReactions(channelID, messageID); }
-		inline bool                  deleteChannelPermission (Snowflake<Channel> channelID, std::string ID) { return removeChannelPermission(channelID, ID); }
-		inline void                  deleteRecipient         (Snowflake<Channel> channelID, Snowflake<User> userID) { removeRecipient(channelID, userID); }
+		inline bool                  deleteReaction(Snowflake<Channel> channelID, Snowflake<Message> messageID, std::string emoji) { return removeReaction(channelID, messageID, emoji); }
+		inline void                  deleteAllReactions(Snowflake<Channel> channelID, Snowflake<Message> messageID) { removeAllReactions(channelID, messageID); }
+		inline bool                  deleteChannelPermission(Snowflake<Channel> channelID, std::string ID) { return removeChannelPermission(channelID, ID); }
+		inline void                  deleteRecipient(Snowflake<Channel> channelID, Snowflake<User> userID) { removeRecipient(channelID, userID); }
 		//For Convenience
 		inline ObjectResponse<Message> editMessage(Message message, std::string newMessage) { return editMessage(message.channelID, message.ID, newMessage); }
 
 		//server functions
 		//ObjectResponse<Server      > createServer            (std::string name, std::string region, std::string icon, int verificationLevel, int defaultMessageNotifications, int explicitContentLevel, std::vector<Role> roles, std::vector<Channel> channels);
-		ObjectResponse<Server      > getServer               (Snowflake<Server> serverID);
+		ObjectResponse<Server      > getServer(Snowflake<Server> serverID);
 		//edit Server		//ask discord api server about what the default values should be
-		ObjectResponse<Server      > deleteServer            (Snowflake<Server> serverID);
-		ArrayResponse <Channel     > getServerChannels       (Snowflake<Server> serverID);
-		ObjectResponse<Channel     > createTextChannel       (Snowflake<Server> serverID, std::string name);
-		ArrayResponse <Channel     > editChannelPositions    (Snowflake<Server> serverID, std::vector<std::pair<std::string, uint64_t>> positions);
-		ObjectResponse<ServerMember> getMember               (Snowflake<Server> serverID, Snowflake<User> userID);
-		ArrayResponse <ServerMember> listMembers             (Snowflake<Server> serverID, uint16_t limit = 0, std::string after = "");
-		ObjectResponse<ServerMember> addMember               (Snowflake<Server> serverID, Snowflake<User> userID, std::string accesToken, std::string nick = "", std::vector<Role> roles = {}, bool mute = false, bool deaf = false); //to do test this
-		bool                         editMember              (Snowflake<Server> serverID, Snowflake<User> userID, std::string nickname = "", std::vector<Snowflake<Role>> roles = {}, int8_t mute = -1, int8_t deaf = -1, Snowflake<Channel> channelID = {});
-		bool                         muteServerMember        (Snowflake<Server> serverID, Snowflake<User> userID, bool mute = true);                                  //to do test this
-		bool                         editNickname            (Snowflake<Server> serverID, std::string newNickname);
-		bool                         addRole                 (Snowflake<Server> serverID, Snowflake<User> userID, Snowflake<Role> roleID);
-		bool                         removeRole              (Snowflake<Server> serverID, Snowflake<User> userID, Snowflake<Role> roleID);   //removes role from member
-		bool                         kickMember              (Snowflake<Server> serverID, Snowflake<User> userID);
-		ArrayResponse <User        > getBans                 (Snowflake<Server> serverID);                                                                     //to do test this
-		bool                         banMember               (Snowflake<Server> serverID, Snowflake<User> userID);
-		bool                         unbanMember             (Snowflake<Server> serverID, Snowflake<User> userID);
-		ArrayResponse <Role        > getRoles                (Snowflake<Server> serverID);
-		ObjectResponse<Role        > createRole              (Snowflake<Server> serverID, std::string name = "", Permission permissions = Permission::NONE, unsigned int color = 0, bool hoist = false, bool mentionable = false);
-		ArrayResponse <Role        > editRolePosition        (Snowflake<Server> serverID, std::vector<std::pair<std::string, uint64_t>> positions);                //to do test this
-		std::string                  editRole                (Snowflake<Server> serverID, Snowflake<Role> roleID, std::string name = "", Permission permissions = Permission::NONE, uint32_t color = 1 << 24, int8_t hoist = -1, int8_t mentionable = -1);
-		bool                         deleteRole              (Snowflake<Server> serverID, Snowflake<Role> roleID);
+		ObjectResponse<Server      > deleteServer(Snowflake<Server> serverID);
+		ArrayResponse <Channel     > getServerChannels(Snowflake<Server> serverID);
+		ObjectResponse<Channel     > createTextChannel(Snowflake<Server> serverID, std::string name);
+		ArrayResponse <Channel     > editChannelPositions(Snowflake<Server> serverID, std::vector<std::pair<std::string, uint64_t>> positions);
+		ObjectResponse<ServerMember> getMember(Snowflake<Server> serverID, Snowflake<User> userID);
+		ArrayResponse <ServerMember> listMembers(Snowflake<Server> serverID, uint16_t limit = 0, std::string after = "");
+		ObjectResponse<ServerMember> addMember(Snowflake<Server> serverID, Snowflake<User> userID, std::string accesToken, std::string nick = "", std::vector<Role> roles = {}, bool mute = false, bool deaf = false); //to do test this
+		bool                         editMember(Snowflake<Server> serverID, Snowflake<User> userID, std::string nickname = "", std::vector<Snowflake<Role>> roles = {}, int8_t mute = -1, int8_t deaf = -1, Snowflake<Channel> channelID = {});
+		bool                         muteServerMember(Snowflake<Server> serverID, Snowflake<User> userID, bool mute = true);                                  //to do test this
+		bool                         editNickname(Snowflake<Server> serverID, std::string newNickname);
+		bool                         addRole(Snowflake<Server> serverID, Snowflake<User> userID, Snowflake<Role> roleID);
+		bool                         removeRole(Snowflake<Server> serverID, Snowflake<User> userID, Snowflake<Role> roleID);   //removes role from member
+		bool                         kickMember(Snowflake<Server> serverID, Snowflake<User> userID);
+		ArrayResponse <User        > getBans(Snowflake<Server> serverID);                                                                     //to do test this
+		bool                         banMember(Snowflake<Server> serverID, Snowflake<User> userID);
+		bool                         unbanMember(Snowflake<Server> serverID, Snowflake<User> userID);
+		ArrayResponse <Role        > getRoles(Snowflake<Server> serverID);
+		ObjectResponse<Role        > createRole(Snowflake<Server> serverID, std::string name = "", Permission permissions = Permission::NONE, unsigned int color = 0, bool hoist = false, bool mentionable = false);
+		ArrayResponse <Role        > editRolePosition(Snowflake<Server> serverID, std::vector<std::pair<std::string, uint64_t>> positions);                //to do test this
+		std::string                  editRole(Snowflake<Server> serverID, Snowflake<Role> roleID, std::string name = "", Permission permissions = Permission::NONE, uint32_t color = 1 << 24, int8_t hoist = -1, int8_t mentionable = -1);
+		bool                         deleteRole(Snowflake<Server> serverID, Snowflake<Role> roleID);
 		//get prune count	needs testing to know what object they are talking about
-		void                         pruneMembers            (Snowflake<Server> serverID, const unsigned int numOfDays);                                               //to do test
-		ArrayResponse <VoiceRegion > getVoiceRegions         ();  //needs voice region class
-		ArrayResponse <Invite      > getServerInvites        (Snowflake<Server> serverID);
-		std::string                  getIntegrations         (Snowflake<Server> serverID);    //needs whatever a integration class is                        //to do test
-		bool                         createIntegration       (Snowflake<Server> serverID, std::string type, std::string integrationID);                          //to do test
-		bool                         editIntergration        (Snowflake<Server> serverID, std::string integrationID, int expireBegavior, int expireGracePeriod, bool enbleEmoticons); //to do test
-		bool                         deleteIntegration       (Snowflake<Server> serverID, std::string integrationID);                                            //to do test this
-		bool                         syncIntegration         (Snowflake<Server> serverID, std::string integrationID);                                              //to do test this
-		ObjectResponse<ServerEmbed > getServerEmbed          (Snowflake<Server> serverID);
+		void                         pruneMembers(Snowflake<Server> serverID, const unsigned int numOfDays);                                               //to do test
+		ArrayResponse <VoiceRegion > getVoiceRegions();  //needs voice region class
+		ArrayResponse <Invite      > getServerInvites(Snowflake<Server> serverID);
+		std::string                  getIntegrations(Snowflake<Server> serverID);    //needs whatever a integration class is                        //to do test
+		bool                         createIntegration(Snowflake<Server> serverID, std::string type, std::string integrationID);                          //to do test
+		bool                         editIntergration(Snowflake<Server> serverID, std::string integrationID, int expireBegavior, int expireGracePeriod, bool enbleEmoticons); //to do test
+		bool                         deleteIntegration(Snowflake<Server> serverID, std::string integrationID);                                            //to do test this
+		bool                         syncIntegration(Snowflake<Server> serverID, std::string integrationID);                                              //to do test this
+		ObjectResponse<ServerEmbed > getServerEmbed(Snowflake<Server> serverID);
 		//edit server embed   I don't know what the perms are
 
 		//Invite functions
-		ObjectResponse<Invite      > inviteEndpoint          (RequestMethod method, std::string inviteCode);
-		ObjectResponse<Invite      > getInvite               (std::string inviteCode);                                                                //to do test this
-		ObjectResponse<Invite      > deleteInvite            (std::string inviteCode);                                                             //to do test this
-		ObjectResponse<Invite      > acceptInvite            (std::string inviteCode);	//not available to bot accounts                          //to do test this
+		ObjectResponse<Invite      > inviteEndpoint(RequestMethod method, std::string inviteCode);
+		ObjectResponse<Invite      > getInvite(std::string inviteCode);                                                                //to do test this
+		ObjectResponse<Invite      > deleteInvite(std::string inviteCode);                                                             //to do test this
+		ObjectResponse<Invite      > acceptInvite(std::string inviteCode);	//not available to bot accounts                          //to do test this
 
 		//User functions
 		ObjectResponse<User        > getCurrentUser();
-		ObjectResponse<User        > getUser                 (Snowflake<User> userID);
+		ObjectResponse<User        > getUser(Snowflake<User> userID);
 		//User editCurrentUser();		//needs Avatar data thing?
-		ArrayResponse <Server>     getServers                ();
-		bool                       leaveServer               (Snowflake<Server> serverID);
-		ArrayResponse <DMChannel  > getDirectMessageChannels  ();
+		ArrayResponse <Server>     getServers();
+		bool                       leaveServer(Snowflake<Server> serverID);
+		ArrayResponse <DMChannel  > getDirectMessageChannels();
 		ObjectResponse<DMChannel  > createDirectMessageChannel(std::string recipientID);
 		//ObjectResponse<DMChannel > createGroupDirectMessageChannel(std:vector<std::string> accessTokens, )   what is a dict???
-		ArrayResponse <Connection> getUserConnections        ();
+		ArrayResponse <Connection> getUserConnections();
 
 		//Voice Functions
 		//getVoiceRegions
 
 		//Webhook functions
-		ObjectResponse<Webhook> createWebhook                (Snowflake<Channel> channelID, std::string name, std::string avatar = "");          //to do test this
-		ArrayResponse <Webhook> getChannelWebhooks           (Snowflake<Channel> channelID);
-		ArrayResponse <Webhook> getServerWebhooks            (Snowflake<Server> serverID);
-		ObjectResponse<Webhook> getWebhook                   (Snowflake<Webhook> webhookID, std::string webhookToken = "");                         //to do test this
-		ObjectResponse<Webhook> editWebhook                  (Snowflake<Webhook> webhookID, std::string webhookToken = "", std::string name = "", std::string avatar = "");    //you can leave token or name as null //to do test this
-		bool                    deleteWebhook                (Snowflake<Webhook> webhookID, std::string webhookToken = "");
-		ObjectResponse<Webhook> requestExecuteWebhook        (Snowflake<Webhook> webhookID, std::string webhookToken, std::pair<std::string, std::string> pair, bool wait, std::string username, std::string avatar_url, bool tts);     //note: it's possiable to have both a file and embeds
-		ObjectResponse<Webhook> executeWebhook               (Snowflake<Webhook> webhookID, std::string webhookToken, std::string content, bool wait = false, std::string username = "", std::string avatar_url = "", bool tts = false);       //to do test this
-		ObjectResponse<Webhook> executeWebhook               (Snowflake<Webhook> webhookID, std::string webhookToken, std::vector<Embed> embeds, bool wait = false, std::string username = "", std::string avatar_url = "", bool tts = false); //to do test this
-		ObjectResponse<Webhook> executeWebhook               (Snowflake<Webhook> webhookID, std::string webhookToken, filePathPart file, bool wait = false, std::string username = "", std::string avatar_url = "", bool tts = false);         //to do test this
+		ObjectResponse<Webhook> createWebhook(Snowflake<Channel> channelID, std::string name, std::string avatar = "");          //to do test this
+		ArrayResponse <Webhook> getChannelWebhooks(Snowflake<Channel> channelID);
+		ArrayResponse <Webhook> getServerWebhooks(Snowflake<Server> serverID);
+		ObjectResponse<Webhook> getWebhook(Snowflake<Webhook> webhookID, std::string webhookToken = "");                         //to do test this
+		ObjectResponse<Webhook> editWebhook(Snowflake<Webhook> webhookID, std::string webhookToken = "", std::string name = "", std::string avatar = "");    //you can leave token or name as null //to do test this
+		bool                    deleteWebhook(Snowflake<Webhook> webhookID, std::string webhookToken = "");
+		ObjectResponse<Webhook> requestExecuteWebhook(Snowflake<Webhook> webhookID, std::string webhookToken, std::pair<std::string, std::string> pair, bool wait, std::string username, std::string avatar_url, bool tts);     //note: it's possiable to have both a file and embeds
+		ObjectResponse<Webhook> executeWebhook(Snowflake<Webhook> webhookID, std::string webhookToken, std::string content, bool wait = false, std::string username = "", std::string avatar_url = "", bool tts = false);       //to do test this
+		ObjectResponse<Webhook> executeWebhook(Snowflake<Webhook> webhookID, std::string webhookToken, std::vector<Embed> embeds, bool wait = false, std::string username = "", std::string avatar_url = "", bool tts = false); //to do test this
+		ObjectResponse<Webhook> executeWebhook(Snowflake<Webhook> webhookID, std::string webhookToken, filePathPart file, bool wait = false, std::string username = "", std::string avatar_url = "", bool tts = false);         //to do test this
 
 		//websocket functions
 		void updateStatus(std::string gameName = "", uint64_t idleSince = 0);
@@ -201,14 +201,14 @@ namespace SleepyDiscord {
 		//time
 		enum AssignmentType : bool {
 			TilDueTime = 0,
-			EpochTime  = 1,
+			EpochTime = 1,
 		};
 		typedef std::function<void()> TimedTask;
-		virtual Timer  schedule(TimedTask                 code   , const time_t millisecondsTilDueTime) { return Timer([](){}); }
-		inline  Timer  schedule(TimedTask                 code   , const time_t milliseconds, AssignmentType mode) {
+		virtual Timer  schedule(TimedTask                 code, const time_t millisecondsTilDueTime) { return Timer([]() {}); }
+		inline  Timer  schedule(TimedTask                 code, const time_t milliseconds, AssignmentType mode) {
 			return     schedule(code, mode == TilDueTime ? milliseconds : milliseconds - getEpochTimeMillisecond());
 		}
-		inline  Timer  schedule(void (BaseDiscordClient::*code)(), const time_t milliseconds, AssignmentType mode = TilDueTime) {
+		inline  Timer  schedule(void (BaseDiscordClient::* code)(), const time_t milliseconds, AssignmentType mode = TilDueTime) {
 			return     schedule(std::bind(code, this), milliseconds, mode);
 		}
 		inline  void  unschedule(const Timer& timer) const { timer.stop(); }
@@ -258,49 +258,49 @@ namespace SleepyDiscord {
 		RELATIONSHIP_REMOVE
 		* event that hasn't been added
 		*/
-		virtual void onReady             (std::string* jsonMessage);
-		virtual void onResumed           (std::string* jsonMessage);
-		virtual void onDeleteServer      (std::string* jsonMessage);
-		virtual void onEditServer        (std::string* jsonMessage);
-		virtual void onBan               (std::string* jsonMessage);
-		virtual void onUnban             (std::string* jsonMessage);
-		virtual void onMember            (std::string* jsonMessage);
-		virtual void onRemoveMember      (std::string* jsonMessage);
-		virtual void onDeleteMember      (std::string* jsonMessage);
-		virtual void onEditMember        (std::string* jsonMessage);
-		virtual void onRole              (std::string* jsonMessage);
-		virtual void onDeleteRole        (std::string* jsonMessage);
-		virtual void onEditRole          (std::string* jsonMessage);
-		virtual void onEditEmojis        (std::string* jsonMessage);
-		virtual void onMemberChunk       (std::string* jsonMessage);
-		virtual void onDeleteChannel     (std::string* jsonMessage);
-		virtual void onEditChannel       (std::string* jsonMessage);
-		virtual void onPinMessage        (std::string* jsonMessage);
-		virtual void onPresenceUpdate    (std::string* jsonMessage);
-		virtual void onEditUser          (std::string* jsonMessage);
-		virtual void onEditUserNote      (std::string* jsonMessage);
-		virtual void onEditUserSettings  (std::string* jsonMessage);
-		virtual void onEditVoiceState    (std::string* jsonMessage);
-		virtual void onTyping            (std::string* jsonMessage);
-		virtual void onDeleteMessage     (std::string* jsonMessage);
-		virtual void onEditMessage       (std::string* jsonMessage);
-		virtual void onBulkDelete        (std::string* jsonMessage);
-		virtual void onEditVoiceServer   (std::string* jsonMessage);
-		virtual void onServerSync        (std::string* jsonMessage);
-		virtual void onRelationship      (std::string* jsonMessage);
+		virtual void onReady(std::string* jsonMessage);
+		virtual void onResumed(std::string* jsonMessage);
+		virtual void onDeleteServer(std::string* jsonMessage);
+		virtual void onEditServer(std::string* jsonMessage);
+		virtual void onBan(std::string* jsonMessage);
+		virtual void onUnban(std::string* jsonMessage);
+		virtual void onMember(std::string* jsonMessage);
+		virtual void onRemoveMember(std::string* jsonMessage);
+		virtual void onDeleteMember(std::string* jsonMessage);
+		virtual void onEditMember(std::string* jsonMessage);
+		virtual void onRole(std::string* jsonMessage);
+		virtual void onDeleteRole(std::string* jsonMessage);
+		virtual void onEditRole(std::string* jsonMessage);
+		virtual void onEditEmojis(std::string* jsonMessage);
+		virtual void onMemberChunk(std::string* jsonMessage);
+		virtual void onDeleteChannel(std::string* jsonMessage);
+		virtual void onEditChannel(std::string* jsonMessage);
+		virtual void onPinMessage(std::string* jsonMessage);
+		virtual void onPresenceUpdate(std::string* jsonMessage);
+		virtual void onEditUser(std::string* jsonMessage);
+		virtual void onEditUserNote(std::string* jsonMessage);
+		virtual void onEditUserSettings(std::string* jsonMessage);
+		virtual void onEditVoiceState(std::string* jsonMessage);
+		virtual void onTyping(std::string* jsonMessage);
+		virtual void onDeleteMessage(std::string* jsonMessage);
+		virtual void onEditMessage(std::string* jsonMessage);
+		virtual void onBulkDelete(std::string* jsonMessage);
+		virtual void onEditVoiceServer(std::string* jsonMessage);
+		virtual void onServerSync(std::string* jsonMessage);
+		virtual void onRelationship(std::string* jsonMessage);
 		virtual void onRemoveRelationship(std::string* jsonMessage);
 		virtual void onDeleteRelationship(std::string* jsonMessage);
-		virtual void onReaction          (std::string* jsonMessage);
-		virtual void onRemoveReaction    (std::string* jsonMessage);
-		virtual void onDeleteReaction    (std::string* jsonMessage);
-		virtual void onRemoveAllReaction (std::string* jsonMessage);
-		virtual void onDeleteAllReaction (std::string* jsonMessage);
-		virtual void onMessage           (Message message         );
-		virtual void onEditedMessage     (std::string* jsonMessage);
-		virtual void onServer            (Server server           );
-		virtual void onChannel           (std::string* jsonMessage);
-		virtual void onEditedRole        (std::string* jsonMessage);
-		virtual void onDispatch          (std::string* jsonMessage);
+		virtual void onReaction(std::string* jsonMessage);
+		virtual void onRemoveReaction(std::string* jsonMessage);
+		virtual void onDeleteReaction(std::string* jsonMessage);
+		virtual void onRemoveAllReaction(std::string* jsonMessage);
+		virtual void onDeleteAllReaction(std::string* jsonMessage);
+		virtual void onMessage(Message message);
+		virtual void onEditedMessage(std::string* jsonMessage);
+		virtual void onServer(Server server);
+		virtual void onChannel(std::string* jsonMessage);
+		virtual void onEditedRole(std::string* jsonMessage);
+		virtual void onDispatch(std::string* jsonMessage);
 
 		//websocket stuff
 		virtual void onHeartbeat();
@@ -312,7 +312,7 @@ namespace SleepyDiscord {
 		virtual void onQuit();
 		virtual void onResponse(Response response);
 		virtual void sleep(const unsigned int milliseconds);  //Deprecated, use schedule instead
-		virtual void fileRead(const char* path, std::string*const file);
+		virtual void fileRead(const char* path, std::string* const file);
 		virtual void tick(float deltaTime);
 		virtual void onError(ErrorCode errorCode, const std::string errorMessage);
 
@@ -325,14 +325,14 @@ namespace SleepyDiscord {
 		void resetHeartbeatValues();
 		inline std::string getToken() { return *token.get(); }
 		void start(const std::string _token, const char maxNumOfThreads = 2, int _shardID = 0, int _shardCount = 0);
-		virtual bool connect(const std::string & uri) { return false; }
+		virtual bool connect(const std::string& uri) { return false; }
 		void handleFailToConnect() { schedule([=]() { reconnect(); }, 10000); }
 		virtual void send(std::string message) {}
 		virtual void disconnect(unsigned int code, const std::string reason) {}
 		void reconnect(const unsigned int status = 1000);
 		virtual void runAsync();
 		virtual const time_t getEpochTimeMillisecond();
-		
+
 	private:
 		int heartbeatInterval = 0;
 		int64_t lastHeartbeat = 0;
@@ -341,18 +341,18 @@ namespace SleepyDiscord {
 		Timer heart;
 
 		enum OPCode {
-			DISPATCH              = 0,		//dispatches an event
-			HEARTHBEAT            = 1,		//used for ping checking
-			IDENTIFY              = 2,		//used for client handshake
-			STATUS_UPDATE         = 3,		//used to update the client status
-			VOICE_STATE_UPDATE    = 4,	 	//used to join / move / leave voice channels
-			VOICE_SERVER_PING     = 5,	 	//used for voice ping checking
-			RESUME                = 6,		//used to resume a closed connection
-			RECONNECT             = 7,		//used to tell clients to reconnect to the gateway
+			DISPATCH = 0,		//dispatches an event
+			HEARTHBEAT = 1,		//used for ping checking
+			IDENTIFY = 2,		//used for client handshake
+			STATUS_UPDATE = 3,		//used to update the client status
+			VOICE_STATE_UPDATE = 4,	 	//used to join / move / leave voice channels
+			VOICE_SERVER_PING = 5,	 	//used for voice ping checking
+			RESUME = 6,		//used to resume a closed connection
+			RECONNECT = 7,		//used to tell clients to reconnect to the gateway
 			REQUEST_GUILD_MEMBERS = 8,		//used to request guild members
-			INVALID_SESSION       = 9,		//used to notify client they have an invalid session id
-			HELLO                 = 10,		//sent immediately after connecting, contains heartbeat and server debug information
-			HEARTBEAT_ACK         = 11,		//sent immediately following a client heartbeat that was received
+			INVALID_SESSION = 9,		//used to notify client they have an invalid session id
+			HELLO = 10,		//sent immediately after connecting, contains heartbeat and server debug information
+			HEARTBEAT_ACK = 11,		//sent immediately following a client heartbeat that was received
 		};
 
 		std::unique_ptr<std::string> token;		//stored in a unique_ptr so that you can't see it in the debugger
@@ -390,7 +390,7 @@ namespace SleepyDiscord {
 		const std::string getEditPositionString(const std::vector<std::pair<std::string, uint64_t>>& positions);
 	};
 
-	/*Used when you like to have the DiscordClient to handle the timer via a loop but 
+	/*Used when you like to have the DiscordClient to handle the timer via a loop but
 	  don't want to do yourself. I plan on somehow merging this with the baseClient
 	  somehow
 
@@ -432,7 +432,7 @@ namespace SleepyDiscord {
 }
 
 //locks away functions that users shouldn't be using
-#define SLEEPY_LOCK_CLIENT_FUNCTIONS private:                                  \
+#define SLEEPY_LOCK_CLIENT_FUNCTIONS public:                                  \
                                      using BaseDiscordClient::processMessage;  \
                                      using BaseDiscordClient::start;           \
                                      using BaseDiscordClient::sendHeartbeat;   \
