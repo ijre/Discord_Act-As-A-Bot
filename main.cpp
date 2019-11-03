@@ -1,5 +1,4 @@
-#include "sleepy_discord/websocketpp_websocket.h"
-#include <fstream>
+#include "main.h"
 
 std::string idGet()
 {
@@ -11,54 +10,63 @@ std::string idGet()
 	return id;
 }
 
-bool find(std::string string)
-{
-	std::size_t find = string.find("hydro");
-	std::size_t find2 = string.find("hydrate");
-	std::size_t find3 = string.find("water");
+ClientClass client(idGet(), 2);
 
-	return (find != std::string::npos || find2 != std::string::npos || find3 != std::string::npos);
+int askServers(std::vector<Server> servers)
+{
+	for (int i = 0; i < servers.size(); i++)
+		if (i == 0)
+			std::cout << "Choose your server: \r\n" << i + 1 << ". " << servers[i].name << "\r\n";
+		else
+			std::cout << i + 1 << ". " << servers[i].name << "\r\n";
+
+	std::string cin;
+	std::getline(std::cin, cin);
+
+	numIn = 0;
+	if (cin != "")
+		numIn = std::stoi(cin);
+
+	if (numIn <= 0)
+		return -1;
+
+	return numIn - 1;
 }
 
-
-using namespace SleepyDiscord;
-class ClientClass : public DiscordClient
+int64_t askChannels(std::vector<Channel> channels)
 {
-public:
-	using DiscordClient::DiscordClient;
-	void onMessage(Message message)
+	for (int i = 0; i < channels.size(); i++)
 	{
-		ClientClass client(idGet(), 2);
-		if (message.author.bot)
-			return;
-
-		if (find(message.content))
-			sendMessage(message.channelID, "Stay hydrated! uwu");
-
-		if (message.content == "~!control")
-		{
-			std::string output;
-			std::cout << "\nready, type quit to exit\n";
-			client.sendTyping(message.channelID);
-
-			while (output != "quit")
-			{
-				std::getline(std::cin, output);
-
-				if (output == "quit")
-					break;
-				if (GetAsyncKeyState(VK_RETURN) && output != "quit")
-				{
-					sendMessage(message.channelID, output);
-					client.sendTyping(message.channelID);
-				}
-			}
-		}
+		if (i == 0)
+			std::cout << "Choose your channel: \r\n" << i + 1 << ". " << channels[i].name << "\r\n";
+		else
+			std::cout << i + 1 << ". " << channels[i].name << "\r\n";
 	}
-};
+
+	std::string cin;
+	std::getline(std::cin, cin);
+
+	numIn = 0;
+	if (cin != "")
+		numIn = std::stoi(cin);
+
+	if (numIn < 0)
+		return -1;
+
+	return channels[numIn - 1].ID.number();
+}
 
 int main()
 {
-	ClientClass client(idGet(), 2);
+	numIn = askServers(client.servers);
+	while (numIn == -1)
+		numIn = askServers(client.servers);
+
+	//while (GetAsyncKeyState(VK_RETURN))
+	//	continue;
+	// old check from debugging days to prevent accidental rollover into the askChannels function
+
+	channel = askChannels(client.getServerChannels(client.servers[numIn].ID));
+
 	client.run();
 }
