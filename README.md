@@ -1,3 +1,5 @@
+[![total time spent](https://wakatime.com/badge/github/ijre/Hatsune_Miku-Bot.svg)]
+
 known issues:
 
 1. bot doesn't come online despite still being able to talk
