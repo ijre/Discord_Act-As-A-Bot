@@ -24,14 +24,6 @@ namespace hatsune_miku_bot_display
             InitializeComponent();
         }
 
-#if _NDEBUG
-        private readonly string idFile = "./id.txt";
-#else
-        private readonly string idFile = "../id.txt";
-#endif
-        private ulong channel = 0;
-        private ulong guild = 0;
-
         private void Start(object sender, EventArgs e)
         {
             TrueStart();
@@ -46,22 +38,19 @@ namespace hatsune_miku_bot_display
         {
             DiscordConfiguration config = new DiscordConfiguration
             {
-                Token = File.ReadAllText(idFile)
+                Token = File.ReadAllText("./id.txt")
             };
             DiscordClient client = new DiscordClient(config);
 
             await client.ConnectAsync();
             await client.InitializeAsync();
 
-            guild = ulong.Parse(File.ReadAllText("./guild.txt"));
-            channel = ulong.Parse(File.ReadAllText("./channel.txt"));
-
-            var guildObj = await client.GetGuildAsync(guild);
-
             client.Ready += OnReady;
             this.send_button.Click += async (sender, e) =>
             {
-                await client.SendMessageAsync(guildObj.GetChannel(channel), Input_Chat.Text);
+                var guildObj = await client.GetGuildAsync(ulong.Parse(File.ReadAllText("./guild.txt")));
+
+                await client.SendMessageAsync(guildObj.GetChannel(ulong.Parse(File.ReadAllText("./channel.txt"))), Input_Chat.Text);
                 Input_Chat.Text = "";
             };
             client.MessageCreated += OnMessage;
@@ -71,7 +60,7 @@ namespace hatsune_miku_bot_display
 
         private async Task<int> OnMessage(MessageCreateEventArgs message)
         {
-            if (message.Channel.Id != channel)
+            if (message.Channel.Id != ulong.Parse(File.ReadAllText("./channel.txt")))
                 return 1;
 
             Output_Chat.Text += message.Author.Username + "#" + message.Author.Discriminator + ": " + message.Message.Content + "\r\n";
