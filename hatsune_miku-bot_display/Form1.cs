@@ -27,11 +27,13 @@ namespace hatsune_miku_bot_display
         private void Start(object sender, EventArgs e)
         {
             TrueStart();
+
             start_button.Visible = false;
             send_button.Visible = true;
             Input_Chat.Visible = true;
             Output_Chat.Visible = true;
             change_channel.Visible = true;
+            add_image.Visible = true;
         }
 
         private async Task<int> TrueStart()
@@ -46,14 +48,24 @@ namespace hatsune_miku_bot_display
             await client.InitializeAsync();
 
             client.Ready += OnReady;
+            client.MessageCreated += OnMessage;
+
             this.send_button.Click += async (sender, e) =>
             {
                 var guildObj = await client.GetGuildAsync(ulong.Parse(File.ReadAllText("./guild.txt")));
 
-                await client.SendMessageAsync(guildObj.GetChannel(ulong.Parse(File.ReadAllText("./channel.txt"))), Input_Chat.Text);
+                if (!string.IsNullOrWhiteSpace(fileName.Text))
+                {
+                    FileStream fstream = new FileStream(fileName.Text, FileMode.Open);
+                    await guildObj.GetChannel(ulong.Parse(File.ReadAllText("./channel.txt"))).SendFileAsync(fstream, Input_Chat.Text);
+
+                    fileName.Text = "";
+                }
+                else
+                    await client.SendMessageAsync(guildObj.GetChannel(ulong.Parse(File.ReadAllText("./channel.txt"))), Input_Chat.Text);
+
                 Input_Chat.Text = "";
             };
-            client.MessageCreated += OnMessage;
 
             return 0;
         }
@@ -118,6 +130,18 @@ namespace hatsune_miku_bot_display
             };
             process.Start();
             process.WaitForExit();
+        }
+
+        private void add_image_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog diag = new OpenFileDialog
+            {
+                RestoreDirectory = true
+            };
+            diag.ShowDialog();
+
+            if (!string.IsNullOrWhiteSpace(diag.FileName))
+                fileName.Text = diag.FileName;
         }
     }
 }

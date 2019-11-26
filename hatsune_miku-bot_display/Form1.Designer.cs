@@ -35,6 +35,8 @@
             this.Input_Chat = new System.Windows.Forms.TextBox();
             this.send_button = new System.Windows.Forms.Button();
             this.change_channel = new System.Windows.Forms.Button();
+            this.add_image = new System.Windows.Forms.Button();
+            this.fileName = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // Output_Chat
@@ -59,7 +61,7 @@
             this.version.Size = new System.Drawing.Size(130, 20);
             this.version.TabIndex = 4;
             this.version.TabStop = false;
-            this.version.Text = "Hatsune_Miku-Bot 0.0.2.0";
+            this.version.Text = "Hatsune_Miku-Bot 0.0.3.0";
             // 
             // start_button
             // 
@@ -100,10 +102,29 @@
             this.change_channel.Name = "change_channel";
             this.change_channel.Size = new System.Drawing.Size(130, 120);
             this.change_channel.TabIndex = 7;
-            this.change_channel.Text = "Change Channel";
+            this.change_channel.Text = "Change Server/Channel";
             this.change_channel.UseVisualStyleBackColor = true;
             this.change_channel.Visible = false;
             this.change_channel.Click += new System.EventHandler(this.change_channel_Click);
+            // 
+            // add_image
+            // 
+            this.add_image.Location = new System.Drawing.Point(748, 275);
+            this.add_image.Name = "add_image";
+            this.add_image.Size = new System.Drawing.Size(84, 85);
+            this.add_image.TabIndex = 8;
+            this.add_image.Text = "Add Image/File";
+            this.add_image.UseVisualStyleBackColor = true;
+            this.add_image.Visible = false;
+            this.add_image.Click += new System.EventHandler(this.add_image_Click);
+            // 
+            // fileName
+            // 
+            this.fileName.Location = new System.Drawing.Point(648, 438);
+            this.fileName.Name = "fileName";
+            this.fileName.Size = new System.Drawing.Size(8, 20);
+            this.fileName.TabIndex = 9;
+            this.fileName.Visible = false;
             // 
             // Form1
             // 
@@ -113,6 +134,8 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(915, 544);
+            this.Controls.Add(this.fileName);
+            this.Controls.Add(this.add_image);
             this.Controls.Add(this.change_channel);
             this.Controls.Add(this.send_button);
             this.Controls.Add(this.Input_Chat);
@@ -137,6 +160,8 @@
         private System.Windows.Forms.TextBox Input_Chat;
         private System.Windows.Forms.Button send_button;
         private System.Windows.Forms.Button change_channel;
+        private System.Windows.Forms.Button add_image;
+        private System.Windows.Forms.TextBox fileName;
     }
 }
 
