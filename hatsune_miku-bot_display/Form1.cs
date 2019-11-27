@@ -28,12 +28,12 @@ namespace hatsune_miku_bot_display
         {
             TrueStart();
 
-            start_button.Visible = false;
-            send_button.Visible = true;
+            Start_Button.Visible = false;
+            Send_Button.Visible = true;
             Input_Chat.Visible = true;
             Output_Chat.Visible = true;
-            change_channel.Visible = true;
-            add_image.Visible = true;
+            Change_Channel.Visible = true;
+            Add_Image.Visible = true;
         }
 
         private async Task<int> TrueStart()
@@ -50,7 +50,7 @@ namespace hatsune_miku_bot_display
             client.Ready += OnReady;
             client.MessageCreated += OnMessage;
 
-            this.send_button.Click += async (sender, e) =>
+            this.Send_Button.Click += async (sender, e) =>
             {
                 var guildObj = await client.GetGuildAsync(ulong.Parse(File.ReadAllText("./guild.txt")));
 
@@ -95,8 +95,8 @@ namespace hatsune_miku_bot_display
                 EnableRaisingEvents = true,
                 StartInfo =
                 {
-                UseShellExecute = false,
-                FileName = "./Hatsune_Miku.exe"
+                    UseShellExecute = false,
+                    FileName = "./Hatsune_Miku.exe"
                 }
             };
             process.Start();
@@ -124,8 +124,8 @@ namespace hatsune_miku_bot_display
                 EnableRaisingEvents = true,
                 StartInfo =
                 {
-                UseShellExecute = false,
-                FileName = "./Hatsune_Miku.exe"
+                    UseShellExecute = false,
+                    FileName = "./Hatsune_Miku.exe"
                 }
             };
             process.Start();
