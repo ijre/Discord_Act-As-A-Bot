@@ -3,3 +3,4 @@ intermediates
 build
 *.vcxproj.*
 SD
+id*.txt
