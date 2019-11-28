@@ -4,9 +4,9 @@ int askServers(std::vector<Server> servers)
 {
 	for (int i = 0; i < servers.size(); i++)
 		if (i == 0)
-			std::cout << "Choose your server: \r\n" << i + 1 << ". " << servers[i].name << "\r\n";
+			std::cout << "Choose your server: \n" << i + 1 << ". " << servers[i].name << "\n";
 		else
-			std::cout << i + 1 << ". " << servers[i].name << "\r\n";
+			std::cout << i + 1 << ". " << servers[i].name << "\n";
 
 	std::getline(std::cin, cin);
 
@@ -17,7 +17,7 @@ int askServers(std::vector<Server> servers)
 		return -1;
 
 	std::ofstream guildID;
-	guildID.open("./guild.txt");
+	guildID.open("./deps/guild.txt");
 	guildID << servers[numIn - 1].ID.string();
 	guildID.close();
 	// fed up with the time this is taking, going to take the "easy" and lazy way out
@@ -28,40 +28,32 @@ int askServers(std::vector<Server> servers)
 int64_t askChannels(std::vector<Channel> channels)
 {
 	for (int i = 0; i < channels.size(); i++)
-	{
 		if (i == 0)
-			std::cout << "\r\nChoose your channel: \r\n" << i + 1 << ". " << channels[i].name << "\r\n";
+			std::cout << "Choose your channel: \n" << i + 1 << ". " << channels[i].name << "\n";
 		else
-			std::cout << i + 1 << ". " << channels[i].name << "\r\n";
-	}
+			std::cout << i + 1 << ". " << channels[i].name << "\n";
 
 	std::getline(std::cin, cin);
 
 	if (cin != "")
-		numIn = std::stoi(cin);
+		numIn = (std::stoi(cin) - 1);
 
-	if (numIn <= 0 || (channels[numIn].type > 1 && channels[numIn].type != 3) || numIn > channels.size())
+	if (numIn < 0 || channels[numIn].type != 0)
 		return -1;
+	/*
+		enum ChannelType {
+		SERVER_TEXT     = 0,
+		DM              = 1,
+		SERVER_VOICE    = 2,
+		GROUP_DM        = 3,
+		SERVER_CATEGORY = 4
+	*/
 
-	return channels[numIn - 1].ID.number();
+	return channels[numIn].ID.number();
 }
 
 int main()
 {
-	auto path = std::filesystem::path("./channel.txt");
-	if (std::filesystem::exists(path))
-		std::filesystem::remove(path);
-
-#define path std::filesystem::path("./guild.txt")
-	// im writing this before i test, and if this #define is legal im going to DIE OF LAUGHTER
-		// because writing path2 just doesnt work for my puny brain so it autopilots into saying path
-			// plus im just curious to see if it works
-
-	// IT WORKS ADIOWHDAIUHWDIUAHBDJBFNA
-
-	if (std::filesystem::exists(path))
-		std::filesystem::remove(path);
-
 	numIn = askServers(servers);
 	while (numIn == -1)
 		numIn = askServers(servers);
@@ -75,7 +67,7 @@ int main()
 		channel = askChannels(client.getServerChannels(servers[numIn].ID));
 
 	std::ofstream channelID;
-	channelID.open("./channel.txt");
+	channelID.open("./deps/channel.txt");
 	channelID << std::to_string(channel);
 	channelID.close();
 
