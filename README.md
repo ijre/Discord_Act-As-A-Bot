@@ -2,4 +2,4 @@
 
 known issues:
 
-none right now
+### Now being tracked using [the todo list](https://github.com/ijre/Hatsune_Miku-Bot/projects/1)
