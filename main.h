@@ -7,7 +7,10 @@
 std::string idGet()
 {
 	std::fstream idFile;
-	idFile.open("./id.txt");
+	if (std::filesystem::exists("./deps/id.txt"))
+		idFile.open("./deps/id.txt");
+	else
+		idFile.open("../deps/id.txt");
 	std::string id;
 	idFile >> id;
 	idFile.close();
