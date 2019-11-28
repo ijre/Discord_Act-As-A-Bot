@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B4C4B82A-D456-4354-98D4-40C46591ED94}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>hatsune_miku_bot_display</RootNamespace>
+    <RootNamespace>hatsune_miku</RootNamespace>
     <AssemblyName>Hatsune Miku</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -41,7 +41,7 @@
     <ApplicationIcon>Resources\bilbobaggins.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Final Build|AnyCPU'">
-    <OutputPath>..\FINAL BUILD\</OutputPath>
+    <OutputPath>..\Final Build\</OutputPath>
     <DefineConstants>TRACE;_FINAL</DefineConstants>
     <Optimize>true</Optimize>
     <NoWarn>
