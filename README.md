@@ -1,4 +1,4 @@
-[![total time spent](https://wakatime.com/badge/github/ijre/Hatsune_Miku-Bot.svg)]()
+[![total time spent](https://wakatime.com/badge/github/ijre/Hatsune_Miku-Bot.svg)](https://wakatime.com/@ijre/projects/stzaxhuwdk)
 
 known issues:
 
