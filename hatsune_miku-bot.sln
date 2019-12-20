@@ -3,14 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29001.49
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hatsune_miku-bot", "hatsune_miku-bot.vcxproj", "{62F30952-924E-4567-9EE6-A8B7000368B7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hatsune_miku-bot_display", "hatsune_miku-bot_display\hatsune_miku-bot_display.csproj", "{B4C4B82A-D456-4354-98D4-40C46591ED94}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "src\GUI\GUI.csproj", "{B4C4B82A-D456-4354-98D4-40C46591ED94}"
 	ProjectSection(ProjectDependencies) = postProject
 		{62F30952-924E-4567-9EE6-A8B7000368B7} = {62F30952-924E-4567-9EE6-A8B7000368B7}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hatsune_release-assist", "hatsune_release-assist\hatsune_release-assist.csproj", "{80D06FD1-B592-4B00-8CC6-DE4C976FCB52}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "server choose", "src\server_choose\server_choose.vcxproj", "{62F30952-924E-4567-9EE6-A8B7000368B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "release_assist", "src\release_assist\release_assist.csproj", "{80D06FD1-B592-4B00-8CC6-DE4C976FCB52}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B4C4B82A-D456-4354-98D4-40C46591ED94} = {B4C4B82A-D456-4354-98D4-40C46591ED94}
 		{62F30952-924E-4567-9EE6-A8B7000368B7} = {62F30952-924E-4567-9EE6-A8B7000368B7}
