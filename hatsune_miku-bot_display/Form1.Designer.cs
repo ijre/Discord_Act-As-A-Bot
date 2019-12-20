@@ -45,6 +45,7 @@
             // 
             // version
             // 
+            this.version.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.version.Enabled = false;
             this.version.Location = new System.Drawing.Point(389, 512);
             this.version.Name = "version";
@@ -56,6 +57,10 @@
             // 
             // Start_Button
             // 
+            this.Start_Button.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.Start_Button.Image = global::hatsune_miku.Properties.Resources.mars_sigh;
             this.Start_Button.Location = new System.Drawing.Point(389, 290);
             this.Start_Button.Name = "Start_Button";
             this.Start_Button.Size = new System.Drawing.Size(130, 120);
@@ -67,6 +72,7 @@
             // 
             // Input_Chat
             // 
+            this.Input_Chat.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.Input_Chat.BackColor = System.Drawing.SystemColors.GrayText;
             this.Input_Chat.ForeColor = System.Drawing.Color.White;
             this.Input_Chat.Location = new System.Drawing.Point(516, 12);
@@ -79,6 +85,7 @@
             // 
             // Send_Button
             // 
+            this.Send_Button.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.Send_Button.Location = new System.Drawing.Point(658, 275);
             this.Send_Button.Name = "Send_Button";
             this.Send_Button.Size = new System.Drawing.Size(84, 84);
@@ -89,6 +96,7 @@
             // 
             // Change_Channel
             // 
+            this.Change_Channel.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.Change_Channel.Location = new System.Drawing.Point(12, 290);
             this.Change_Channel.Name = "Change_Channel";
             this.Change_Channel.Size = new System.Drawing.Size(130, 120);
@@ -100,6 +108,7 @@
             // 
             // Add_Image
             // 
+            this.Add_Image.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.Add_Image.Location = new System.Drawing.Point(748, 275);
             this.Add_Image.Name = "Add_Image";
             this.Add_Image.Size = new System.Drawing.Size(84, 84);
@@ -121,6 +130,7 @@
             // 
             // React
             // 
+            this.React.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.React.Location = new System.Drawing.Point(262, 290);
             this.React.Name = "React";
             this.React.Size = new System.Drawing.Size(130, 120);
@@ -131,6 +141,7 @@
             // 
             // Output_Chat
             // 
+            this.Output_Chat.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.Output_Chat.BackColor = System.Drawing.SystemColors.GrayText;
             this.Output_Chat.ForeColor = System.Drawing.Color.White;
             this.Output_Chat.Location = new System.Drawing.Point(12, 12);
@@ -144,6 +155,7 @@
             // 
             // ReactText
             // 
+            this.ReactText.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ReactText.BackColor = System.Drawing.SystemColors.GrayText;
             this.ReactText.ForeColor = System.Drawing.Color.White;
             this.ReactText.Location = new System.Drawing.Point(262, 416);
@@ -158,6 +170,9 @@
             // 
             // Please_Wait
             // 
+            this.Please_Wait.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.Please_Wait.BackColor = System.Drawing.SystemColors.GrayText;
             this.Please_Wait.ForeColor = System.Drawing.Color.White;
             this.Please_Wait.Location = new System.Drawing.Point(-1, -2);
@@ -173,6 +188,7 @@
             // 
             // React_Confirm
             // 
+            this.React_Confirm.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.React_Confirm.Location = new System.Drawing.Point(262, 461);
             this.React_Confirm.Name = "React_Confirm";
             this.React_Confirm.Size = new System.Drawing.Size(130, 45);
