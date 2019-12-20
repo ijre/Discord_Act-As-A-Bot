@@ -15,10 +15,9 @@ namespace hatsune_release_assist
 #if !_FINAL
             return;
 #else
+            string root = "../../";
             try
             {
-                string root = "../../";
-
                 var files = Directory.GetFiles(root + "/Final Build/");
 
                 for (int i = 0; i < files.Length; i++)
@@ -32,13 +31,11 @@ namespace hatsune_release_assist
                         File.Delete(files[i]);
 
                 Directory.Move(root + "/build/deps/", root + "/Final Build/deps");
-                Directory.Delete(root + "/build/");
-
-                if (!File.Exists(root + "/Final Build/deps/id.txt"))
-                    File.Copy(root + "id.txt", root + "/Final Build/deps/id.txt");
+                Directory.Delete(root + "/build/", true);
             }
-            catch
+            finally
             {
+                File.Copy(root + "id lyra.txt", root + "/Final Build/deps/id.txt");
                 Process.GetProcessesByName("hatsune_release-assist")[0].Kill();
             }
 #endif
