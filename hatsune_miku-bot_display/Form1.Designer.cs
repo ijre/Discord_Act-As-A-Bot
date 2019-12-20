@@ -60,7 +60,6 @@
             this.Start_Button.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Start_Button.Image = global::hatsune_miku.Properties.Resources.mars_sigh;
             this.Start_Button.Location = new System.Drawing.Point(389, 290);
             this.Start_Button.Name = "Start_Button";
             this.Start_Button.Size = new System.Drawing.Size(130, 120);
