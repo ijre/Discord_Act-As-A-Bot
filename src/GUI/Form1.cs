@@ -29,9 +29,12 @@ namespace hatsune_miku_bot_display
             if (Directory.Exists(messages))
                 Directory.Delete(messages, true);
 
-#if !_DEBUG
+
             if (!Directory.Exists("./deps/"))
+#if !_DEBUG
                 MessageBox.Show("Could not find deps folder, this folder and its original contents are required for the program to run.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+#else
+                Directory.CreateDirectory("./deps/");
 #endif
         }
 
@@ -105,12 +108,17 @@ namespace hatsune_miku_bot_display
                     file = "";
                     return;
                 }
+
+                if (Directory.Exists(Application.StartupPath + "\\deps\\" + "messages"))
+                    file = Application.StartupPath + "\\deps\\" + "messages";
+                else
+                    file = Application.StartupPath + "\\deps\\";
+
                 using (OpenFileDialog diag = new OpenFileDialog
                 {
                     DefaultExt = "txt",
                     Filter = "(*.txt) | *.txt",
-                    RestoreDirectory = true,
-                    InitialDirectory = "./deps/",
+                    InitialDirectory = file,
                     Title = "Choose which message you would like to react to"
                 })
                 {
