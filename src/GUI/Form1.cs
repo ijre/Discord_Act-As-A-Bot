@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
@@ -28,15 +29,10 @@ namespace hatsune_miku_bot_display
             if (Directory.Exists(messages))
                 Directory.Delete(messages, true);
 
-            if (!Directory.Exists("./deps/"))
-            {
 #if !_DEBUG
-                MessageBox.Show("Could not find deps folder", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.Exit();
-#else
-                Directory.CreateDirectory("./deps/");
+            if (!Directory.Exists("./deps/"))
+                MessageBox.Show("Could not find deps folder, this folder and its original contents are required for the program to run.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 #endif
-            }
         }
 
         private void Start(object sender, EventArgs e)
@@ -86,11 +82,13 @@ namespace hatsune_miku_bot_display
 
                 if (!string.IsNullOrWhiteSpace(File_Name.Text))
                 {
-                    FileStream fstream = new FileStream(File_Name.Text, FileMode.Open);
-                    await guildObj.GetChannel(ulong.Parse(File.ReadAllText(channel))).SendFileAsync(fstream, Input_Chat.Text);
+                    using (FileStream fstream = new FileStream(File_Name.Text, FileMode.Open))
+                    {
+                        await guildObj.GetChannel(ulong.Parse(File.ReadAllText(channel))).SendFileAsync(fstream, Input_Chat.Text);
 
-                    File_Name.Text = "";
-                    Add_Image.Text = "Add Image/File";
+                        File_Name.Text = "";
+                        Add_Image.Text = "Add Image/File";
+                    }
                 }
                 else
                     await client.SendMessageAsync(guildObj.GetChannel(ulong.Parse(File.ReadAllText(channel))), Input_Chat.Text);
@@ -107,26 +105,29 @@ namespace hatsune_miku_bot_display
                     file = "";
                     return;
                 }
-                OpenFileDialog diag = new OpenFileDialog
+                using (OpenFileDialog diag = new OpenFileDialog
                 {
                     DefaultExt = "txt",
                     Filter = "(*.txt) | *.txt",
                     RestoreDirectory = true,
+                    InitialDirectory = "./deps/",
                     Title = "Choose which message you would like to react to"
+                })
+                {
+                    diag.ShowDialog();
+                    if (string.IsNullOrEmpty(diag.FileName))
+                        return;
+
+                    file = diag.FileName;
+
+                    ReactText.Visible = true;
+                    React_Confirm.Visible = true;
+
+                    if (React.Text.Contains("React "))
+                        React.Text = "Cancel reacting";
+                    else
+                        React.Text = "React to a message";
                 };
-                diag.ShowDialog();
-                if (string.IsNullOrEmpty(diag.FileName))
-                    return;
-
-                file = diag.FileName;
-
-                ReactText.Visible = true;
-                React_Confirm.Visible = true;
-
-                if (React.Text.Contains("React "))
-                    React.Text = "Cancel reacting";
-                else
-                    React.Text = "React to a message";
             };
 
             React_Confirm.Click += async (sender, e) =>
@@ -203,7 +204,7 @@ namespace hatsune_miku_bot_display
         {
             // two different functions use this same program starting sequence, this makes it easier to make changes
 
-            Process process = new Process()
+            using (Process process = new Process()
             {
                 EnableRaisingEvents = true,
                 StartInfo =
@@ -211,13 +212,15 @@ namespace hatsune_miku_bot_display
                     UseShellExecute = false,
                     FileName = "./deps/saknade_vänner.exe"
                 }
-            };
-            process.Start();
-            process.WaitForExit();
+            })
+            {
+                process.Start();
+                process.WaitForExit();
 
 #if _FINAL
-            Please_Wait.Visible = false;
+                Please_Wait.Visible = false;
 #endif
+            }
         }
 
         #region WinFormsEvents
@@ -247,9 +250,12 @@ namespace hatsune_miku_bot_display
             SelectServer_or_Channel();
 
             if (Directory.Exists(messages))
+            {
                 Directory.Delete(messages, true);
+                Output_Chat.Text = "";
+            }
         }
-        
+
         private void Add_Image_Click(object sender, EventArgs e)
         {
             if (Add_Image.Text.Contains("Remove"))
@@ -259,16 +265,18 @@ namespace hatsune_miku_bot_display
                 return;
             }
 
-            OpenFileDialog diag = new OpenFileDialog
+            using (OpenFileDialog diag = new OpenFileDialog
             {
                 RestoreDirectory = true
-            };
-            diag.ShowDialog();
-
-            if (!string.IsNullOrWhiteSpace(diag.FileName))
+            })
             {
-                File_Name.Text = diag.FileName;
-                Add_Image.Text = "Remove Image/File";
+                diag.ShowDialog();
+
+                if (!string.IsNullOrWhiteSpace(diag.FileName))
+                {
+                    File_Name.Text = diag.FileName;
+                    Add_Image.Text = "Remove Image/File";
+                }
             }
         }
 
