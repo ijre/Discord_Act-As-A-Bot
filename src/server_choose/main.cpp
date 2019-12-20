@@ -11,7 +11,17 @@ int askServers(std::vector<Server> servers)
 	std::getline(std::cin, cin);
 
 	if (cin != "")
-		numIn = std::stoi(cin);
+	{
+		try
+		{
+			numIn = (std::stoi(cin));
+		}
+		catch (std::invalid_argument)
+		{
+			return -1;
+		}
+	}
+	else return -1;
 
 	if (numIn <= 0 || numIn > servers.size())
 		return -1;
@@ -28,17 +38,34 @@ int askServers(std::vector<Server> servers)
 int64_t askChannels(std::vector<Channel> channels)
 {
 	for (int i = 0; i < channels.size(); i++)
+	{
+		std::string doNot = (channels[i].type == 2 || channels[i].type == 4 ? " (INVALID CHANNEL)" : "");
+
 		if (i == 0)
-			std::cout << "Choose your channel: \n" << i + 1 << ". " << channels[i].name << "\n";
+			std::cout << "Choose your channel: \n" << i + 1 << ". " << channels[i].name << doNot << "\n";
 		else
-			std::cout << i + 1 << ". " << channels[i].name << "\n";
+			std::cout << i + 1 << ". " << channels[i].name << doNot << "\n";
+	}
 
 	std::getline(std::cin, cin);
 
 	if (cin != "")
-		numIn = (std::stoi(cin) - 1);
+	{
+		try
+		{
+			numIn = (std::stoi(cin) - 1);
+		}
+		catch (std::invalid_argument)
+		{
+			return -1;
+		}
+	}
+	else return -1;
 
-	if (numIn < 0 || channels[numIn].type != 0)
+	if (numIn < 0 || numIn >= channels.size())
+		return -1;
+
+	if (channels[numIn].type == 2 || channels[numIn].type == 4)
 		return -1;
 	/*
 		enum ChannelType {
@@ -54,17 +81,25 @@ int64_t askChannels(std::vector<Channel> channels)
 
 int main()
 {
-	numIn = askServers(servers);
-	while (numIn == -1)
-		numIn = askServers(servers);
+	int oldNum = askServers(servers);
+	std::cout << "\n";
+	while (oldNum == -1)
+	{
+		std::cout << "\n";
+		oldNum = askServers(servers);
+	}
 
 	while (GetAsyncKeyState(VK_RETURN))
 		continue;
 	// to prevent accidental rollover into the askChannels function
 
-	channel = askChannels(client.getServerChannels(servers[numIn].ID));
+	channel = askChannels(client.getServerChannels(servers[oldNum].ID));
+	std::cout << "\n";
 	while (channel == -1)
-		channel = askChannels(client.getServerChannels(servers[numIn].ID));
+	{
+		std::cout << "\n";
+		channel = askChannels(client.getServerChannels(servers[oldNum].ID));
+	}
 
 	std::ofstream channelID;
 	channelID.open("./deps/channel.txt");
