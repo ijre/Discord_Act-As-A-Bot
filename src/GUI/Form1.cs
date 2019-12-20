@@ -53,6 +53,7 @@ namespace hatsune_miku_bot_display
             Change_Channel.Visible = true;
             Add_Image.Visible = true;
             React.Visible = true;
+            Clear_Button.Visible = true;
         }
 
         private async Task<int> TrueStart()
@@ -161,7 +162,7 @@ namespace hatsune_miku_bot_display
                 return 1;
 
 #if !_DEBUG
-            Output_Chat.Text += message.Author.Username + "#" + message.Author.Discriminator + ": " + message.Message.Content + "\r\n";
+            Output_Chat.AppendText(message.Author.Username + "#" + message.Author.Discriminator + ": " + message.Message.Content + "\r\n");
 #endif
 
             if (!Directory.Exists(messages))
@@ -179,7 +180,6 @@ namespace hatsune_miku_bot_display
             if (indexAny != -1)
                 for (int i = 0; i < originalMessage.Length; i++)
                     for (int i2 = 0; i2 < fileNameCheck.Length; i2++)
-                        // for skin
                         if (originalMessage[i] == fileNameCheck[i2])
                         {
                             originalMessage = originalMessage.Remove(i, 1);
@@ -292,6 +292,13 @@ namespace hatsune_miku_bot_display
         {
             if (ReactText.Text == "Type in your reaction here.")
                 ReactText.Text = "";
+        }
+
+        private void Clear_Button_Click(object sender, EventArgs e)
+        {
+#if !_DEBUG
+            Output_Chat.Text = "";
+#endif
         }
         #endregion
     }

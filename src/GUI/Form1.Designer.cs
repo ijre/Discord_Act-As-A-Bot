@@ -40,6 +40,7 @@
             this.ReactText = new System.Windows.Forms.TextBox();
             this.Please_Wait = new System.Windows.Forms.TextBox();
             this.React_Confirm = new System.Windows.Forms.Button();
+            this.Clear_Button = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Start_Button
@@ -58,6 +59,8 @@
             // 
             // Input_Chat
             // 
+            this.Input_Chat.AcceptsReturn = true;
+            this.Input_Chat.AcceptsTab = true;
             this.Input_Chat.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.Input_Chat.BackColor = System.Drawing.SystemColors.GrayText;
             this.Input_Chat.ForeColor = System.Drawing.Color.White;
@@ -127,7 +130,6 @@
             // 
             // Output_Chat
             // 
-            this.Output_Chat.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.Output_Chat.BackColor = System.Drawing.SystemColors.GrayText;
             this.Output_Chat.ForeColor = System.Drawing.Color.White;
             this.Output_Chat.Location = new System.Drawing.Point(12, 12);
@@ -184,6 +186,18 @@
             this.React_Confirm.UseVisualStyleBackColor = true;
             this.React_Confirm.Visible = false;
             // 
+            // Clear_Button
+            // 
+            this.Clear_Button.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.Clear_Button.Location = new System.Drawing.Point(160, 308);
+            this.Clear_Button.Name = "Clear_Button";
+            this.Clear_Button.Size = new System.Drawing.Size(84, 84);
+            this.Clear_Button.TabIndex = 14;
+            this.Clear_Button.Text = "Clear Text";
+            this.Clear_Button.UseVisualStyleBackColor = true;
+            this.Clear_Button.Visible = false;
+            this.Clear_Button.Click += new System.EventHandler(this.Clear_Button_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -193,6 +207,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(915, 547);
+            this.Controls.Add(this.Clear_Button);
             this.Controls.Add(this.React_Confirm);
             this.Controls.Add(this.React);
             this.Controls.Add(this.ReactText);
@@ -209,7 +224,7 @@
             this.MinimumSize = new System.Drawing.Size(931, 586);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Hatsune Miku (v1.0.1.1)";
+            this.Text = "Hatsune Miku (v2.0.0.0)";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -228,6 +243,7 @@
         private System.Windows.Forms.TextBox ReactText;
         private System.Windows.Forms.TextBox Please_Wait;
         private System.Windows.Forms.Button React_Confirm;
+        private System.Windows.Forms.Button Clear_Button;
     }
 }
 
