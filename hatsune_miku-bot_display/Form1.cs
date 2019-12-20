@@ -158,7 +158,7 @@ namespace hatsune_miku_bot_display
             if (!Directory.Exists(messages))
             {
                 Directory.CreateDirectory(messages);
-                File.WriteAllText("./deps/messages/CHOOSE WHICH MESSAGE YOU WOULD LIKE TO REACT TO", "");
+                File.WriteAllText("./deps/messages/CHOOSE WHICH MESSAGE YOU WOULD LIKE TO REACT TO.txt", "");
             }
 
             char[] fileNameCheck = new char[] { '\\', '/', ':', '*', '?', '\"', '<', '>', '|' };
@@ -170,12 +170,12 @@ namespace hatsune_miku_bot_display
             if (indexAny != -1)
                 for (int i = 0; i < originalMessage.Length; i++)
                     for (int i2 = 0; i2 < fileNameCheck.Length; i2++)
+                        // for skin
                         if (originalMessage[i] == fileNameCheck[i2])
                         {
                             originalMessage = originalMessage.Remove(i, 1);
                             originalMessage = originalMessage.Insert(i, replacement[i2]);
                         }
-            // for skin
             File.WriteAllText(messages + message.Author.Username + " said " + originalMessage + ".txt".Trim(), message.Message.Id.ToString());
 
             return 0;
@@ -249,7 +249,7 @@ namespace hatsune_miku_bot_display
             if (Directory.Exists(messages))
                 Directory.Delete(messages, true);
         }
-
+        
         private void Add_Image_Click(object sender, EventArgs e)
         {
             if (Add_Image.Text.Contains("Remove"))
