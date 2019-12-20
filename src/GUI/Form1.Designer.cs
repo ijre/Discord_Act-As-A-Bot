@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.version = new System.Windows.Forms.TextBox();
             this.Start_Button = new System.Windows.Forms.Button();
             this.Input_Chat = new System.Windows.Forms.TextBox();
             this.Send_Button = new System.Windows.Forms.Button();
@@ -42,18 +41,6 @@
             this.Please_Wait = new System.Windows.Forms.TextBox();
             this.React_Confirm = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
-            // version
-            // 
-            this.version.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.version.Enabled = false;
-            this.version.Location = new System.Drawing.Point(389, 512);
-            this.version.Name = "version";
-            this.version.ReadOnly = true;
-            this.version.Size = new System.Drawing.Size(130, 20);
-            this.version.TabIndex = 4;
-            this.version.TabStop = false;
-            this.version.Text = "Hatsune_Miku-Bot 1.0.0.0";
             // 
             // Start_Button
             // 
@@ -214,16 +201,16 @@
             this.Controls.Add(this.Change_Channel);
             this.Controls.Add(this.Send_Button);
             this.Controls.Add(this.Input_Chat);
-            this.Controls.Add(this.version);
             this.Controls.Add(this.Output_Chat);
             this.Controls.Add(this.Start_Button);
             this.Controls.Add(this.Please_Wait);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.MinimumSize = new System.Drawing.Size(931, 586);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Hatsune Miku";
+            this.Text = "Hatsune Miku (version 1.0.0.1)";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -231,7 +218,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.TextBox version;
         private System.Windows.Forms.Button Start_Button;
         private System.Windows.Forms.TextBox Input_Chat;
         private System.Windows.Forms.Button Send_Button;
