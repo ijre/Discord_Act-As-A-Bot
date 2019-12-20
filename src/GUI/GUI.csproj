@@ -7,7 +7,7 @@
     <ProjectGuid>{B4C4B82A-D456-4354-98D4-40C46591ED94}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>hatsune_miku</RootNamespace>
-    <AssemblyName>Hatsune Miku</AssemblyName>
+    <AssemblyName>Hatsune Miku GUI</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -44,11 +44,9 @@
     <OutputPath>..\Final Build\</OutputPath>
     <DefineConstants>TRACE;_FINAL</DefineConstants>
     <Optimize>true</Optimize>
-    <NoWarn>
-    </NoWarn>
+    <NoWarn>4014, 1998</NoWarn>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
@@ -56,7 +54,9 @@
     <DocumentationFile>
     </DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup />
+   <PropertyGroup>
+   <LangVersion>latest</LangVersion>
+ </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
