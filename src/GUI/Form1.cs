@@ -10,13 +10,13 @@ using DSharpPlus.EventArgs;
 
 namespace hatsune_miku_bot_display
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         readonly string channel = "./deps/channel.txt";
         readonly string guild = "./deps/guild.txt";
         readonly string messages = "./deps/messages/";
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
 
@@ -72,6 +72,7 @@ namespace hatsune_miku_bot_display
             await client.InitializeAsync();
             /*DiscordGame gajm = new DiscordGame
             {
+                StreamType = GameStreamType.Twitch,
                 Name = "Minecraft"
             };
             client.UpdateStatusAsync(gajm, UserStatus.Online);*/
@@ -174,7 +175,7 @@ namespace hatsune_miku_bot_display
             char[] fileNameCheck = new char[] { '\\', '/', ':', '*', '?', '\"', '<', '>', '|' };
             string[] replacement = new string[] { "[back slash]", "[forward slash]", ";", "[asterisk]", " ", "''", "[less than]", "[greater than]", " " };
 
-            string originalMessage = message.Message.Content.Length > 214 ? message.Message.Content.Substring(0, 214) : message.Message.Content;
+            string originalMessage = message.Message.Content.Length > 100 ? message.Message.Content.Substring(0, 100) : message.Message.Content;
 
             var indexAny = originalMessage.IndexOfAny(fileNameCheck);
             if (indexAny != -1)
@@ -247,9 +248,14 @@ namespace hatsune_miku_bot_display
             {
                 Process.GetProcessesByName("saknade_vänner")[0].Kill();
             }
+            catch (IndexOutOfRangeException)
+            {
+                // this error happens if the program is already closed, which it should be 99% of the time you close the main GUI
+                Application.Exit();
+            }
             catch
             {
-                Application.Exit();
+                throw;
             }
         }
 
