@@ -30,7 +30,6 @@ int askServers(std::vector<Server> servers)
 	guildID.open("./deps/guild.txt");
 	guildID << servers[numIn - 1].ID.string();
 	guildID.close();
-	// fed up with the time this is taking, going to take the "easy" and lazy way out
 
 	return numIn - 1;
 }
@@ -105,6 +104,4 @@ int main()
 	channelID.open("./deps/channel.txt");
 	channelID << std::to_string(channel);
 	channelID.close();
-
-	// fed up with the time this is taking, going to take the "easy" and lazy way out
 }

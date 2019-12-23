@@ -1,6 +1,6 @@
 ﻿namespace hatsune_miku_bot_display
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Variable nécessaire au concepteur.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.Start_Button = new System.Windows.Forms.Button();
             this.Input_Chat = new System.Windows.Forms.TextBox();
             this.Send_Button = new System.Windows.Forms.Button();
@@ -130,6 +130,7 @@
             // 
             // Output_Chat
             // 
+            this.Output_Chat.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.Output_Chat.BackColor = System.Drawing.SystemColors.GrayText;
             this.Output_Chat.ForeColor = System.Drawing.Color.White;
             this.Output_Chat.Location = new System.Drawing.Point(12, 12);
