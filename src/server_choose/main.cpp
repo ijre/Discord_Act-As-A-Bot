@@ -2,11 +2,9 @@
 
 int askServers(std::vector<Server> servers)
 {
+	std::cout << "Choose your server: \n";
 	for (int i = 0; i < servers.size(); i++)
-		if (i == 0)
-			std::cout << "Choose your server: \n" << i + 1 << ". " << servers[i].name << "\n";
-		else
-			std::cout << i + 1 << ". " << servers[i].name << "\n";
+		std::cout << i + 1 << ". " << servers[i].name << "\n";
 
 	std::getline(std::cin, cin);
 
@@ -36,14 +34,11 @@ int askServers(std::vector<Server> servers)
 
 int64_t askChannels(std::vector<Channel> channels)
 {
+	std::cout << "Choose your channel: \n";
 	for (int i = 0; i < channels.size(); i++)
 	{
 		std::string doNot = (channels[i].type == 2 || channels[i].type == 4 ? " (INVALID CHANNEL)" : "");
-
-		if (i == 0)
-			std::cout << "Choose your channel: \n" << i + 1 << ". " << channels[i].name << doNot << "\n";
-		else
-			std::cout << i + 1 << ". " << channels[i].name << doNot << "\n";
+		std::cout << i + 1 << ". " << channels[i].name << doNot << "\n";
 	}
 
 	std::getline(std::cin, cin);
@@ -81,6 +76,7 @@ int64_t askChannels(std::vector<Channel> channels)
 int main()
 {
 	int oldNum = askServers(servers);
+
 	std::cout << "\n";
 	while (oldNum == -1)
 	{
