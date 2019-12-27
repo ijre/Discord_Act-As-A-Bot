@@ -53,7 +53,9 @@ namespace hatsune_miku_bot_display
             Change_Channel.Visible = true;
             Add_Image.Visible = true;
             React.Visible = true;
+#if !_DEBUG
             Clear_Button.Visible = true;
+#endif
         }
 
         private async Task<int> TrueStart()
@@ -105,9 +107,13 @@ namespace hatsune_miku_bot_display
 
             React.Click += (sender, e) =>
             {
-                if (!React.Text.Contains("React "))
+                if (React.Text.Contains("Cancel"))
                 {
                     file = "";
+
+                    React.Text = "React to a message";
+                    ReactText.Visible = false;
+                    React_Confirm.Visible = false;
                     return;
                 }
 
@@ -130,13 +136,9 @@ namespace hatsune_miku_bot_display
 
                     file = diag.FileName;
 
+                    React.Text = "Cancel reacting";
                     ReactText.Visible = true;
                     React_Confirm.Visible = true;
-
-                    if (React.Text.Contains("React "))
-                        React.Text = "Cancel reacting";
-                    else
-                        React.Text = "React to a message";
                 };
             };
 
@@ -150,6 +152,7 @@ namespace hatsune_miku_bot_display
                 ReactText.Visible = false;
                 React_Confirm.Visible = false;
                 React.Text = "React to a message";
+                ReactText.Text = "Type in your reaction here.";
             };
             #endregion
 
@@ -172,21 +175,25 @@ namespace hatsune_miku_bot_display
                 File.WriteAllText("./deps/messages/CHOOSE WHICH MESSAGE YOU WOULD LIKE TO REACT TO.txt", "");
             }
 
-            char[] fileNameCheck = new char[] { '\\', '/', ':', '*', '?', '\"', '<', '>', '|' };
-            string[] replacement = new string[] { "[back slash]", "[forward slash]", ";", "[asterisk]", " ", "''", "[less than]", "[greater than]", " " };
+            char[] fileNameCheck = new char[] { '\\', '/', ':', '*', '?', '\"', '<', '>', '|', '\n' };
+            string[] replacement = new string[] { "[back slash]", "[forward slash]", "[colon]", "[asterisk]", "[question mark]", "''", "[less than]", "[greater than]", "[vertical line]", " " };
 
-            string originalMessage = message.Message.Content.Length > 100 ? message.Message.Content.Substring(0, 100) : message.Message.Content;
+            string newMessage = message.Message.Content;
 
-            var indexAny = originalMessage.IndexOfAny(fileNameCheck);
-            if (indexAny != -1)
-                for (int i = 0; i < originalMessage.Length; i++)
+            if (newMessage.IndexOfAny(fileNameCheck) != -1)
+                for (int i = 0; i < newMessage.Length; i++)
                     for (int i2 = 0; i2 < fileNameCheck.Length; i2++)
-                        if (originalMessage[i] == fileNameCheck[i2])
+                        if (newMessage[i] == fileNameCheck[i2])
                         {
-                            originalMessage = originalMessage.Remove(i, 1);
-                            originalMessage = originalMessage.Insert(i, replacement[i2]);
+                            newMessage = newMessage.Remove(i, 1);
+                            newMessage = newMessage.Insert(i, replacement[i2]);
                         }
-            File.WriteAllText(messages + message.Author.Username + " said " + originalMessage + ".txt".Trim(), message.Message.Id.ToString());
+
+            if (newMessage.Length > 170)
+                newMessage = newMessage.Substring(0, 171 - (message.Author.Username + " said ").Length);
+
+            string fileName = messages + message.Author.Username + " said " + newMessage + ".txt";
+            File.WriteAllText(fileName, message.Message.Id.ToString());
 
             return 0;
         }
@@ -302,9 +309,7 @@ namespace hatsune_miku_bot_display
 
         private void Clear_Button_Click(object sender, EventArgs e)
         {
-#if !_DEBUG
             Output_Chat.Text = "";
-#endif
         }
         #endregion
     }
