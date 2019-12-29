@@ -41,6 +41,9 @@
             this.Please_Wait = new System.Windows.Forms.TextBox();
             this.React_Confirm = new System.Windows.Forms.Button();
             this.Clear_Button = new System.Windows.Forms.Button();
+            this.ID_B = new System.Windows.Forms.Button();
+            this.Recent_Message_B = new System.Windows.Forms.Button();
+            this.ID_TB = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // Start_Button
@@ -199,6 +202,43 @@
             this.Clear_Button.Visible = false;
             this.Clear_Button.Click += new System.EventHandler(this.Clear_Button_Click);
             // 
+            // ID_B
+            // 
+            this.ID_B.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.ID_B.Location = new System.Drawing.Point(262, 416);
+            this.ID_B.Name = "ID_B";
+            this.ID_B.Size = new System.Drawing.Size(65, 65);
+            this.ID_B.TabIndex = 15;
+            this.ID_B.Text = "ID";
+            this.ID_B.UseVisualStyleBackColor = true;
+            this.ID_B.Visible = false;
+            // 
+            // Recent_Message_B
+            // 
+            this.Recent_Message_B.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.Recent_Message_B.Location = new System.Drawing.Point(327, 416);
+            this.Recent_Message_B.Name = "Recent_Message_B";
+            this.Recent_Message_B.Size = new System.Drawing.Size(65, 65);
+            this.Recent_Message_B.TabIndex = 16;
+            this.Recent_Message_B.Text = "Messages";
+            this.Recent_Message_B.UseVisualStyleBackColor = true;
+            this.Recent_Message_B.Visible = false;
+            // 
+            // ID_TB
+            // 
+            this.ID_TB.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.ID_TB.BackColor = System.Drawing.SystemColors.GrayText;
+            this.ID_TB.ForeColor = System.Drawing.Color.White;
+            this.ID_TB.Location = new System.Drawing.Point(262, 416);
+            this.ID_TB.Multiline = true;
+            this.ID_TB.Name = "ID_TB";
+            this.ID_TB.Size = new System.Drawing.Size(130, 42);
+            this.ID_TB.TabIndex = 17;
+            this.ID_TB.TabStop = false;
+            this.ID_TB.Text = "Type in your message ID here.";
+            this.ID_TB.Visible = false;
+            this.ID_TB.Enter += new System.EventHandler(this.ID_TB_Enter);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -208,6 +248,9 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(915, 547);
+            this.Controls.Add(this.ID_TB);
+            this.Controls.Add(this.Recent_Message_B);
+            this.Controls.Add(this.ID_B);
             this.Controls.Add(this.Clear_Button);
             this.Controls.Add(this.React_Confirm);
             this.Controls.Add(this.React);
@@ -222,10 +265,11 @@
             this.Controls.Add(this.Please_Wait);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(931, 586);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Hatsune Miku (v2.0.1.0)";
+            this.Text = "Hatsune Miku (v2.1.1.0)";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -245,6 +289,9 @@
         private System.Windows.Forms.TextBox Please_Wait;
         private System.Windows.Forms.Button React_Confirm;
         private System.Windows.Forms.Button Clear_Button;
+        private System.Windows.Forms.Button ID_B;
+        private System.Windows.Forms.Button Recent_Message_B;
+        private System.Windows.Forms.TextBox ID_TB;
     }
 }
 
