@@ -72,12 +72,6 @@ namespace hatsune_miku_bot_display
 
             await client.ConnectAsync();
             await client.InitializeAsync();
-            /*DiscordGame gajm = new DiscordGame
-            {
-                StreamType = GameStreamType.Twitch,
-                Name = "Minecraft"
-            };
-            client.UpdateStatusAsync(gajm, UserStatus.Online);*/
 
             client.Ready += OnReady;
             client.MessageCreated += OnMessage;
@@ -116,36 +110,73 @@ namespace hatsune_miku_bot_display
                     React_Confirm.Visible = false;
                     return;
                 }
-
-                if (Directory.Exists(Application.StartupPath + "\\deps\\" + "messages"))
-                    file = Application.StartupPath + "\\deps\\" + "messages";
-                else
-                    file = Application.StartupPath + "\\deps\\";
-
-                using (OpenFileDialog diag = new OpenFileDialog
+                else if (React.Text.Contains("React to"))
                 {
-                    DefaultExt = "txt",
-                    Filter = "(*.txt) | *.txt",
-                    InitialDirectory = file,
-                    Title = "Choose which message you would like to react to"
-                })
+                    React.Text = "Would you like to use an ID to specify which message, or pick one from the recent messages?";
+                    ID_B.Visible = true;
+                    Recent_Message_B.Visible = true;
+                }
+
+                ID_B.Click += (bender, ee) =>
                 {
-                    diag.ShowDialog();
-                    if (string.IsNullOrEmpty(diag.FileName))
-                        return;
-
-                    file = diag.FileName;
-
-                    React.Text = "Cancel reacting";
-                    ReactText.Visible = true;
+                    ID_TB.Visible = true;
+                    ID_B.Visible = false;
+                    Recent_Message_B.Visible = false;
                     React_Confirm.Visible = true;
+                    React.Text = "Enter the ID in the box below.";
+                };
+
+                Recent_Message_B.Click += (zender, eee) =>
+                {
+                    if (Directory.Exists(Application.StartupPath + "\\deps\\" + "messages"))
+                        file = Application.StartupPath + "\\deps\\" + "messages";
+                    else
+                        file = Application.StartupPath + "\\deps\\";
+
+                    using (OpenFileDialog diag = new OpenFileDialog
+                    {
+                        DefaultExt = "txt",
+                        Filter = "(*.txt) | *.txt",
+                        InitialDirectory = file,
+                        Title = "Choose which message you would like to react to"
+                    })
+                    {
+                        diag.ShowDialog();
+
+                        if (!string.IsNullOrEmpty(diag.FileName))
+                        {
+                            file = diag.FileName;
+
+                            React.Text = "Cancel reacting";
+                            ReactText.Visible = true;
+                            React_Confirm.Visible = true;
+                            ID_B.Visible = false;
+                            Recent_Message_B.Visible = false;
+                        }
+                    };
                 };
             };
 
             React_Confirm.Click += async (sender, e) =>
             {
                 DiscordChannel chan = await client.GetChannelAsync(ulong.Parse(File.ReadAllText(channel)));
-                DiscordMessage mess = await chan.GetMessageAsync(ulong.Parse(File.ReadAllText(file)));
+                DiscordMessage mess;
+
+                if (React.Text.StartsWith("Enter"))
+                {
+                    ReactText.Visible = true;
+                    ID_B.Visible = false;
+                    Recent_Message_B.Visible = false;
+
+                    ID_TB.Visible = false;
+                    ReactText.Visible = true;
+                    React.Text = "Now, enter the name of your chosen emoji in the box below.";
+                    return;
+                }
+                else if (React.Text.StartsWith("Now"))
+                    mess = await chan.GetMessageAsync(ulong.Parse(ID_TB.Text));
+                else
+                    mess = await chan.GetMessageAsync(ulong.Parse(File.ReadAllText(file)));
 
                 mess.CreateReactionAsync(DiscordEmoji.FromName(client, ReactText.Text));
 
@@ -192,8 +223,7 @@ namespace hatsune_miku_bot_display
             if (newMessage.Length > 170)
                 newMessage = newMessage.Substring(0, 171 - (message.Author.Username + " said ").Length);
 
-            string fileName = messages + message.Author.Username + " said " + newMessage + ".txt";
-            File.WriteAllText(fileName, message.Message.Id.ToString());
+            File.WriteAllText(messages + message.Author.Username + " said " + newMessage + ".txt", message.Message.Id.ToString());
 
             return 0;
         }
@@ -312,5 +342,11 @@ namespace hatsune_miku_bot_display
             Output_Chat.Text = "";
         }
         #endregion
+
+        private void ID_TB_Enter(object sender, EventArgs e)
+        {
+            if (ID_TB.Text == "Type in your message ID here.")
+                ID_TB.Text = "";
+        }
     }
 }
