@@ -300,11 +300,13 @@ namespace hatsune_miku_bot_display
         {
             SelectServer_or_Channel();
 
-            if (Directory.Exists(messages))
-            {
-                Directory.Delete(messages, true);
+#if !_DEBUG
+            if (MessageBox.Show("Would you like to clear the chat?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 Output_Chat.Text = "";
-            }
+#endif
+
+            if (Directory.Exists(messages))
+                Directory.Delete(messages, true);
         }
 
         private void Add_Image_Click(object sender, EventArgs e)
