@@ -12,9 +12,6 @@ namespace hatsune_release_assist
     {
         static void Main(string[] args)
         {
-#if !_FINAL
-            return;
-#else
             string root = "../../";
             try
             {
@@ -38,7 +35,6 @@ namespace hatsune_release_assist
                 File.Copy(root + "id lyra.txt", root + "/Final Build/deps/id.txt");
                 Process.GetProcessesByName("hatsune_release-assist")[0].Kill();
             }
-#endif
         }
     }
 }
