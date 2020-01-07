@@ -184,6 +184,7 @@ namespace hatsune_miku_bot_display
                 React_Confirm.Visible = false;
                 React.Text = "React to a message";
                 ReactText.Text = "Type in your reaction here.";
+                ID_TB.Text = "Type in your message ID here.";
             };
             #endregion
 
