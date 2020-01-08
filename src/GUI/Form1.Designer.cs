@@ -44,6 +44,7 @@
             this.ID_B = new System.Windows.Forms.Button();
             this.Recent_Message_B = new System.Windows.Forms.Button();
             this.ID_TB = new System.Windows.Forms.TextBox();
+            this.Cancel_React = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Start_Button
@@ -239,6 +240,17 @@
             this.ID_TB.Visible = false;
             this.ID_TB.Enter += new System.EventHandler(this.ID_TB_Enter);
             // 
+            // Cancel_React
+            // 
+            this.Cancel_React.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.Cancel_React.Location = new System.Drawing.Point(398, 308);
+            this.Cancel_React.Name = "Cancel_React";
+            this.Cancel_React.Size = new System.Drawing.Size(84, 84);
+            this.Cancel_React.TabIndex = 18;
+            this.Cancel_React.Text = "Cancel";
+            this.Cancel_React.UseVisualStyleBackColor = true;
+            this.Cancel_React.Visible = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -248,6 +260,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(915, 547);
+            this.Controls.Add(this.Cancel_React);
             this.Controls.Add(this.ID_TB);
             this.Controls.Add(this.Recent_Message_B);
             this.Controls.Add(this.ID_B);
@@ -269,7 +282,7 @@
             this.MinimumSize = new System.Drawing.Size(931, 586);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Hatsune Miku (v2.1.2.0)";
+            this.Text = "Hatsune Miku (v2.1.3.0)";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -292,6 +305,7 @@
         private System.Windows.Forms.Button ID_B;
         private System.Windows.Forms.Button Recent_Message_B;
         private System.Windows.Forms.TextBox ID_TB;
+        private System.Windows.Forms.Button Cancel_React;
     }
 }
 
