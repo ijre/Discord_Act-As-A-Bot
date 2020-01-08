@@ -101,59 +101,71 @@ namespace hatsune_miku_bot_display
 
             React.Click += (sender, e) =>
             {
-                if (React.Text.Contains("Cancel"))
-                {
-                    file = "";
+                Cancel_React.Visible = true;
 
-                    React.Text = "React to a message";
-                    ReactText.Visible = false;
-                    React_Confirm.Visible = false;
-                    return;
-                }
-                else if (React.Text.Contains("React to"))
+                if (React.Text.Contains("React to"))
                 {
                     React.Text = "Would you like to use an ID to specify which message, or pick one from the recent messages?";
                     ID_B.Visible = true;
                     Recent_Message_B.Visible = true;
                 }
+            };
 
-                ID_B.Click += (bender, ee) =>
+            Cancel_React.Click += (sender2, eve) =>
+            {
+                file = "";
+
+                Cancel_React.Visible = false;
+
+                ID_B.Visible = false;
+                ID_TB.Visible = false;
+                Recent_Message_B.Visible = false;
+
+                ReactText.Visible = false;
+                React_Confirm.Visible = false;
+                React.Text = "React to a message";
+                ReactText.Text = "Type in your reaction here.";
+                ID_TB.Text = "Type in your message ID here.";
+                return;
+            };
+
+
+            ID_B.Click += (bender, ee) =>
+            {
+                ID_TB.Visible = true;
+                ID_B.Visible = false;
+                Recent_Message_B.Visible = false;
+                React_Confirm.Visible = true;
+                React.Text = "Enter the ID in the box below.";
+            };
+
+            Recent_Message_B.Click += (zender, eee) =>
+            {
+                if (Directory.Exists(Application.StartupPath + "\\deps\\" + "messages"))
+                    file = Application.StartupPath + "\\deps\\" + "messages";
+                else
+                    file = Application.StartupPath + "\\deps\\";
+
+                using (OpenFileDialog diag = new OpenFileDialog
                 {
-                    ID_TB.Visible = true;
-                    ID_B.Visible = false;
-                    Recent_Message_B.Visible = false;
-                    React_Confirm.Visible = true;
-                    React.Text = "Enter the ID in the box below.";
-                };
-
-                Recent_Message_B.Click += (zender, eee) =>
+                    DefaultExt = "txt",
+                    Filter = "(*.txt) | *.txt",
+                    InitialDirectory = file,
+                    Title = "Choose which message you would like to react to"
+                })
                 {
-                    if (Directory.Exists(Application.StartupPath + "\\deps\\" + "messages"))
-                        file = Application.StartupPath + "\\deps\\" + "messages";
-                    else
-                        file = Application.StartupPath + "\\deps\\";
+                    diag.ShowDialog();
 
-                    using (OpenFileDialog diag = new OpenFileDialog
+                    if (!string.IsNullOrEmpty(diag.FileName))
                     {
-                        DefaultExt = "txt",
-                        Filter = "(*.txt) | *.txt",
-                        InitialDirectory = file,
-                        Title = "Choose which message you would like to react to"
-                    })
-                    {
-                        diag.ShowDialog();
+                        file = diag.FileName;
 
-                        if (!string.IsNullOrEmpty(diag.FileName))
-                        {
-                            file = diag.FileName;
-
-                            React.Text = "Cancel reacting";
-                            ReactText.Visible = true;
-                            React_Confirm.Visible = true;
-                            ID_B.Visible = false;
-                            Recent_Message_B.Visible = false;
-                        }
-                    };
+                        React.Text = "Now, enter the name of your chosen emoji in the box below.";
+                        ReactText.Visible = true;
+                        React_Confirm.Visible = true;
+                        ID_B.Visible = false;
+                        Recent_Message_B.Visible = false;
+                    }
                 };
             };
 
@@ -177,6 +189,12 @@ namespace hatsune_miku_bot_display
                     mess = await chan.GetMessageAsync(ulong.Parse(ID_TB.Text));
                 else
                     mess = await chan.GetMessageAsync(ulong.Parse(File.ReadAllText(file)));
+
+                if (!ReactText.Text.Contains(":"))
+                {
+                    ReactText.Text = ReactText.Text.Insert(0, ":");
+                    ReactText.Text = ReactText.Text.Insert(ReactText.Text.Length, ":");
+                }
 
                 mess.CreateReactionAsync(DiscordEmoji.FromName(client, ReactText.Text));
 
@@ -211,6 +229,13 @@ namespace hatsune_miku_bot_display
             string[] replacement = new string[] { "[back slash]", "[forward slash]", "[colon]", "[asterisk]", "[question mark]", "''", "[less than]", "[greater than]", "[vertical line]", " ", " " };
 
             string newMessage = message.Message.Content;
+
+            /*
+            Idea:
+                Use IndexOfAny in a while != -1 loop, then use a for loop to compare every character within the fileNameCheck array, as to avoid checking every letter individually
+
+                int indOfAny = newMessage.IndexOfAny
+            */
 
             if (newMessage.IndexOfAny(fileNameCheck) != -1)
                 for (int i = 0; i < newMessage.Length; i++)
