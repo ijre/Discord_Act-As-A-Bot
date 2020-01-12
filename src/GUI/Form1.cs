@@ -200,6 +200,7 @@ namespace hatsune_miku_bot_display
 
                 ReactText.Visible = false;
                 React_Confirm.Visible = false;
+                Cancel_React.Visible = false;
                 React.Text = "React to a message";
                 ReactText.Text = "Type in your reaction here.";
                 ID_TB.Text = "Type in your message ID here.";
@@ -229,13 +230,6 @@ namespace hatsune_miku_bot_display
             string[] replacement = new string[] { "[back slash]", "[forward slash]", "[colon]", "[asterisk]", "[question mark]", "''", "[less than]", "[greater than]", "[vertical line]", " ", " " };
 
             string newMessage = message.Message.Content;
-
-            /*
-            Idea:
-                Use IndexOfAny in a while != -1 loop, then use a for loop to compare every character within the fileNameCheck array, as to avoid checking every letter individually
-
-                int indOfAny = newMessage.IndexOfAny
-            */
 
             if (newMessage.IndexOfAny(fileNameCheck) != -1)
                 for (int i = 0; i < newMessage.Length; i++)
