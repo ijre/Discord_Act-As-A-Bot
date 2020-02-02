@@ -36,30 +36,20 @@ namespace hatsune_miku_bot_display
 #else
                 Directory.CreateDirectory("./deps/");
 #endif
+
+#if _DEBUG
+            Clear_Button.Visible = false;
+#endif
+            TrueStart();
         }
 
-        private void Start(object sender, EventArgs e)
+        private async Task<int> TrueStart()
         {
-            TrueStart();
-            Start_Button.Visible = false;
 #if _FINAL
             Please_Wait.Visible = true;
             Please_Wait.BringToFront();
 #endif
 
-            Send_Button.Visible = true;
-            Input_Chat.Visible = true;
-            Output_Chat.Visible = true;
-            Change_Channel.Visible = true;
-            Add_Image.Visible = true;
-            React.Visible = true;
-#if !_DEBUG
-            Clear_Button.Visible = true;
-#endif
-        }
-
-        private async Task<int> TrueStart()
-        {
             DiscordConfiguration config = new DiscordConfiguration
             {
 #if !_DEBUG
@@ -363,12 +353,12 @@ namespace hatsune_miku_bot_display
         {
             Output_Chat.Text = "";
         }
-        #endregion
 
         private void ID_TB_Enter(object sender, EventArgs e)
         {
             if (ID_TB.Text == "Type in your message ID here.")
                 ID_TB.Text = "";
         }
+        #endregion
     }
 }
