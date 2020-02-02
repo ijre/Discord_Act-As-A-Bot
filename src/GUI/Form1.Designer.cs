@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.Start_Button = new System.Windows.Forms.Button();
             this.Input_Chat = new System.Windows.Forms.TextBox();
             this.Send_Button = new System.Windows.Forms.Button();
             this.Change_Channel = new System.Windows.Forms.Button();
@@ -47,20 +46,6 @@
             this.Cancel_React = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // Start_Button
-            // 
-            this.Start_Button.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.Start_Button.Location = new System.Drawing.Point(389, 290);
-            this.Start_Button.Name = "Start_Button";
-            this.Start_Button.Size = new System.Drawing.Size(130, 120);
-            this.Start_Button.TabIndex = 0;
-            this.Start_Button.TabStop = false;
-            this.Start_Button.Text = "Launch Hatsune Miku Bot";
-            this.Start_Button.UseVisualStyleBackColor = true;
-            this.Start_Button.Click += new System.EventHandler(this.Start);
-            // 
             // Input_Chat
             // 
             this.Input_Chat.AcceptsReturn = true;
@@ -74,7 +59,6 @@
             this.Input_Chat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.Input_Chat.Size = new System.Drawing.Size(387, 257);
             this.Input_Chat.TabIndex = 5;
-            this.Input_Chat.Visible = false;
             // 
             // Send_Button
             // 
@@ -85,7 +69,6 @@
             this.Send_Button.TabIndex = 6;
             this.Send_Button.Text = "Send";
             this.Send_Button.UseVisualStyleBackColor = true;
-            this.Send_Button.Visible = false;
             // 
             // Change_Channel
             // 
@@ -96,7 +79,6 @@
             this.Change_Channel.TabIndex = 7;
             this.Change_Channel.Text = "Change Server/Channel";
             this.Change_Channel.UseVisualStyleBackColor = true;
-            this.Change_Channel.Visible = false;
             this.Change_Channel.Click += new System.EventHandler(this.Change_Channel_Click);
             // 
             // Add_Image
@@ -108,7 +90,6 @@
             this.Add_Image.TabIndex = 8;
             this.Add_Image.Text = "Add Image/File";
             this.Add_Image.UseVisualStyleBackColor = true;
-            this.Add_Image.Visible = false;
             this.Add_Image.Click += new System.EventHandler(this.Add_Image_Click);
             // 
             // File_Name
@@ -130,7 +111,6 @@
             this.React.TabIndex = 10;
             this.React.Text = "React to a message";
             this.React.UseVisualStyleBackColor = true;
-            this.React.Visible = false;
             // 
             // Output_Chat
             // 
@@ -144,7 +124,6 @@
             this.Output_Chat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.Output_Chat.Size = new System.Drawing.Size(380, 257);
             this.Output_Chat.TabIndex = 1;
-            this.Output_Chat.Visible = false;
             // 
             // ReactText
             // 
@@ -200,7 +179,6 @@
             this.Clear_Button.TabIndex = 14;
             this.Clear_Button.Text = "Clear Text";
             this.Clear_Button.UseVisualStyleBackColor = true;
-            this.Clear_Button.Visible = false;
             this.Clear_Button.Click += new System.EventHandler(this.Clear_Button_Click);
             // 
             // ID_B
@@ -274,7 +252,6 @@
             this.Controls.Add(this.Send_Button);
             this.Controls.Add(this.Input_Chat);
             this.Controls.Add(this.Output_Chat);
-            this.Controls.Add(this.Start_Button);
             this.Controls.Add(this.Please_Wait);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -290,7 +267,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button Start_Button;
         private System.Windows.Forms.TextBox Input_Chat;
         private System.Windows.Forms.Button Send_Button;
         private System.Windows.Forms.Button Change_Channel;
