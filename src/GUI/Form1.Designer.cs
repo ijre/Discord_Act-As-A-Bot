@@ -58,7 +58,7 @@
             this.Input_Chat.Name = "Input_Chat";
             this.Input_Chat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.Input_Chat.Size = new System.Drawing.Size(387, 257);
-            this.Input_Chat.TabIndex = 5;
+            this.Input_Chat.TabIndex = 0;
             // 
             // Send_Button
             // 
@@ -66,7 +66,7 @@
             this.Send_Button.Location = new System.Drawing.Point(658, 275);
             this.Send_Button.Name = "Send_Button";
             this.Send_Button.Size = new System.Drawing.Size(84, 84);
-            this.Send_Button.TabIndex = 6;
+            this.Send_Button.TabIndex = 1;
             this.Send_Button.Text = "Send";
             this.Send_Button.UseVisualStyleBackColor = true;
             // 
@@ -124,6 +124,7 @@
             this.Output_Chat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.Output_Chat.Size = new System.Drawing.Size(380, 257);
             this.Output_Chat.TabIndex = 1;
+            this.Output_Chat.TabStop = false;
             // 
             // ReactText
             // 
