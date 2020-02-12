@@ -176,17 +176,21 @@ namespace hatsune_miku_bot_display
                     return;
                 }
                 else if (React.Text.StartsWith("Now"))
-                    mess = await chan.GetMessageAsync(ulong.Parse(ID_TB.Text));
-                else
-                    mess = await chan.GetMessageAsync(ulong.Parse(File.ReadAllText(file)));
-
-                if (!ReactText.Text.Contains(":"))
                 {
-                    ReactText.Text = ReactText.Text.Insert(0, ":");
-                    ReactText.Text = ReactText.Text.Insert(ReactText.Text.Length, ":");
+                    if (String.IsNullOrWhiteSpace(file))
+                        mess = await chan.GetMessageAsync(ulong.Parse(ID_TB.Text));
+                    else
+                        mess = await chan.GetMessageAsync(ulong.Parse(File.ReadAllText(file)));
+
+                    if (!ReactText.Text.Contains(":"))
+                    {
+                        ReactText.Text = ReactText.Text.Insert(0, ":");
+                        ReactText.Text = ReactText.Text.Insert(ReactText.Text.Length, ":");
+                    }
+
+                    mess.CreateReactionAsync(DiscordEmoji.FromName(client, ReactText.Text));
                 }
 
-                mess.CreateReactionAsync(DiscordEmoji.FromName(client, ReactText.Text));
 
                 ReactText.Visible = false;
                 React_Confirm.Visible = false;
