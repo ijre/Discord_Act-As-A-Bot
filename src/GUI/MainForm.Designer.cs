@@ -44,6 +44,7 @@
             this.Recent_Message_B = new System.Windows.Forms.Button();
             this.ID_TB = new System.Windows.Forms.TextBox();
             this.Cancel_React = new System.Windows.Forms.Button();
+            this.ViewImageButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Input_Chat
@@ -230,6 +231,17 @@
             this.Cancel_React.UseVisualStyleBackColor = true;
             this.Cancel_React.Visible = false;
             // 
+            // ViewImageButton
+            // 
+            this.ViewImageButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.ViewImageButton.Location = new System.Drawing.Point(12, 423);
+            this.ViewImageButton.Name = "ViewImageButton";
+            this.ViewImageButton.Size = new System.Drawing.Size(130, 120);
+            this.ViewImageButton.TabIndex = 19;
+            this.ViewImageButton.Text = "View Image";
+            this.ViewImageButton.UseVisualStyleBackColor = true;
+            this.ViewImageButton.Click += new System.EventHandler(this.ViewImageButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -239,6 +251,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(915, 547);
+            this.Controls.Add(this.ViewImageButton);
             this.Controls.Add(this.Cancel_React);
             this.Controls.Add(this.ID_TB);
             this.Controls.Add(this.Recent_Message_B);
@@ -283,6 +296,7 @@
         private System.Windows.Forms.Button Recent_Message_B;
         private System.Windows.Forms.TextBox ID_TB;
         private System.Windows.Forms.Button Cancel_React;
+        private System.Windows.Forms.Button ViewImageButton;
     }
 }
 

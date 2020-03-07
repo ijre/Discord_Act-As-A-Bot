@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
+
+using IOF;
 
 namespace hatsune_miku_bot_display
 {
@@ -73,13 +74,12 @@ namespace hatsune_miku_bot_display
 
                 if (!string.IsNullOrWhiteSpace(File_Name.Text))
                 {
-                    using (FileStream fstream = new FileStream(File_Name.Text, FileMode.Open))
-                    {
-                        await guildObj.GetChannel(ulong.Parse(File.ReadAllText(channel))).SendFileAsync(fstream, Input_Chat.Text);
+                    using FileStream fstream = new FileStream(File_Name.Text, FileMode.Open);
 
-                        File_Name.Text = "";
-                        Add_Image.Text = "Add Image/File";
-                    }
+                    await guildObj.GetChannel(ulong.Parse(File.ReadAllText(channel))).SendFileAsync(fstream, Input_Chat.Text);
+
+                    File_Name.Text = "";
+                    Add_Image.Text = "Add Image/File";
                 }
                 else
                     await client.SendMessageAsync(guildObj.GetChannel(ulong.Parse(File.ReadAllText(channel))), Input_Chat.Text);
@@ -211,13 +211,20 @@ namespace hatsune_miku_bot_display
                 return 1;
 
 #if !_DEBUG
-            Output_Chat.AppendText(message.Author.Username + "#" + message.Author.Discriminator + ": " + message.Message.Content + "\r\n");
+            if (message.Message.Attachments.Count == 0)
+                Output_Chat.AppendText(message.Author.Username + "#" + message.Author.Discriminator + ": " + message.Message.Content + "\r\n");
+            else if (message.Message.Attachments.Count == 1)
+                Output_Chat.AppendText(message.Author.Username + "#" + message.Author.Discriminator + ": " + message.Message.Content + "(IMAGE ATTACHED)\r\n");
+            else
+                Output_Chat.AppendText(message.Author.Username + "#" + message.Author.Discriminator + ": " + message.Message.Content + "(MULTIPLE IMAGES ATTACHED)\r\n");
 #endif
 
             if (!Directory.Exists(messages))
             {
                 Directory.CreateDirectory(messages);
-                File.WriteAllText("./deps/messages/CHOOSE WHICH MESSAGE YOU WOULD LIKE TO REACT TO.txt", "");
+                File.WriteAllText(messages + "CHOOSE WHICH MESSAGE YOU WOULD LIKE TO REACT TO.txt", "");
+
+                Directory.CreateDirectory(messages + "images");
             }
 
             char[] fileNameCheck = new char[] { '\\', '/', ':', '*', '?', '\"', '<', '>', '|', '\n', '\r' };
@@ -238,6 +245,16 @@ namespace hatsune_miku_bot_display
                 newMessage = newMessage.Substring(0, 171 - (message.Author.Username + " said ").Length);
 
             File.WriteAllText(messages + message.Author.Username + " said " + newMessage + ".txt", message.Message.Id.ToString());
+
+            if (message.Message.Attachments.Count == 1 && message.Message.Attachments[0].Width != 0)
+                File.WriteAllText(messages + "images/" + message.Author.Username + (String.IsNullOrWhiteSpace(newMessage) ? " at " + message.Message.Timestamp.Hour + " " + message.Message.Timestamp.Minute : " said " + newMessage) + ".txt", message.Message.Attachments[0].Url);
+            else if (message.Message.Attachments.Count > 1)
+                for (int i = 0; i < message.Message.Attachments.Count - 1; i++)
+                {
+                    if (message.Message.Attachments[i].Width == 0)
+                        continue;
+                    File.WriteAllText(messages + "images/" + message.Author.Username + " at " + message.Message.CreationTimestamp + "File name: " + message.Message.Attachments[i].FileName + ".txt", message.Message.Attachments[i].Url);
+                }
 
             return 0;
         }
@@ -362,6 +379,13 @@ namespace hatsune_miku_bot_display
         {
             if (ID_TB.Text == "Type in your message ID here.")
                 ID_TB.Text = "";
+        }
+
+        private void ViewImageButton_Click(object sender, EventArgs e)
+        {
+            ImageOpenForm IOF = new ImageOpenForm();
+
+            IOF.Show();
         }
         #endregion
     }
