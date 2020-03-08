@@ -32,7 +32,6 @@ namespace hatsune_release_assist
             }
             finally
             {
-                File.Copy(root + "id lyra.txt", root + "/Final Build/deps/id.txt");
                 Process.GetProcessesByName("hatsune_release-assist")[0].Kill();
             }
         }
