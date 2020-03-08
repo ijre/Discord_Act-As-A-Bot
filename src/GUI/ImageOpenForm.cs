@@ -12,8 +12,10 @@ namespace IOF
 
             OpenFileDialog diag = new OpenFileDialog()
             {
+                DefaultExt = "txt",
+                Filter = "(*.txt) | *.txt",
                 InitialDirectory = Application.StartupPath + "\\deps\\messages\\images",
-                RestoreDirectory = false
+                Title = "Choose which image you would like to view"
             };
             diag.ShowDialog();
 
