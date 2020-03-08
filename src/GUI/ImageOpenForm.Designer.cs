@@ -50,7 +50,6 @@
             this.Controls.Add(this.webBrowser1);
             this.Name = "ImageOpenForm";
             this.ShowIcon = false;
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.ResumeLayout(false);
 

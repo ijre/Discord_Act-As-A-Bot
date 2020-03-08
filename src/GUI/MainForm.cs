@@ -383,9 +383,28 @@ namespace hatsune_miku_bot_display
 
         private void ViewImageButton_Click(object sender, EventArgs e)
         {
-            ImageOpenForm IOF = new ImageOpenForm();
+            var box = MessageBox.Show("Would you like to open the image in your browser?\n(Saying no will open it in a separate window)", "Where would you like to open the image?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
-            IOF.Show();
+            if (box == DialogResult.No)
+            {
+                ImageOpenForm IOF = new ImageOpenForm();
+
+                IOF.Show();
+            }
+            else if (box == DialogResult.Yes)
+            {
+                using OpenFileDialog diag = new OpenFileDialog
+                {
+                    DefaultExt = "txt",
+                    Filter = "(*.txt) | *.txt",
+                    InitialDirectory = Application.StartupPath + "\\deps\\messages\\images",
+                    Title = "Choose which image you would like to view"
+                };
+                diag.ShowDialog();
+
+                if (!String.IsNullOrEmpty(diag.FileName))
+                    Process.Start(File.ReadAllText(diag.FileName));
+            }
         }
         #endregion
     }

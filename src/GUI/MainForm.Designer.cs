@@ -273,7 +273,7 @@
             this.MinimumSize = new System.Drawing.Size(931, 586);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Hatsune Miku (v2.1.4.1)";
+            this.Text = "Hatsune Miku (v2.2.4.1)";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
