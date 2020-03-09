@@ -247,13 +247,13 @@ namespace hatsune_miku_bot_display
             File.WriteAllText(messages + message.Author.Username + " said " + newMessage + ".txt", message.Message.Id.ToString());
 
             if (message.Message.Attachments.Count == 1 && message.Message.Attachments[0].Width != 0)
-                File.WriteAllText(messages + "images/" + message.Author.Username + (String.IsNullOrWhiteSpace(newMessage) ? " at " + message.Message.Timestamp.Hour + " " + message.Message.Timestamp.Minute : " said " + newMessage) + ".txt", message.Message.Attachments[0].Url);
+                File.WriteAllText(messages + "images/" + message.Author.Username + (String.IsNullOrWhiteSpace(newMessage) ? " at " + message.Message.Timestamp.Hour + " " + message.Message.Timestamp.Minute + ", file name = " + message.Message.Attachments[0].FileName : " said " + newMessage) + ".txt", message.Message.Attachments[0].Url);
             else if (message.Message.Attachments.Count > 1)
                 for (int i = 0; i < message.Message.Attachments.Count; i++)
                 {
                     if (message.Message.Attachments[i].Width == 0)
                         continue;
-                    File.WriteAllText(messages + "images/" + message.Author.Username + " at " + message.Message.Timestamp.Hour + " " + message.Message.Timestamp.Minute + ", File name = " + message.Message.Attachments[i].FileName + ".txt", message.Message.Attachments[i].Url);
+                    File.WriteAllText(messages + "images/" + message.Author.Username + " at " + message.Message.Timestamp.Hour + " " + message.Message.Timestamp.Minute + ", file name = " + message.Message.Attachments[i].FileName + ".txt", message.Message.Attachments[i].Url);
                 }
 
             return 0;

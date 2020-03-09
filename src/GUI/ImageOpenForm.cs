@@ -42,5 +42,44 @@ namespace IOF
                 };
             }
         }
+
+        static bool ignoreNext = false;
+
+        private void WebBrowser1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode.ToString() == "F11")
+            {
+                if (FormBorderStyle == FormBorderStyle.Sizable && !ignoreNext)
+                {
+                    FormBorderStyle = FormBorderStyle.None;
+                    WindowState = FormWindowState.Maximized;
+
+                    ignoreNext = true;
+                }
+                else if (!ignoreNext)
+                {
+                    FormBorderStyle = FormBorderStyle.Sizable;
+                    WindowState = FormWindowState.Normal;
+
+                    ignoreNext = true;
+                }
+                else
+                    ignoreNext = false;
+            }
+            else if (e.KeyCode.ToString() == "Escape")
+            {
+                if (FormBorderStyle == FormBorderStyle.None)
+                {
+                    FormBorderStyle = FormBorderStyle.Sizable;
+                    WindowState = FormWindowState.Normal;
+
+                    ignoreNext = true;
+                }
+                else if (!ignoreNext)
+                    this.Hide();
+                else
+                    ignoreNext = false;
+            }
+        }
     }
 }

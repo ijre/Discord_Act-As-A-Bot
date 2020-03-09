@@ -40,6 +40,7 @@
             this.webBrowser1.Size = new System.Drawing.Size(800, 450);
             this.webBrowser1.TabIndex = 0;
             this.webBrowser1.Visible = false;
+            this.webBrowser1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.WebBrowser1_PreviewKeyDown);
             // 
             // ImageOpenForm
             // 
