@@ -249,11 +249,11 @@ namespace hatsune_miku_bot_display
             if (message.Message.Attachments.Count == 1 && message.Message.Attachments[0].Width != 0)
                 File.WriteAllText(messages + "images/" + message.Author.Username + (String.IsNullOrWhiteSpace(newMessage) ? " at " + message.Message.Timestamp.Hour + " " + message.Message.Timestamp.Minute : " said " + newMessage) + ".txt", message.Message.Attachments[0].Url);
             else if (message.Message.Attachments.Count > 1)
-                for (int i = 0; i < message.Message.Attachments.Count - 1; i++)
+                for (int i = 0; i < message.Message.Attachments.Count; i++)
                 {
                     if (message.Message.Attachments[i].Width == 0)
                         continue;
-                    File.WriteAllText(messages + "images/" + message.Author.Username + " at " + message.Message.CreationTimestamp + "File name: " + message.Message.Attachments[i].FileName + ".txt", message.Message.Attachments[i].Url);
+                    File.WriteAllText(messages + "images/" + message.Author.Username + " at " + message.Message.Timestamp.Hour + " " + message.Message.Timestamp.Minute + ", File name = " + message.Message.Attachments[i].FileName + ".txt", message.Message.Attachments[i].Url);
                 }
 
             return 0;
