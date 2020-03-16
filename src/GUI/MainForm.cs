@@ -205,18 +205,20 @@ namespace hatsune_miku_bot_display
         }
 
         #region ClientEvents
-        private async Task<int> OnMessage(MessageCreateEventArgs message)
+        private async Task<int> OnMessage(MessageCreateEventArgs e)
         {
+            var message = e.Message;
+
             if (message.Channel.Id != ulong.Parse(File.ReadAllText(channel)))
                 return 1;
 
 #if !_DEBUG
-            if (message.Message.Attachments.Count == 0)
-                Output_Chat.AppendText(message.Author.Username + "#" + message.Author.Discriminator + ": " + message.Message.Content + "\r\n");
-            else if (message.Message.Attachments.Count == 1)
-                Output_Chat.AppendText(message.Author.Username + "#" + message.Author.Discriminator + ": " + message.Message.Content + "(IMAGE ATTACHED)\r\n");
+            if (message.Attachments.Count == 0)
+                Output_Chat.AppendText(message.Author.Username + "#" + message.Author.Discriminator + ": " + message.Content + "\r\n");
+            else if (message.Attachments.Count == 1)
+                Output_Chat.AppendText(message.Author.Username + "#" + message.Author.Discriminator + ": " + message.Content + "(IMAGE ATTACHED)\r\n");
             else
-                Output_Chat.AppendText(message.Author.Username + "#" + message.Author.Discriminator + ": " + message.Message.Content + "(MULTIPLE IMAGES ATTACHED)\r\n");
+                Output_Chat.AppendText(message.Author.Username + "#" + message.Author.Discriminator + ": " + message.Content + "(MULTIPLE IMAGES ATTACHED)\r\n");
 #endif
 
             if (!Directory.Exists(messages))
@@ -230,7 +232,7 @@ namespace hatsune_miku_bot_display
             char[] fileNameCheck = new char[] { '\\', '/', ':', '*', '?', '\"', '<', '>', '|', '\n', '\r' };
             string[] replacement = new string[] { "[back slash]", "[forward slash]", "[colon]", "[asterisk]", "[question mark]", "''", "[less than]", "[greater than]", "[vertical line]", " ", " " };
 
-            string newMessage = message.Message.Content;
+            string newMessage = message.Content;
 
             if (newMessage.IndexOfAny(fileNameCheck) != -1)
                 for (int i = 0; i < newMessage.Length; i++)
@@ -244,16 +246,16 @@ namespace hatsune_miku_bot_display
             if (newMessage.Length > 170)
                 newMessage = newMessage.Substring(0, 171 - (message.Author.Username + " said ").Length);
 
-            File.WriteAllText(messages + message.Author.Username + " said " + newMessage + ".txt", message.Message.Id.ToString());
+            File.WriteAllText(messages + message.Author.Username + " said " + newMessage + ".txt", message.Id.ToString());
 
-            if (message.Message.Attachments.Count == 1 && message.Message.Attachments[0].Width != 0)
-                File.WriteAllText(messages + "images/" + message.Author.Username + (String.IsNullOrWhiteSpace(newMessage) ? " at " + message.Message.Timestamp.Hour + " " + message.Message.Timestamp.Minute + ", file name = " + message.Message.Attachments[0].FileName : " said " + newMessage) + ".txt", message.Message.Attachments[0].Url);
-            else if (message.Message.Attachments.Count > 1)
-                for (int i = 0; i < message.Message.Attachments.Count; i++)
+            if (message.Attachments.Count == 1 && message.Attachments[0].Width != 0)
+                File.WriteAllText(messages + "images/" + message.Author.Username + (String.IsNullOrWhiteSpace(newMessage) ? " at " + message.Timestamp.Hour + " " + message.Timestamp.Minute + ", file name = " + message.Attachments[0].FileName : " said " + newMessage) + ".txt", message.Attachments[0].Url);
+            else if (message.Attachments.Count > 1)
+                for (int i = 0; i < message.Attachments.Count; i++)
                 {
-                    if (message.Message.Attachments[i].Width == 0)
+                    if (message.Attachments[i].Width == 0)
                         continue;
-                    File.WriteAllText(messages + "images/" + message.Author.Username + " at " + message.Message.Timestamp.Hour + " " + message.Message.Timestamp.Minute + ", file name = " + message.Message.Attachments[i].FileName + ".txt", message.Message.Attachments[i].Url);
+                    File.WriteAllText(messages + "images/" + message.Author.Username + " at " + message.Timestamp.Hour + " " + message.Timestamp.Minute + ", file name = " + message.Attachments[i].FileName + ".txt", message.Attachments[i].Url);
                 }
 
             return 0;
