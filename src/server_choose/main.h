@@ -26,7 +26,4 @@ public:
 
 ClientClass client(idGet(), 2);
 
-int numIn;
-static int64_t channel;
 std::vector<Server> servers = client.getServers().vector();
-std::string cin;
