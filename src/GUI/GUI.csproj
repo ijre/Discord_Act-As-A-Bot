@@ -71,6 +71,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PickyCatch.cs" />
     <Compile Include="ImageOpenForm.cs">
       <SubType>Form</SubType>
     </Compile>
