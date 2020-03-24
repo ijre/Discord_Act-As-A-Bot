@@ -33,11 +33,9 @@
             this.Send_Button = new System.Windows.Forms.Button();
             this.Change_Channel = new System.Windows.Forms.Button();
             this.Add_Image = new System.Windows.Forms.Button();
-            this.File_Name = new System.Windows.Forms.TextBox();
             this.React = new System.Windows.Forms.Button();
             this.Output_Chat = new System.Windows.Forms.TextBox();
             this.ReactText = new System.Windows.Forms.TextBox();
-            this.Please_Wait = new System.Windows.Forms.TextBox();
             this.React_Confirm = new System.Windows.Forms.Button();
             this.Clear_Button = new System.Windows.Forms.Button();
             this.ID_B = new System.Windows.Forms.Button();
@@ -45,6 +43,7 @@
             this.ID_TB = new System.Windows.Forms.TextBox();
             this.Cancel_React = new System.Windows.Forms.Button();
             this.ViewImageButton = new System.Windows.Forms.Button();
+            this.ServerChannelList = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // Input_Chat
@@ -60,6 +59,7 @@
             this.Input_Chat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.Input_Chat.Size = new System.Drawing.Size(387, 257);
             this.Input_Chat.TabIndex = 0;
+            this.Input_Chat.Visible = false;
             // 
             // Send_Button
             // 
@@ -80,6 +80,7 @@
             this.Change_Channel.TabIndex = 7;
             this.Change_Channel.Text = "Change Server/Channel";
             this.Change_Channel.UseVisualStyleBackColor = true;
+            this.Change_Channel.Visible = false;
             this.Change_Channel.Click += new System.EventHandler(this.Change_Channel_Click);
             // 
             // Add_Image
@@ -91,17 +92,8 @@
             this.Add_Image.TabIndex = 8;
             this.Add_Image.Text = "Add Image/File";
             this.Add_Image.UseVisualStyleBackColor = true;
+            this.Add_Image.Visible = false;
             this.Add_Image.Click += new System.EventHandler(this.Add_Image_Click);
-            // 
-            // File_Name
-            // 
-            this.File_Name.CausesValidation = false;
-            this.File_Name.Location = new System.Drawing.Point(881, 529);
-            this.File_Name.Name = "File_Name";
-            this.File_Name.Size = new System.Drawing.Size(8, 20);
-            this.File_Name.TabIndex = 9;
-            this.File_Name.TabStop = false;
-            this.File_Name.Visible = false;
             // 
             // React
             // 
@@ -126,6 +118,7 @@
             this.Output_Chat.Size = new System.Drawing.Size(380, 257);
             this.Output_Chat.TabIndex = 1;
             this.Output_Chat.TabStop = false;
+            this.Output_Chat.Visible = false;
             // 
             // ReactText
             // 
@@ -141,24 +134,6 @@
             this.ReactText.Text = "Type in your reaction here.";
             this.ReactText.Visible = false;
             this.ReactText.Enter += new System.EventHandler(this.ReactText_Enter);
-            // 
-            // Please_Wait
-            // 
-            this.Please_Wait.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.Please_Wait.BackColor = System.Drawing.SystemColors.GrayText;
-            this.Please_Wait.ForeColor = System.Drawing.Color.White;
-            this.Please_Wait.Location = new System.Drawing.Point(-1, -2);
-            this.Please_Wait.Multiline = true;
-            this.Please_Wait.Name = "Please_Wait";
-            this.Please_Wait.ReadOnly = true;
-            this.Please_Wait.Size = new System.Drawing.Size(916, 551);
-            this.Please_Wait.TabIndex = 11;
-            this.Please_Wait.TabStop = false;
-            this.Please_Wait.Text = resources.GetString("Please_Wait.Text");
-            this.Please_Wait.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.Please_Wait.Visible = false;
             // 
             // React_Confirm
             // 
@@ -240,7 +215,19 @@
             this.ViewImageButton.TabIndex = 19;
             this.ViewImageButton.Text = "View Image";
             this.ViewImageButton.UseVisualStyleBackColor = true;
+            this.ViewImageButton.Visible = false;
             this.ViewImageButton.Click += new System.EventHandler(this.ViewImageButton_Click);
+            // 
+            // ServerChannelList
+            // 
+            this.ServerChannelList.BackColor = System.Drawing.SystemColors.GrayText;
+            this.ServerChannelList.ForeColor = System.Drawing.Color.White;
+            this.ServerChannelList.FormattingEnabled = true;
+            this.ServerChannelList.HorizontalScrollbar = true;
+            this.ServerChannelList.Location = new System.Drawing.Point(120, 30);
+            this.ServerChannelList.Name = "ServerChannelList";
+            this.ServerChannelList.Size = new System.Drawing.Size(689, 459);
+            this.ServerChannelList.TabIndex = 20;
             // 
             // MainForm
             // 
@@ -251,6 +238,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(915, 547);
+            this.Controls.Add(this.Input_Chat);
             this.Controls.Add(this.ViewImageButton);
             this.Controls.Add(this.Cancel_React);
             this.Controls.Add(this.ID_TB);
@@ -260,20 +248,18 @@
             this.Controls.Add(this.React_Confirm);
             this.Controls.Add(this.React);
             this.Controls.Add(this.ReactText);
-            this.Controls.Add(this.File_Name);
             this.Controls.Add(this.Add_Image);
             this.Controls.Add(this.Change_Channel);
             this.Controls.Add(this.Send_Button);
-            this.Controls.Add(this.Input_Chat);
             this.Controls.Add(this.Output_Chat);
-            this.Controls.Add(this.Please_Wait);
+            this.Controls.Add(this.ServerChannelList);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(931, 586);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Hatsune Miku (v2.2.5.2)";
+            this.Text = "Hatsune Miku";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -285,11 +271,9 @@
         private System.Windows.Forms.Button Send_Button;
         private System.Windows.Forms.Button Change_Channel;
         private System.Windows.Forms.Button Add_Image;
-        private System.Windows.Forms.TextBox File_Name;
         private System.Windows.Forms.Button React;
         private System.Windows.Forms.TextBox Output_Chat;
         private System.Windows.Forms.TextBox ReactText;
-        private System.Windows.Forms.TextBox Please_Wait;
         private System.Windows.Forms.Button React_Confirm;
         private System.Windows.Forms.Button Clear_Button;
         private System.Windows.Forms.Button ID_B;
@@ -297,6 +281,7 @@
         private System.Windows.Forms.TextBox ID_TB;
         private System.Windows.Forms.Button Cancel_React;
         private System.Windows.Forms.Button ViewImageButton;
+        private System.Windows.Forms.ListBox ServerChannelList;
     }
 }
 
