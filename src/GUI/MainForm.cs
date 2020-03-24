@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.IO;
@@ -7,29 +9,24 @@ using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 
+using static PickyCatch;
 using IOF;
 
 namespace hatsune_miku_bot_display
 {
     public partial class MainForm : Form
     {
-        readonly string channel = "./deps/channel.txt";
-        readonly string guild = "./deps/guild.txt";
-        readonly string messages = "./deps/messages/";
+        private ulong channel = 0;
+        private ulong guild = 0;
+        private readonly string messages = "./deps/messages/";
+        private readonly string[] file = new string[2] { "", "" };
+        // index 0 is used for sending files, index 1 is used to store the message being reacted to
 
         public MainForm()
         {
             InitializeComponent();
-
-            if (File.Exists(guild))
-                File.Delete(guild);
-
-            if (File.Exists(channel))
-                File.Delete(channel);
-
-            if (Directory.Exists(messages))
-                Directory.Delete(messages, true);
-
+            Text = $"Hatsune Miku (v{Application.ProductVersion})";
+            ServerChannelList.BringToFront();
 
             if (!Directory.Exists("./deps/"))
 #if !_DEBUG
@@ -38,28 +35,19 @@ namespace hatsune_miku_bot_display
                 Directory.CreateDirectory("./deps/");
 #endif
 
-#if _DEBUG
-            Clear_Button.Visible = false;
-#endif
             TrueStart();
         }
 
         private async Task<int> TrueStart()
         {
-#if _FINAL
-            Please_Wait.Visible = true;
-            Please_Wait.BringToFront();
-#endif
-
-            DiscordConfiguration config = new DiscordConfiguration
+            DiscordClient client = new DiscordClient(new DiscordConfiguration
             {
 #if !_DEBUG
                 Token = File.ReadAllText("./deps/id.txt")
 #else
                 Token = File.ReadAllText("../deps/id.txt")
 #endif
-            };
-            DiscordClient client = new DiscordClient(config);
+            });
 
             await client.ConnectAsync();
             await client.InitializeAsync();
@@ -67,27 +55,25 @@ namespace hatsune_miku_bot_display
             client.Ready += OnReady;
             client.MessageCreated += OnMessage;
 
-            #region WinFormsClientEvents
+            #region WinFormsClientAsyncEvents
             Send_Button.Click += async (sender, e) =>
             {
-                var guildObj = await client.GetGuildAsync(ulong.Parse(File.ReadAllText(guild)));
+                var guildObj = await client.GetGuildAsync(guild);
 
-                if (!string.IsNullOrWhiteSpace(File_Name.Text))
+                if (!string.IsNullOrWhiteSpace(file[0]))
                 {
-                    using FileStream fstream = new FileStream(File_Name.Text, FileMode.Open);
+                    using FileStream fstream = new FileStream(file[0], FileMode.Open);
 
-                    await guildObj.GetChannel(ulong.Parse(File.ReadAllText(channel))).SendFileAsync(fstream, Input_Chat.Text);
+                    await guildObj.GetChannel(channel).SendFileAsync(fstream, Input_Chat.Text);
 
-                    File_Name.Text = "";
+                    file[0] = "";
                     Add_Image.Text = "Add Image/File";
                 }
                 else
-                    await client.SendMessageAsync(guildObj.GetChannel(ulong.Parse(File.ReadAllText(channel))), Input_Chat.Text);
+                    await client.SendMessageAsync(guildObj.GetChannel(channel), Input_Chat.Text);
 
                 Input_Chat.Text = "";
             };
-
-            string file = "";
 
             React.Click += (sender, e) =>
             {
@@ -103,7 +89,7 @@ namespace hatsune_miku_bot_display
 
             Cancel_React.Click += (sender2, eve) =>
             {
-                file = "";
+                file[1] = "";
 
                 Cancel_React.Visible = false;
 
@@ -132,15 +118,15 @@ namespace hatsune_miku_bot_display
             Recent_Message_B.Click += (zender, eee) =>
             {
                 if (Directory.Exists(Application.StartupPath + "\\deps\\" + "messages"))
-                    file = Application.StartupPath + "\\deps\\" + "messages";
+                    file[1] = Application.StartupPath + "\\deps\\" + "messages";
                 else
-                    file = Application.StartupPath + "\\deps\\";
+                    file[1] = Application.StartupPath + "\\deps\\";
 
                 using (OpenFileDialog diag = new OpenFileDialog
                 {
                     DefaultExt = "txt",
                     Filter = "(*.txt) | *.txt",
-                    InitialDirectory = file,
+                    InitialDirectory = file[1],
                     Title = "Choose which message you would like to react to"
                 })
                 {
@@ -148,7 +134,7 @@ namespace hatsune_miku_bot_display
 
                     if (!string.IsNullOrEmpty(diag.FileName))
                     {
-                        file = diag.FileName;
+                        file[1] = diag.FileName;
 
                         React.Text = "Now, enter the name of your chosen emoji in the box below.";
                         ReactText.Visible = true;
@@ -161,7 +147,7 @@ namespace hatsune_miku_bot_display
 
             React_Confirm.Click += async (sender, e) =>
             {
-                DiscordChannel chan = await client.GetChannelAsync(ulong.Parse(File.ReadAllText(channel)));
+                DiscordChannel chan = await client.GetChannelAsync(channel);
                 DiscordMessage mess;
 
                 if (React.Text.StartsWith("Enter"))
@@ -177,10 +163,10 @@ namespace hatsune_miku_bot_display
                 }
                 else if (React.Text.StartsWith("Now"))
                 {
-                    if (String.IsNullOrWhiteSpace(file))
+                    if (String.IsNullOrWhiteSpace(file[1]))
                         mess = await chan.GetMessageAsync(ulong.Parse(ID_TB.Text));
                     else
-                        mess = await chan.GetMessageAsync(ulong.Parse(File.ReadAllText(file)));
+                        mess = await chan.GetMessageAsync(ulong.Parse(File.ReadAllText(file[1])));
 
                     if (!ReactText.Text.Contains(":"))
                     {
@@ -191,7 +177,6 @@ namespace hatsune_miku_bot_display
                     mess.CreateReactionAsync(DiscordEmoji.FromName(client, ReactText.Text));
                 }
 
-
                 ReactText.Visible = false;
                 React_Confirm.Visible = false;
                 Cancel_React.Visible = false;
@@ -199,27 +184,68 @@ namespace hatsune_miku_bot_display
                 ReactText.Text = "Type in your reaction here.";
                 ID_TB.Text = "Type in your message ID here.";
             };
+
+            bool server = true;
+            ServerChannelList.DoubleClick += async (object sender, EventArgs e) =>
+            {
+                string item2S = "";
+                try
+                {
+                    item2S = ServerChannelList.SelectedItem.ToString();
+                }
+                catch (Exception ex)
+                {
+                    MessageBoxIgnoreException(new NullReferenceException(), ex, "Fatal Error");
+                    return;
+                }
+
+                if (server)
+                {
+                    var chosenGuild = await client.GetGuildAsync(ulong.Parse(item2S.Substring(item2S.LastIndexOf("(") + 1, item2S.Length - item2S.LastIndexOf("(") - 2)));
+                    IEnumerable<DiscordChannel> channels = from value in await chosenGuild.GetChannelsAsync()
+                                                           select value;
+
+                    ServerChannelList.Items.Clear();
+                    for (int i = 0; i < channels.ToArray().Length; i++)
+                        ServerChannelList.Items.Add($"{channels.ToArray()[i].Name} ({channels.ToArray()[i].Id})");
+
+                    guild = chosenGuild.Id;
+                    server = false;
+                }
+                else
+                {
+                    channel = ulong.Parse(item2S.Substring(item2S.LastIndexOf("(") + 1, item2S.Length - item2S.LastIndexOf("(") - 2));
+
+                    ServerChannelList.Visible = false;
+
+                    Output_Chat.Visible = true;
+                    Input_Chat.Visible = true;
+                    Change_Channel.Visible = true;
+                    ViewImageButton.Visible = true;
+                    Add_Image.Visible = true;
+
+                    server = true;
+                }
+            };
             #endregion
 
             return 0;
         }
 
-        #region ClientEvents
+        #region DiscordEvents
         private async Task<int> OnMessage(MessageCreateEventArgs e)
         {
             var message = e.Message;
 
-            if (message.Channel.Id != ulong.Parse(File.ReadAllText(channel)))
+            if (message.Channel.Id != channel)
                 return 1;
 
-#if !_DEBUG
             if (message.Attachments.Count == 0)
                 Output_Chat.AppendText(message.Author.Username + "#" + message.Author.Discriminator + ": " + message.Content + "\r\n");
             else if (message.Attachments.Count == 1)
                 Output_Chat.AppendText(message.Author.Username + "#" + message.Author.Discriminator + ": " + message.Content + "(IMAGE ATTACHED)\r\n");
             else
                 Output_Chat.AppendText(message.Author.Username + "#" + message.Author.Discriminator + ": " + message.Content + "(MULTIPLE IMAGES ATTACHED)\r\n");
-#endif
 
             if (!Directory.Exists(messages))
             {
@@ -283,50 +309,46 @@ namespace hatsune_miku_bot_display
         {
             // two different functions use this same program starting sequence, this makes it easier to make changes
 
-            using (Process process = new Process()
+            using Process process = new Process()
             {
                 EnableRaisingEvents = true,
                 StartInfo =
                 {
                     UseShellExecute = false,
-                    FileName = "./deps/saknade_vänner.exe"
+                    FileName = "./deps/saknade_vänner.exe",
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
                 }
-            })
+            };
+            process.OutputDataReceived += (object sender, DataReceivedEventArgs e) =>
             {
-                process.Start();
-                process.WaitForExit();
+                try
+                {
+                    ServerChannelList.Items.Add(e.Data);
+                }
+                catch (Exception ex)
+                {
+                    MessageBoxIgnoreException(new ArgumentNullException(), ex);
+                }
+            };
+            process.Start();
+            process.BeginOutputReadLine();
 
-#if _FINAL
-                Please_Wait.Visible = false;
-#endif
-            }
+            Output_Chat.Visible = false;
+            Input_Chat.Visible = false;
+            Change_Channel.Visible = false;
+            ViewImageButton.Visible = false;
+            Add_Image.Visible = false;
+
+            ServerChannelList.BringToFront();
+            ServerChannelList.Visible = true;
         }
 
         #region WinFormsEvents
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (File.Exists(guild))
-                File.Delete(guild);
-
-            if (File.Exists(channel))
-                File.Delete(channel);
-
             if (Directory.Exists(messages))
                 Directory.Delete(messages, true);
-
-            try
-            {
-                Process.GetProcessesByName("saknade_vänner")[0].Kill();
-            }
-            catch (IndexOutOfRangeException)
-            {
-                // this error happens if the program is already closed, which it should be 99% of the time you close the main GUI
-                Application.Exit();
-            }
-            catch
-            {
-                throw;
-            }
         }
 
         private void Change_Channel_Click(object sender, EventArgs e)
@@ -346,23 +368,21 @@ namespace hatsune_miku_bot_display
         {
             if (Add_Image.Text.Contains("Remove"))
             {
-                File_Name.Text = "";
+                file[0] = "";
                 Add_Image.Text = "Add Image/File";
                 return;
             }
 
-            using (OpenFileDialog diag = new OpenFileDialog
+            using OpenFileDialog diag = new OpenFileDialog
             {
                 RestoreDirectory = true
-            })
-            {
-                diag.ShowDialog();
+            };
+            diag.ShowDialog();
 
-                if (!string.IsNullOrWhiteSpace(diag.FileName))
-                {
-                    File_Name.Text = diag.FileName;
-                    Add_Image.Text = "Remove Image/File";
-                }
+            if (!string.IsNullOrWhiteSpace(diag.FileName))
+            {
+                file[0] = diag.FileName;
+                Add_Image.Text = "Remove Image/File";
             }
         }
 
