@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace IOF.Properties {
+namespace hatsune_miku.Properties {
     using System;
     
     
