@@ -1,6 +1,6 @@
-﻿namespace IOF
+﻿namespace hatsune_miku
 {
-    partial class ImageOpenForm
+    partial class IOF
     {
         /// <summary>
         /// Required designer variable.
@@ -42,14 +42,14 @@
             this.webBrowser1.Visible = false;
             this.webBrowser1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.WebBrowser1_PreviewKeyDown);
             // 
-            // ImageOpenForm
+            // IOF
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.webBrowser1);
-            this.Name = "ImageOpenForm";
+            this.Name = "IOF";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.ResumeLayout(false);
