@@ -2,4 +2,4 @@
 
 known issues tracked using [the todo list](https://github.com/ijre/Hatsune_Miku-Bot/projects/1)  
   
-### check out the [nightly build](https://github.com/ijre/Hatsune_Miku-Bot/tree/nightly) if you're interested in the absolutely latest changes (that you have to build yourself)
+### henlo to the nightly branch, most likely that these updates will break the program; will not be releasing pre-builts for this you must build it yourself
