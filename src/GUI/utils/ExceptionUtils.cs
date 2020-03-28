@@ -3,10 +3,10 @@ using System.Windows.Forms;
 
 namespace hatsune_miku.utils
 {
-    public class PickyCatch
+    public class ExceptionUtils
     {
         /// <summary>
-        /// Ignores a specific exception, to be used if you have a Catch(Exception) but don't want a specific exception.
+        /// Ignores a specific exception, to be used if you have a catch(Exception) but don't want a specific exception.
         /// Returns true if the exception was ignored.
         /// </summary>
         /// <param name="exceptionToIgnore">
@@ -24,8 +24,8 @@ namespace hatsune_miku.utils
         /// Defaults to "Error".
         /// </param>
         /// <param name="body">
-        /// If your exception was not ignored, this is the body of the MessageBox.
-        /// Defaults to the thrown exception's message.
+        /// MessageBox body.
+        /// Defaults to the caught exception's message.
         /// </param>
         public static bool IgnoreSpecificException(Exception exceptionToIgnore, Exception exceptionCaught,
             bool messageBox = false, string title = "Error", string body = "")
