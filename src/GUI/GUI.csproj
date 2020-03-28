@@ -85,7 +85,8 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="utils\PickyCatch.cs" />
+    <Compile Include="utils\MessageUtils.cs" />
+    <Compile Include="utils\ExceptionUtils.cs" />
     <EmbeddedResource Include="ImageOpenForm.resx">
       <DependentUpon>ImageOpenForm.cs</DependentUpon>
     </EmbeddedResource>
