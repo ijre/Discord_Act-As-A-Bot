@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
-using System.IO;
 using System.Windows.Forms;
 using DSharpPlus;
 using DSharpPlus.Entities;
@@ -62,7 +62,7 @@ namespace hatsune_miku
                 }
                 catch (Exception ex)
                 {
-                    PickyCatch.IgnoreSpecificException(new NullReferenceException(), ex, true, "Fatal Error");
+                    ExceptionUtils.IgnoreSpecificException(new NullReferenceException(), ex, true, "Fatal Error");
                     return;
                 }
 
@@ -102,20 +102,22 @@ namespace hatsune_miku
         #region DiscordEvents
         private async Task<int> OnMessage(MessageCreateEventArgs e)
         {
-            var message = e.Message;
-
-            if (message.Channel.Id != channel)
+            if (e.Message.Channel.Id != channel)
                 return 1;
 
-            if (message.Attachments.Count == 0)
-                Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content}");
-            else if (message.Attachments.Count == 1)
-                Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (IMAGE ATTACHED)");
-            else
+            var message = e.Message;
+
+            switch (message.Attachments.Count)
             {
-                Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (MULTIPLE IMAGES ATTACHED)");
-                for (int i = 0; i < message.Attachments.Count; i++)
-                    listBox1.Items.Add(message.Attachments[i].Url);
+                case 0:
+                    Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content}");
+                    break;
+                case 1:
+                    Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (IMAGE ATTACHED)");
+                    break;
+                default:
+                    Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (MULTIPLE IMAGES ATTACHED)");
+                    break;
             }
 
             messageIds[Output_ChatText.Items.Count - 1] = message.Id;
@@ -162,7 +164,7 @@ namespace hatsune_miku
                 }
                 catch (Exception ex)
                 {
-                    PickyCatch.IgnoreSpecificException(new ArgumentNullException(), ex);
+                    ExceptionUtils.IgnoreSpecificException(new ArgumentNullException(), ex);
                 }
             };
             process.Start();
@@ -215,35 +217,6 @@ namespace hatsune_miku
             }
         }
 
-        private void CMViewImage_Click(object sender, EventArgs e)
-        {
-            var getMessage = client.GetChannelAsync(channel).Result.GetMessageAsync((messageIds[Output_ChatText.SelectedIndex])).Result;
-
-            string attachment = "";
-            if (getMessage.Attachments.Count == 1)
-            {
-                attachment = getMessage.Attachments[0].Url;
-                IOF iof = new IOF(attachment);
-                iof.Show();
-            }
-            else
-            {
-                MessageBox.Show("Selected message has more than one attachment. Please select which image(s) you would like to open.", "Multi-image message",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                listBox1.Visible = true;
-                Button1.Visible = true;
-            }
-        }
-
-        private void Button1_Click(object sender, EventArgs e)
-        {
-            for (int i = 0; i < listBox1.SelectedItems.Count; i++)
-            {
-                IOF iof = new IOF(listBox1.SelectedItems[i].ToString());
-                iof.Show();
-            }
-        }
-
         #region SendMessageHandling
         private async Task SendMessage()
         {
@@ -282,13 +255,128 @@ namespace hatsune_miku
         }
         #endregion
 
+        #region ViewImageHandling
+
+        private readonly string[] urls = new string[10];
+        // max attachments allowed is 10
+
+        private void CMViewImage_Click(object sender, EventArgs e)
+        {
+            var message = MessageUtils.GetMessage(client, messageIds[Output_ChatText.SelectedIndex], channel);
+
+            if (message.Attachments.Count == 1)
+            {
+                IOF iof = new IOF(message.Attachments[0].Url);
+                iof.Show();
+            }
+            else
+            {
+                MessageBox.Show("Selected message has more than one attachment. Please select which attachments you would like to open.", "Multi-image message",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                for (int i = 1; i <= message.Attachments.Count; i++)
+                {
+                    switch (i)
+                    {
+                        case 1:
+                            Multiple_ImagesLB.Items.Add($"1st file ({message.Attachments[i - 1].FileName})");
+                            break;
+                        case 2:
+                            Multiple_ImagesLB.Items.Add($"2nd file ({message.Attachments[i - 1].FileName})");
+                            break;
+                        case 3:
+                            Multiple_ImagesLB.Items.Add($"3rd file ({message.Attachments[i - 1].FileName})");
+                            break;
+                        default:
+                            Multiple_ImagesLB.Items.Add($"{i}th file ({message.Attachments[i - 1].FileName})");
+                            break;
+                    }
+
+                    urls[i - 1] = message.Attachments[i - 1].Url;
+                }
+
+                Output_ChatText.Visible = false;
+                Input_Chat.Visible = false;
+                Change_Channel.Visible = false;
+                Add_Image.Visible = false;
+
+                Multiple_ImagesLB.BringToFront();
+                Multiple_ImagesLB.Visible = true;
+
+                Multiple_ImagesOpen.BringToFront();
+                Multiple_ImagesOpen.Visible = true;
+
+                Multiple_ImagesCancel.BringToFront();
+                Multiple_ImagesCancel.Visible = true;
+            }
+        }
+
+        private void Multiple_ImagesOpen_Click(object sender, EventArgs e)
+        {
+            bool allowFiles = false;
+            bool allowFilesAnswered = false;
+
+            for (int i = 0; i < Multiple_ImagesLB.Items.Count; i++)
+            {
+                var attachment = MessageUtils.GetMessage(client, messageIds[Output_ChatText.SelectedIndex], channel).Attachments[i];
+
+                // width == 0 means it's not an image
+                if (attachment.Width != 0)
+                {
+                    IOF iof = new IOF(attachment.Url);
+                    iof.Show();
+                }
+                else
+                {
+                    if (!allowFilesAnswered)
+                    {
+                        if (MessageBox.Show(
+                            "One or more of the selected files is not an image.\n" +
+                            "Downloading/Viewing these files requires opening your browser; would you still like to open these files?", "Non-image in selection", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                                            == DialogResult.Yes)
+                        {
+                            allowFiles = true;
+                            allowFilesAnswered = true;
+                        }
+                    }
+
+                    if (allowFiles)
+                        Process.Start(attachment.Url);
+                }
+            }
+
+            Output_ChatText.Visible = true;
+            Input_Chat.Visible = true;
+            Change_Channel.Visible = true;
+            Add_Image.Visible = true;
+
+            Multiple_ImagesLB.Visible = false;
+            Multiple_ImagesOpen.Visible = false;
+            Multiple_ImagesCancel.Visible = false;
+
+            Multiple_ImagesLB.Items.Clear();
+        }
+
+        private void Multiple_ImagesCancel_Click(object sender, EventArgs e)
+        {
+            Output_ChatText.Visible = true;
+            Input_Chat.Visible = true;
+            Change_Channel.Visible = true;
+            Add_Image.Visible = true;
+
+            Multiple_ImagesLB.Visible = false;
+            Multiple_ImagesOpen.Visible = false;
+
+            Multiple_ImagesLB.Items.Clear();
+        }
+        #endregion
+
         private void Output_ChatCM_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (Output_ChatText.SelectedIndex == -1)
                 e.Cancel = true;
             else
-                switch (client.GetChannelAsync(channel).Result.
-                    GetMessageAsync(messageIds[Output_ChatText.SelectedIndex]).Result.Attachments.Count)
+                switch (MessageUtils.GetMessage(client, messageIds[Output_ChatText.SelectedIndex], channel).
+                    Attachments.Count)
                 {
                     case 0:
                         CMViewImage.Enabled = false;
@@ -302,6 +390,16 @@ namespace hatsune_miku
                         CMViewImage.Text = "View Images";
                         break;
                 }
+        }
+
+        private int lastIndex = -1;
+
+        private void Output_ChatText_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (Output_ChatText.SelectedIndex == lastIndex)
+                Output_ChatText.ClearSelected();
+
+            lastIndex = Output_ChatText.SelectedIndex;
         }
     }
     #endregion
