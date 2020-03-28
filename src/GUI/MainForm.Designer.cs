@@ -222,9 +222,9 @@
             this.Controls.Add(this.ServerChannelList);
             this.Controls.Add(this.Multiple_ImagesLB);
             this.DoubleBuffered = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(931, 586);
             this.Name = "MainForm";
-            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Act As A Discord Bot";
             this.Output_ChatCM.ResumeLayout(false);
