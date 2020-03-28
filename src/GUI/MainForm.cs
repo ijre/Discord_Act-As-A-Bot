@@ -22,6 +22,7 @@ namespace hatsune_miku
         public MainForm()
         {
             InitializeComponent();
+            ServerChannelList.BringToFront();
             Text = $"Hatsune Miku (v{Application.ProductVersion})";
 
             if (!Directory.Exists("./deps/"))
@@ -32,49 +33,6 @@ namespace hatsune_miku
 #endif
 
             TrueStart();
-        }
-
-        private enum FormControlGroups
-        {
-            ShowMain,
-            HideMain
-        }
-
-        private void Hide_Show_Controls(FormControlGroups group)
-        {
-            switch (group)
-            {
-                case FormControlGroups.ShowMain:
-                    Output_ChatText.Visible = true;
-                    Change_Channel.Visible = true;
-                    Clear_Button.Visible = true;
-                    Input_Chat.Visible = true;
-                    Send_Button.Visible = true;
-                    Add_Image.Visible = true;
-
-
-                    ServerChannelList.Visible = false;
-
-                    Multiple_ImagesLB.Visible = false;
-                    Multiple_ImagesOpen.Visible = false;
-                    Multiple_ImagesCancel.Visible = false;
-                    break;
-                case FormControlGroups.HideMain:
-                    Output_ChatText.Visible = false;
-                    Change_Channel.Visible = false;
-                    Clear_Button.Visible = false;
-                    Input_Chat.Visible = false;
-                    Send_Button.Visible = false;
-                    Add_Image.Visible = false;
-
-
-                    ServerChannelList.Visible = true;
-
-                    Multiple_ImagesLB.Visible = true;
-                    Multiple_ImagesOpen.Visible = true;
-                    Multiple_ImagesCancel.Visible = true;
-                    break;
-            }
         }
 
         private readonly DiscordClient client = new DiscordClient(new DiscordConfiguration
@@ -127,7 +85,7 @@ namespace hatsune_miku
                 {
                     channel = ulong.Parse(item2S.Substring(item2S.LastIndexOf("(") + 1, item2S.Length - item2S.LastIndexOf("(") - 2));
 
-                    Hide_Show_Controls(FormControlGroups.ShowMain);
+                    ServerChannelList.Visible = false;
 
                     server = true;
                 }
@@ -207,8 +165,8 @@ namespace hatsune_miku
             process.Start();
             process.BeginOutputReadLine();
 
-            Hide_Show_Controls(FormControlGroups.HideMain);
             ServerChannelList.BringToFront();
+            ServerChannelList.Visible = true;
         }
 
         #region WinFormsEvents
@@ -320,11 +278,14 @@ namespace hatsune_miku
                     }
                 }
 
-                Hide_Show_Controls(FormControlGroups.HideMain);
-
                 Multiple_ImagesLB.BringToFront();
+                Multiple_ImagesLB.Visible = true;
+
                 Multiple_ImagesOpen.BringToFront();
+                Multiple_ImagesOpen.Visible = true;
+
                 Multiple_ImagesCancel.BringToFront();
+                Multiple_ImagesCancel.Visible = true;
             }
         }
 
@@ -360,25 +321,59 @@ namespace hatsune_miku
                 }
             }
 
-            Hide_Show_Controls(FormControlGroups.ShowMain);
+            Multiple_ImagesLB.Visible = false;
+            Multiple_ImagesOpen.Visible = false;
+            Multiple_ImagesCancel.Visible = false;
 
             Multiple_ImagesLB.Items.Clear();
         }
 
         private void Multiple_ImagesCancel_Click(object sender, EventArgs e)
         {
-            Hide_Show_Controls(FormControlGroups.ShowMain);
+            Multiple_ImagesLB.Visible = false;
+            Multiple_ImagesOpen.Visible = false;
+            Multiple_ImagesCancel.Visible = false;
 
             Multiple_ImagesLB.Items.Clear();
         }
         #endregion
 
-        private void CMReact_Click(object sender, EventArgs e)
+        #region ReactionHandling
+        private void CMReactText_KeyDown(object sender, KeyEventArgs e)
         {
-            string oldInput = Input_Chat.Text;
+            if (e.KeyData != Keys.Return)
+                return;
 
-            //MessageBox.Show("Use the input ")
+            CMReactText.Enabled = false;
+
+            try
+            {
+                if (!CMReactText.Text.StartsWith(":") || !CMReactText.Text.EndsWith(":"))
+                {
+                    while (CMReactText.Text.Contains(":"))
+                        CMReactText.Text = CMReactText.Text.Remove(CMReactText.Text.IndexOf(":"), 1);
+
+                    CMReactText.Text = CMReactText.Text.Insert(0, ":") + ":";
+                }
+
+                MessageUtils.GetMessage(client, messageIds[Output_ChatText.SelectedIndex], channel).
+                        CreateReactionAsync(DiscordEmoji.FromName(client, CMReactText.Text));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            CMReactText.Enabled = true;
+            CMReactText.Text = "Input Emoji Here";
         }
+
+        private void CMReactText_Click(object sender, EventArgs e)
+        {
+            if (CMReactText.Text == "Input Emoji Here")
+                CMReactText.Text = "";
+        }
+        #endregion
 
         private void Output_ChatCM_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -416,11 +411,6 @@ namespace hatsune_miku
                 Output_ChatText.ClearSelected();
 
             lastIndex = Output_ChatText.SelectedIndex;
-        }
-
-        private void toolStripTextBox1_Leave(object sender, EventArgs e)
-        {
-            MessageBox.Show("e");
         }
     }
     #endregion
