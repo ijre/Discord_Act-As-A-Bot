@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B4C4B82A-D456-4354-98D4-40C46591ED94}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>hatsune_miku</RootNamespace>
-    <AssemblyName>Hatsune Miku GUI</AssemblyName>
+    <RootNamespace>discord_puppet</RootNamespace>
+    <AssemblyName>Act As A Discord Bot</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -35,10 +35,11 @@
     <NoWarn>4014, 1998</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>hatsune_miku.Program</StartupObject>
+    <StartupObject>discord_puppet.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\bilbobaggins.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Final Build|AnyCPU'">
     <OutputPath>..\Final Build\</OutputPath>
@@ -96,7 +97,6 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
@@ -105,11 +105,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -120,10 +115,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\corrupted pic.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\bilbobaggins.ico" />
+    <None Include="Resources\background.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DSharpPlus">

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace hatsune_miku.utils
+namespace discord_puppet.utils
 {
     public class ExceptionUtils
     {

@@ -1,4 +1,4 @@
-﻿namespace hatsune_miku
+﻿namespace discord_puppet
 {
     partial class IOF
     {

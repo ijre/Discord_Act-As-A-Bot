@@ -57,7 +57,7 @@
     <IncludePath>$(ProjectDir)sd\include;$(ProjectDir)sd\include\deps;$(ProjectDir)sd\deps\include;$(ProjectDir)sd\include\sleepy_discord\IncludeNonexistent;$(IncludePath)</IncludePath>
     <OutDir>../build/deps/</OutDir>
     <IntDir>./intermediates/</IntDir>
-    <TargetName>saknade_vänner</TargetName>
+    <TargetName>server_choose</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>./build/</OutDir>
