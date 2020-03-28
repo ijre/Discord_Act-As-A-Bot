@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B4C4B82A-D456-4354-98D4-40C46591ED94}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>hatsune_miku</RootNamespace>
-    <AssemblyName>Hatsune Miku GUI</AssemblyName>
+    <RootNamespace>discord_puppet</RootNamespace>
+    <AssemblyName>Act As A Discord Bot</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -35,10 +35,10 @@
     <NoWarn>4014, 1998</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>hatsune_miku_bot_display.Program</StartupObject>
+    <StartupObject>discord_puppet.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\bilbobaggins.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\kneedeep.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Final Build|AnyCPU'">
     <OutputPath>..\Final Build\</OutputPath>
@@ -71,7 +71,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PickyCatch.cs" />
     <Compile Include="ImageOpenForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -86,6 +85,13 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="utils\MessageUtils.cs" />
+    <Compile Include="utils\ExceptionUtils.cs" />
     <EmbeddedResource Include="ImageOpenForm.resx">
       <DependentUpon>ImageOpenForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -97,15 +103,13 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -116,15 +120,15 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\corrupted pic.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\bilbobaggins.ico" />
+    <None Include="Resources\background.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DSharpPlus">
       <Version>3.2.3</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\kneedeep.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

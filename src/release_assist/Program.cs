@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
 
-namespace hatsune_release_assist
+namespace release_assist
 {
     class Program
     {
@@ -32,7 +32,7 @@ namespace hatsune_release_assist
             }
             finally
             {
-                Process.GetProcessesByName("hatsune_release-assist")[0].Kill();
+                Process.GetProcessesByName("release-assist")[0].Kill();
             }
         }
     }

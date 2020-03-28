@@ -1,7 +1,12 @@
 .vs
-intermediates
 build
+intermediates
+obj
 *.vcxproj.*
+*.user
+.editorconfig
+*.DotSettings
+
 SD
 id*.txt
-Final Build
+Final Build*
