@@ -9,9 +9,9 @@ using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 
-using hatsune_miku.utils;
+using discord_puppet.utils;
 
-namespace hatsune_miku
+namespace discord_puppet
 {
     public partial class MainForm : Form
     {
@@ -23,7 +23,7 @@ namespace hatsune_miku
         {
             InitializeComponent();
             ServerChannelList.BringToFront();
-            Text = $"Hatsune Miku (v{Application.ProductVersion})";
+            Text = $"Act As A Discord Bot (v{Application.ProductVersion})";
 
             if (!Directory.Exists("./deps/"))
 #if !_DEBUG
@@ -146,7 +146,7 @@ namespace hatsune_miku
                 StartInfo =
                 {
                     UseShellExecute = false,
-                    FileName = "./deps/saknade_vänner.exe",
+                    FileName = "./deps/server_choose.exe",
                     RedirectStandardOutput = true,
                     CreateNoWindow = true
                 }

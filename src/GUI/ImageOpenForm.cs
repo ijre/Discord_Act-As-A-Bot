@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 
-namespace hatsune_miku
+namespace discord_puppet
 {
     public partial class IOF : Form
     {

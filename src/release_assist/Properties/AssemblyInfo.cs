@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Les informations générales relatives à un assembly dépendent de
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("hatsune_release-assist")]
+[assembly: AssemblyTitle("release-assist")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("@ijre")]
-[assembly: AssemblyProduct("hatsune_release-assist")]
+[assembly: AssemblyProduct("release-assist")]
 [assembly: AssemblyCopyright("Copyright © Paige Seivertson 2019-2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using DSharpPlus;
 using DSharpPlus.Entities;
 
-namespace hatsune_miku.utils
+namespace discord_puppet.utils
 {
     public class MessageUtils
     {

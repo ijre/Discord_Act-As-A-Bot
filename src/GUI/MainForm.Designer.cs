@@ -1,4 +1,4 @@
-﻿namespace hatsune_miku
+﻿namespace discord_puppet
 {
     partial class MainForm
     {
@@ -33,17 +33,17 @@
             this.Output_ChatCM = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.CMViewImage = new System.Windows.Forms.ToolStripMenuItem();
             this.CMReact = new System.Windows.Forms.ToolStripMenuItem();
-            this.ServerChannelList = new System.Windows.Forms.ListBox();
+            this.CMReactText = new System.Windows.Forms.ToolStripTextBox();
             this.Change_Channel = new System.Windows.Forms.Button();
             this.Add_Image = new System.Windows.Forms.Button();
             this.Send_Button = new System.Windows.Forms.Button();
             this.Clear_Button = new System.Windows.Forms.Button();
             this.Input_Chat = new System.Windows.Forms.TextBox();
             this.Output_ChatText = new System.Windows.Forms.ListBox();
-            this.Multiple_ImagesLB = new System.Windows.Forms.ListBox();
             this.Multiple_ImagesOpen = new System.Windows.Forms.Button();
             this.Multiple_ImagesCancel = new System.Windows.Forms.Button();
-            this.CMReactText = new System.Windows.Forms.ToolStripTextBox();
+            this.Multiple_ImagesLB = new System.Windows.Forms.ListBox();
+            this.ServerChannelList = new System.Windows.Forms.ListBox();
             this.Output_ChatCM.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,13 +53,13 @@
             this.CMViewImage,
             this.CMReact});
             this.Output_ChatCM.Name = "Output_ChatCM";
-            this.Output_ChatCM.Size = new System.Drawing.Size(181, 70);
+            this.Output_ChatCM.Size = new System.Drawing.Size(136, 48);
             this.Output_ChatCM.Opening += new System.ComponentModel.CancelEventHandler(this.Output_ChatCM_Opening);
             // 
             // CMViewImage
             // 
             this.CMViewImage.Name = "CMViewImage";
-            this.CMViewImage.Size = new System.Drawing.Size(180, 22);
+            this.CMViewImage.Size = new System.Drawing.Size(135, 22);
             this.CMViewImage.Text = "View Image";
             this.CMViewImage.Click += new System.EventHandler(this.CMViewImage_Click);
             // 
@@ -68,22 +68,18 @@
             this.CMReact.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.CMReactText});
             this.CMReact.Name = "CMReact";
-            this.CMReact.Size = new System.Drawing.Size(180, 22);
+            this.CMReact.Size = new System.Drawing.Size(135, 22);
             this.CMReact.Text = "React";
             // 
-            // ServerChannelList
+            // CMReactText
             // 
-            this.ServerChannelList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ServerChannelList.BackColor = System.Drawing.SystemColors.GrayText;
-            this.ServerChannelList.ForeColor = System.Drawing.Color.White;
-            this.ServerChannelList.FormattingEnabled = true;
-            this.ServerChannelList.HorizontalScrollbar = true;
-            this.ServerChannelList.Location = new System.Drawing.Point(0, 0);
-            this.ServerChannelList.Name = "ServerChannelList";
-            this.ServerChannelList.Size = new System.Drawing.Size(915, 550);
-            this.ServerChannelList.TabIndex = 0;
+            this.CMReactText.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.CMReactText.Name = "CMReactText";
+            this.CMReactText.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.CMReactText.Size = new System.Drawing.Size(100, 23);
+            this.CMReactText.Text = "Input Emoji Here";
+            this.CMReactText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CMReactText_KeyDown);
+            this.CMReactText.Click += new System.EventHandler(this.CMReactText_Click);
             // 
             // Change_Channel
             // 
@@ -157,17 +153,6 @@
             this.Output_ChatText.TabIndex = 19;
             this.Output_ChatText.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Output_ChatText_MouseClick);
             // 
-            // Multiple_ImagesLB
-            // 
-            this.Multiple_ImagesLB.FormattingEnabled = true;
-            this.Multiple_ImagesLB.Location = new System.Drawing.Point(0, 0);
-            this.Multiple_ImagesLB.Name = "Multiple_ImagesLB";
-            this.Multiple_ImagesLB.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.Multiple_ImagesLB.Size = new System.Drawing.Size(915, 550);
-            this.Multiple_ImagesLB.TabIndex = 20;
-            this.Multiple_ImagesLB.TabStop = false;
-            this.Multiple_ImagesLB.Visible = false;
-            // 
             // Multiple_ImagesOpen
             // 
             this.Multiple_ImagesOpen.BackColor = System.Drawing.SystemColors.Window;
@@ -192,15 +177,30 @@
             this.Multiple_ImagesCancel.Visible = false;
             this.Multiple_ImagesCancel.Click += new System.EventHandler(this.Multiple_ImagesCancel_Click);
             // 
-            // CMReactText
+            // Multiple_ImagesLB
             // 
-            this.CMReactText.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.CMReactText.Name = "CMReactText";
-            this.CMReactText.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.CMReactText.Size = new System.Drawing.Size(100, 23);
-            this.CMReactText.Text = "Input Emoji Here";
-            this.CMReactText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CMReactText_KeyDown);
-            this.CMReactText.Click += new System.EventHandler(this.CMReactText_Click);
+            this.Multiple_ImagesLB.FormattingEnabled = true;
+            this.Multiple_ImagesLB.Location = new System.Drawing.Point(0, 0);
+            this.Multiple_ImagesLB.Name = "Multiple_ImagesLB";
+            this.Multiple_ImagesLB.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.Multiple_ImagesLB.Size = new System.Drawing.Size(915, 550);
+            this.Multiple_ImagesLB.TabIndex = 20;
+            this.Multiple_ImagesLB.TabStop = false;
+            this.Multiple_ImagesLB.Visible = false;
+            // 
+            // ServerChannelList
+            // 
+            this.ServerChannelList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ServerChannelList.BackColor = System.Drawing.SystemColors.GrayText;
+            this.ServerChannelList.ForeColor = System.Drawing.Color.White;
+            this.ServerChannelList.FormattingEnabled = true;
+            this.ServerChannelList.HorizontalScrollbar = true;
+            this.ServerChannelList.Location = new System.Drawing.Point(0, 0);
+            this.ServerChannelList.Name = "ServerChannelList";
+            this.ServerChannelList.Size = new System.Drawing.Size(915, 550);
+            this.ServerChannelList.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -222,11 +222,11 @@
             this.Controls.Add(this.ServerChannelList);
             this.Controls.Add(this.Multiple_ImagesLB);
             this.DoubleBuffered = true;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(931, 586);
             this.Name = "MainForm";
+            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Hatsune Miku";
+            this.Text = "Act As A Discord Bot";
             this.Output_ChatCM.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -237,17 +237,17 @@
         private System.Windows.Forms.ContextMenuStrip Output_ChatCM;
         private System.Windows.Forms.ToolStripMenuItem CMViewImage;
         private System.Windows.Forms.ToolStripMenuItem CMReact;
-        private System.Windows.Forms.ListBox ServerChannelList;
         private System.Windows.Forms.Button Change_Channel;
         private System.Windows.Forms.Button Add_Image;
         private System.Windows.Forms.Button Send_Button;
         private System.Windows.Forms.Button Clear_Button;
         private System.Windows.Forms.TextBox Input_Chat;
         private System.Windows.Forms.ListBox Output_ChatText;
-        private System.Windows.Forms.ListBox Multiple_ImagesLB;
         private System.Windows.Forms.Button Multiple_ImagesOpen;
         private System.Windows.Forms.Button Multiple_ImagesCancel;
         private System.Windows.Forms.ToolStripTextBox CMReactText;
+        private System.Windows.Forms.ListBox Multiple_ImagesLB;
+        private System.Windows.Forms.ListBox ServerChannelList;
     }
 }
 
