@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace hatsune_miku.Properties {
+namespace discord_puppet.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace hatsune_miku.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("hatsune_miku.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("discord_puppet.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,22 +61,22 @@ namespace hatsune_miku.Properties {
         }
         
         /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Icon bilbobaggins {
+        internal static System.Drawing.Bitmap background {
             get {
-                object obj = ResourceManager.GetObject("bilbobaggins", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
+                object obj = ResourceManager.GetObject("background", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
         /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
         /// </summary>
-        internal static System.Drawing.Bitmap corrupted_pic {
+        internal static System.Drawing.Icon kneedeep {
             get {
-                object obj = ResourceManager.GetObject("corrupted_pic", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                object obj = ResourceManager.GetObject("kneedeep", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
     }

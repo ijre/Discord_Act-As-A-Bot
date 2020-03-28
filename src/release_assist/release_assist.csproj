@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{80D06FD1-B592-4B00-8CC6-DE4C976FCB52}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>hatsune_release_assist</RootNamespace>
-    <AssemblyName>hatsune_release-assist</AssemblyName>
+    <RootNamespace>release_assist</RootNamespace>
+    <AssemblyName>release-assist</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,7 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>hatsune_release_assist.Program</StartupObject>
+    <StartupObject>release_assist.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Final Build|AnyCPU'">
     <OutputPath>build\</OutputPath>

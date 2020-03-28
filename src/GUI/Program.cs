@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace hatsune_miku_bot_display
+namespace discord_puppet
 {
     static class Program
     {

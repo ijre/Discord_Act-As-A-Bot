@@ -1,32 +1,29 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
-using System.IO;
 using System.Windows.Forms;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 
-using static PickyCatch;
-using IOF;
+using discord_puppet.utils;
 
-namespace hatsune_miku_bot_display
+namespace discord_puppet
 {
     public partial class MainForm : Form
     {
-        private ulong channel = 0;
-        private ulong guild = 0;
-        private readonly string messages = "./deps/messages/";
-        private readonly string[] file = new string[2] { "", "" };
-        // index 0 is used for sending files, index 1 is used to store the message being reacted to
+        private ulong channel;
+        private ulong guild;
+        private string file = "";
 
         public MainForm()
         {
             InitializeComponent();
-            Text = $"Hatsune Miku (v{Application.ProductVersion})";
             ServerChannelList.BringToFront();
+            Text = $"Act As A Discord Bot (v{Application.ProductVersion})";
 
             if (!Directory.Exists("./deps/"))
 #if !_DEBUG
@@ -38,164 +35,34 @@ namespace hatsune_miku_bot_display
             TrueStart();
         }
 
-        private async Task<int> TrueStart()
+        private readonly DiscordClient client = new DiscordClient(new DiscordConfiguration
         {
-            DiscordClient client = new DiscordClient(new DiscordConfiguration
-            {
 #if !_DEBUG
-                Token = File.ReadAllText("./deps/id.txt")
+            Token = File.ReadAllText("./deps/id.txt")
 #else
-                Token = File.ReadAllText("../deps/id.txt")
+            Token = File.ReadAllText("../deps/id.txt")
 #endif
-            });
+        });
 
+        private async Task TrueStart()
+        {
             await client.ConnectAsync();
             await client.InitializeAsync();
 
             client.Ready += OnReady;
             client.MessageCreated += OnMessage;
 
-            #region WinFormsClientAsyncEvents
-            Send_Button.Click += async (sender, e) =>
-            {
-                var guildObj = await client.GetGuildAsync(guild);
-
-                if (!string.IsNullOrWhiteSpace(file[0]))
-                {
-                    using FileStream fstream = new FileStream(file[0], FileMode.Open);
-
-                    await guildObj.GetChannel(channel).SendFileAsync(fstream, Input_Chat.Text);
-
-                    file[0] = "";
-                    Add_Image.Text = "Add Image/File";
-                }
-                else
-                    await client.SendMessageAsync(guildObj.GetChannel(channel), Input_Chat.Text);
-
-                Input_Chat.Text = "";
-            };
-
-            React.Click += (sender, e) =>
-            {
-                Cancel_React.Visible = true;
-
-                if (React.Text.Contains("React to"))
-                {
-                    React.Text = "Would you like to use an ID to specify which message, or pick one from the recent messages?";
-                    ID_B.Visible = true;
-                    Recent_Message_B.Visible = true;
-                }
-            };
-
-            Cancel_React.Click += (sender2, eve) =>
-            {
-                file[1] = "";
-
-                Cancel_React.Visible = false;
-
-                ID_B.Visible = false;
-                ID_TB.Visible = false;
-                Recent_Message_B.Visible = false;
-
-                ReactText.Visible = false;
-                React_Confirm.Visible = false;
-                React.Text = "React to a message";
-                ReactText.Text = "Type in your reaction here.";
-                ID_TB.Text = "Type in your message ID here.";
-                return;
-            };
-
-
-            ID_B.Click += (bender, ee) =>
-            {
-                ID_TB.Visible = true;
-                ID_B.Visible = false;
-                Recent_Message_B.Visible = false;
-                React_Confirm.Visible = true;
-                React.Text = "Enter the ID in the box below.";
-            };
-
-            Recent_Message_B.Click += (zender, eee) =>
-            {
-                if (Directory.Exists(Application.StartupPath + "\\deps\\" + "messages"))
-                    file[1] = Application.StartupPath + "\\deps\\" + "messages";
-                else
-                    file[1] = Application.StartupPath + "\\deps\\";
-
-                using (OpenFileDialog diag = new OpenFileDialog
-                {
-                    DefaultExt = "txt",
-                    Filter = "(*.txt) | *.txt",
-                    InitialDirectory = file[1],
-                    Title = "Choose which message you would like to react to"
-                })
-                {
-                    diag.ShowDialog();
-
-                    if (!string.IsNullOrEmpty(diag.FileName))
-                    {
-                        file[1] = diag.FileName;
-
-                        React.Text = "Now, enter the name of your chosen emoji in the box below.";
-                        ReactText.Visible = true;
-                        React_Confirm.Visible = true;
-                        ID_B.Visible = false;
-                        Recent_Message_B.Visible = false;
-                    }
-                };
-            };
-
-            React_Confirm.Click += async (sender, e) =>
-            {
-                DiscordChannel chan = await client.GetChannelAsync(channel);
-                DiscordMessage mess;
-
-                if (React.Text.StartsWith("Enter"))
-                {
-                    ReactText.Visible = true;
-                    ID_B.Visible = false;
-                    Recent_Message_B.Visible = false;
-
-                    ID_TB.Visible = false;
-                    ReactText.Visible = true;
-                    React.Text = "Now, enter the name of your chosen emoji in the box below.";
-                    return;
-                }
-                else if (React.Text.StartsWith("Now"))
-                {
-                    if (String.IsNullOrWhiteSpace(file[1]))
-                        mess = await chan.GetMessageAsync(ulong.Parse(ID_TB.Text));
-                    else
-                        mess = await chan.GetMessageAsync(ulong.Parse(File.ReadAllText(file[1])));
-
-                    if (!ReactText.Text.Contains(":"))
-                    {
-                        ReactText.Text = ReactText.Text.Insert(0, ":");
-                        ReactText.Text = ReactText.Text.Insert(ReactText.Text.Length, ":");
-                    }
-
-                    mess.CreateReactionAsync(DiscordEmoji.FromName(client, ReactText.Text));
-                }
-
-                ReactText.Visible = false;
-                React_Confirm.Visible = false;
-                Cancel_React.Visible = false;
-                React.Text = "React to a message";
-                ReactText.Text = "Type in your reaction here.";
-                ID_TB.Text = "Type in your message ID here.";
-            };
-
             bool server = true;
             ServerChannelList.DoubleClick += async (object sender, EventArgs e) =>
             {
-                string item2S = "";
+                string item2S;
                 try
                 {
                     item2S = ServerChannelList.SelectedItem.ToString();
                 }
                 catch (Exception ex)
                 {
-                    MessageBoxIgnoreException(new NullReferenceException(), ex, "Fatal Error");
+                    ExceptionUtils.IgnoreSpecificException(new NullReferenceException(), ex, true, "Fatal Error");
                     return;
                 }
 
@@ -204,10 +71,12 @@ namespace hatsune_miku_bot_display
                     var chosenGuild = await client.GetGuildAsync(ulong.Parse(item2S.Substring(item2S.LastIndexOf("(") + 1, item2S.Length - item2S.LastIndexOf("(") - 2)));
                     IEnumerable<DiscordChannel> channels = from value in await chosenGuild.GetChannelsAsync()
                                                            select value;
+                    DiscordChannel[] chanArray = channels.ToArray();
 
                     ServerChannelList.Items.Clear();
-                    for (int i = 0; i < channels.ToArray().Length; i++)
-                        ServerChannelList.Items.Add($"{channels.ToArray()[i].Name} ({channels.ToArray()[i].Id})");
+                    for (int i = 0; i < chanArray.Length; i++)
+                        if (chanArray[i].Type == ChannelType.Text)
+                            ServerChannelList.Items.Add($"{chanArray[i].Name} ({chanArray[i].Id})");
 
                     guild = chosenGuild.Id;
                     server = false;
@@ -218,71 +87,35 @@ namespace hatsune_miku_bot_display
 
                     ServerChannelList.Visible = false;
 
-                    Output_Chat.Visible = true;
-                    Input_Chat.Visible = true;
-                    Change_Channel.Visible = true;
-                    ViewImageButton.Visible = true;
-                    Add_Image.Visible = true;
-
                     server = true;
                 }
             };
-            #endregion
-
-            return 0;
         }
+
+        private readonly ulong[] messageIds = new ulong[500];
 
         #region DiscordEvents
         private async Task<int> OnMessage(MessageCreateEventArgs e)
         {
-            var message = e.Message;
-
-            if (message.Channel.Id != channel)
+            if (e.Message.Channel.Id != channel)
                 return 1;
 
-            if (message.Attachments.Count == 0)
-                Output_Chat.AppendText(message.Author.Username + "#" + message.Author.Discriminator + ": " + message.Content + "\r\n");
-            else if (message.Attachments.Count == 1)
-                Output_Chat.AppendText(message.Author.Username + "#" + message.Author.Discriminator + ": " + message.Content + "(IMAGE ATTACHED)\r\n");
-            else
-                Output_Chat.AppendText(message.Author.Username + "#" + message.Author.Discriminator + ": " + message.Content + "(MULTIPLE IMAGES ATTACHED)\r\n");
+            var message = e.Message;
 
-            if (!Directory.Exists(messages))
+            switch (message.Attachments.Count)
             {
-                Directory.CreateDirectory(messages);
-                File.WriteAllText(messages + "CHOOSE WHICH MESSAGE YOU WOULD LIKE TO REACT TO.txt", "");
-
-                Directory.CreateDirectory(messages + "images");
+                case 0:
+                    Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content}");
+                    break;
+                case 1:
+                    Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (IMAGE ATTACHED)");
+                    break;
+                default:
+                    Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (MULTIPLE IMAGES ATTACHED)");
+                    break;
             }
 
-            char[] fileNameCheck = new char[] { '\\', '/', ':', '*', '?', '\"', '<', '>', '|', '\n', '\r' };
-            string[] replacement = new string[] { "[back slash]", "[forward slash]", "[colon]", "[asterisk]", "[question mark]", "''", "[less than]", "[greater than]", "[vertical line]", " ", " " };
-
-            string newMessage = message.Content;
-
-            if (newMessage.IndexOfAny(fileNameCheck) != -1)
-                for (int i = 0; i < newMessage.Length; i++)
-                    for (int i2 = 0; i2 < fileNameCheck.Length; i2++)
-                        if (newMessage[i] == fileNameCheck[i2])
-                        {
-                            newMessage = newMessage.Remove(i, 1);
-                            newMessage = newMessage.Insert(i, replacement[i2]);
-                        }
-
-            if (newMessage.Length > 170)
-                newMessage = newMessage.Substring(0, 171 - (message.Author.Username + " said ").Length);
-
-            File.WriteAllText(messages + message.Author.Username + " said " + newMessage + ".txt", message.Id.ToString());
-
-            if (message.Attachments.Count == 1 && message.Attachments[0].Width != 0)
-                File.WriteAllText(messages + "images/" + message.Author.Username + (String.IsNullOrWhiteSpace(newMessage) ? " at " + message.Timestamp.Hour + " " + message.Timestamp.Minute + ", file name = " + message.Attachments[0].FileName : " said " + newMessage) + ".txt", message.Attachments[0].Url);
-            else if (message.Attachments.Count > 1)
-                for (int i = 0; i < message.Attachments.Count; i++)
-                {
-                    if (message.Attachments[i].Width == 0)
-                        continue;
-                    File.WriteAllText(messages + "images/" + message.Author.Username + " at " + message.Timestamp.Hour + " " + message.Timestamp.Minute + ", file name = " + message.Attachments[i].FileName + ".txt", message.Attachments[i].Url);
-                }
+            messageIds[Output_ChatText.Items.Count - 1] = message.Id;
 
             return 0;
         }
@@ -307,15 +140,13 @@ namespace hatsune_miku_bot_display
 
         private void SelectServer_or_Channel()
         {
-            // two different functions use this same program starting sequence, this makes it easier to make changes
-
             using Process process = new Process()
             {
                 EnableRaisingEvents = true,
                 StartInfo =
                 {
                     UseShellExecute = false,
-                    FileName = "./deps/saknade_vänner.exe",
+                    FileName = "./deps/server_choose.exe",
                     RedirectStandardOutput = true,
                     CreateNoWindow = true
                 }
@@ -328,27 +159,20 @@ namespace hatsune_miku_bot_display
                 }
                 catch (Exception ex)
                 {
-                    MessageBoxIgnoreException(new ArgumentNullException(), ex);
+                    ExceptionUtils.IgnoreSpecificException(new ArgumentNullException(), ex);
                 }
             };
             process.Start();
             process.BeginOutputReadLine();
-
-            Output_Chat.Visible = false;
-            Input_Chat.Visible = false;
-            Change_Channel.Visible = false;
-            ViewImageButton.Visible = false;
-            Add_Image.Visible = false;
 
             ServerChannelList.BringToFront();
             ServerChannelList.Visible = true;
         }
 
         #region WinFormsEvents
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private void Clear_Button_Click(object sender, EventArgs e)
         {
-            if (Directory.Exists(messages))
-                Directory.Delete(messages, true);
+            Output_ChatText.Items.Clear();
         }
 
         private void Change_Channel_Click(object sender, EventArgs e)
@@ -357,18 +181,15 @@ namespace hatsune_miku_bot_display
 
 #if !_DEBUG
             if (MessageBox.Show("Would you like to clear the chat?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                Output_Chat.Text = "";
+                Output_ChatText.Items.Clear();
 #endif
-
-            if (Directory.Exists(messages))
-                Directory.Delete(messages, true);
         }
 
         private void Add_Image_Click(object sender, EventArgs e)
         {
             if (Add_Image.Text.Contains("Remove"))
             {
-                file[0] = "";
+                file = "";
                 Add_Image.Text = "Add Image/File";
                 return;
             }
@@ -381,53 +202,216 @@ namespace hatsune_miku_bot_display
 
             if (!string.IsNullOrWhiteSpace(diag.FileName))
             {
-                file[0] = diag.FileName;
+                file = diag.FileName;
                 Add_Image.Text = "Remove Image/File";
             }
         }
 
-        private void ReactText_Enter(object sender, EventArgs e)
+        #region SendMessageHandling
+        private async Task SendMessage()
         {
-            if (ReactText.Text == "Type in your reaction here.")
-                ReactText.Text = "";
-        }
-
-        private void Clear_Button_Click(object sender, EventArgs e)
-        {
-            Output_Chat.Text = "";
-        }
-
-        private void ID_TB_Enter(object sender, EventArgs e)
-        {
-            if (ID_TB.Text == "Type in your message ID here.")
-                ID_TB.Text = "";
-        }
-
-        private void ViewImageButton_Click(object sender, EventArgs e)
-        {
-            var box = MessageBox.Show("Would you like to open the image in your browser?\n(Saying no will open it in a separate window)", "Where would you like to open the image?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-
-            if (box == DialogResult.No)
+            if (string.IsNullOrWhiteSpace(Input_Chat.Text) && string.IsNullOrWhiteSpace(file))
             {
-                ImageOpenForm IOF = new ImageOpenForm();
-
-                IOF.Show();
+                MessageBox.Show("Message cannot be empty.", "Empty Message Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-            else if (box == DialogResult.Yes)
+
+            var guildObj = await client.GetGuildAsync(guild);
+
+            if (!string.IsNullOrWhiteSpace(file))
             {
-                using OpenFileDialog diag = new OpenFileDialog
-                {
-                    DefaultExt = "txt",
-                    Filter = "(*.txt) | *.txt",
-                    InitialDirectory = Application.StartupPath + "\\deps\\messages\\images",
-                    Title = "Choose which image you would like to view"
-                };
-                diag.ShowDialog();
+                using FileStream fstream = new FileStream(file, FileMode.Open);
 
-                if (!String.IsNullOrEmpty(diag.FileName))
-                    Process.Start(File.ReadAllText(diag.FileName));
+                await guildObj.GetChannel(channel).SendFileAsync(fstream, Input_Chat.Text);
+
+                file = "";
+                Add_Image.Text = "Add Image/File";
             }
+            else
+                await client.SendMessageAsync(guildObj.GetChannel(channel), Input_Chat.Text);
+
+            Input_Chat.Text = "";
+        }
+
+        private void Input_Chat_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Return)
+                SendMessage();
+        }
+
+        private void Send_Button_Click(object sender, EventArgs e)
+        {
+            SendMessage();
         }
         #endregion
+
+        #region ViewImageHandling
+        private void CMViewImage_Click(object sender, EventArgs e)
+        {
+            var message = MessageUtils.GetMessage(client, messageIds[Output_ChatText.SelectedIndex], channel);
+
+            if (message.Attachments.Count == 1)
+            {
+                IOF iof = new IOF(message.Attachments[0].Url);
+                iof.Show();
+            }
+            else
+            {
+                MessageBox.Show("Selected message has more than one attachment. Please select which attachments you would like to open.", "Multi-image message",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                for (int i = 0; i < message.Attachments.Count; i++)
+                {
+                    switch (i + 1)
+                    {
+                        case 1:
+                            Multiple_ImagesLB.Items.Add($"1st file ({message.Attachments[i].FileName})");
+                            break;
+                        case 2:
+                            Multiple_ImagesLB.Items.Add($"2nd file ({message.Attachments[i].FileName})");
+                            break;
+                        case 3:
+                            Multiple_ImagesLB.Items.Add($"3rd file ({message.Attachments[i].FileName})");
+                            break;
+                        default:
+                            Multiple_ImagesLB.Items.Add($"{i}th file ({message.Attachments[i].FileName})");
+                            break;
+                    }
+                }
+
+                Multiple_ImagesLB.BringToFront();
+                Multiple_ImagesLB.Visible = true;
+
+                Multiple_ImagesOpen.BringToFront();
+                Multiple_ImagesOpen.Visible = true;
+
+                Multiple_ImagesCancel.BringToFront();
+                Multiple_ImagesCancel.Visible = true;
+            }
+        }
+
+        private void Multiple_ImagesOpen_Click(object sender, EventArgs e)
+        {
+            bool allowFiles = false;
+            bool allowFilesAnswered = false;
+
+            for (int i = 0; i < Multiple_ImagesLB.SelectedIndices.Count; i++)
+            {
+                var attachment = MessageUtils.GetMessage(client, messageIds[Output_ChatText.SelectedIndex], channel).Attachments[Multiple_ImagesLB.SelectedIndices[i]];
+
+                // width == 0 means it's not an image
+                if (attachment.Width != 0)
+                {
+                    IOF iof = new IOF(attachment.Url);
+                    iof.Show();
+                }
+                else
+                {
+                    if (!allowFilesAnswered)
+                        if (MessageBox.Show(
+                                "One or more of the selected files is not an image.\n" +
+                                "Downloading/Viewing these files requires opening your browser; would you still like to open these files?", "Non-image in selection", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                            == DialogResult.Yes)
+                        {
+                            allowFiles = true;
+                            allowFilesAnswered = true;
+                        }
+
+                    if (allowFiles)
+                        Process.Start(attachment.Url);
+                }
+            }
+
+            Multiple_ImagesLB.Visible = false;
+            Multiple_ImagesOpen.Visible = false;
+            Multiple_ImagesCancel.Visible = false;
+
+            Multiple_ImagesLB.Items.Clear();
+        }
+
+        private void Multiple_ImagesCancel_Click(object sender, EventArgs e)
+        {
+            Multiple_ImagesLB.Visible = false;
+            Multiple_ImagesOpen.Visible = false;
+            Multiple_ImagesCancel.Visible = false;
+
+            Multiple_ImagesLB.Items.Clear();
+        }
+        #endregion
+
+        #region ReactionHandling
+        private void CMReactText_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData != Keys.Return)
+                return;
+
+            CMReactText.Enabled = false;
+
+            try
+            {
+                if (!CMReactText.Text.StartsWith(":") || !CMReactText.Text.EndsWith(":"))
+                {
+                    while (CMReactText.Text.Contains(":"))
+                        CMReactText.Text = CMReactText.Text.Remove(CMReactText.Text.IndexOf(":"), 1);
+
+                    CMReactText.Text = CMReactText.Text.Insert(0, ":") + ":";
+                }
+
+                MessageUtils.GetMessage(client, messageIds[Output_ChatText.SelectedIndex], channel).
+                        CreateReactionAsync(DiscordEmoji.FromName(client, CMReactText.Text));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            CMReactText.Enabled = true;
+            CMReactText.Text = "Input Emoji Here";
+        }
+
+        private void CMReactText_Click(object sender, EventArgs e)
+        {
+            if (CMReactText.Text == "Input Emoji Here")
+                CMReactText.Text = "";
+        }
+        #endregion
+
+        private void Output_ChatCM_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (Output_ChatText.SelectedIndex == -1)
+            {
+                CMReact.Enabled = false;
+                CMViewImage.Enabled = false;
+            }
+            else
+            {
+                switch (MessageUtils.GetMessage(client, messageIds[Output_ChatText.SelectedIndex], channel).
+                    Attachments.Count)
+                {
+                    case 0:
+                        CMViewImage.Enabled = false;
+                        break;
+                    case 1:
+                        CMViewImage.Enabled = true;
+                        CMViewImage.Text = "View Image";
+                        break;
+                    default:
+                        CMViewImage.Enabled = true;
+                        CMViewImage.Text = "View Images";
+                        break;
+                }
+                CMReact.Enabled = true;
+            }
+        }
+
+        private int lastIndex = -1;
+
+        private void Output_ChatText_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (Output_ChatText.SelectedIndex == lastIndex)
+                Output_ChatText.ClearSelected();
+
+            lastIndex = Output_ChatText.SelectedIndex;
+        }
     }
+    #endregion
 }
