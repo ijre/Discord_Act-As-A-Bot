@@ -23,7 +23,6 @@ namespace hatsune_miku
         {
             InitializeComponent();
             Text = $"Hatsune Miku (v{Application.ProductVersion})";
-            ServerChannelList.BringToFront();
 
             if (!Directory.Exists("./deps/"))
 #if !_DEBUG
@@ -33,6 +32,49 @@ namespace hatsune_miku
 #endif
 
             TrueStart();
+        }
+
+        private enum FormControlGroups
+        {
+            ShowMain,
+            HideMain
+        }
+
+        private void Hide_Show_Controls(FormControlGroups group)
+        {
+            switch (group)
+            {
+                case FormControlGroups.ShowMain:
+                    Output_ChatText.Visible = true;
+                    Change_Channel.Visible = true;
+                    Clear_Button.Visible = true;
+                    Input_Chat.Visible = true;
+                    Send_Button.Visible = true;
+                    Add_Image.Visible = true;
+
+
+                    ServerChannelList.Visible = false;
+
+                    Multiple_ImagesLB.Visible = false;
+                    Multiple_ImagesOpen.Visible = false;
+                    Multiple_ImagesCancel.Visible = false;
+                    break;
+                case FormControlGroups.HideMain:
+                    Output_ChatText.Visible = false;
+                    Change_Channel.Visible = false;
+                    Clear_Button.Visible = false;
+                    Input_Chat.Visible = false;
+                    Send_Button.Visible = false;
+                    Add_Image.Visible = false;
+
+
+                    ServerChannelList.Visible = true;
+
+                    Multiple_ImagesLB.Visible = true;
+                    Multiple_ImagesOpen.Visible = true;
+                    Multiple_ImagesCancel.Visible = true;
+                    break;
+            }
         }
 
         private readonly DiscordClient client = new DiscordClient(new DiscordConfiguration
@@ -85,12 +127,7 @@ namespace hatsune_miku
                 {
                     channel = ulong.Parse(item2S.Substring(item2S.LastIndexOf("(") + 1, item2S.Length - item2S.LastIndexOf("(") - 2));
 
-                    ServerChannelList.Visible = false;
-
-                    Output_ChatText.Visible = true;
-                    Input_Chat.Visible = true;
-                    Change_Channel.Visible = true;
-                    Add_Image.Visible = true;
+                    Hide_Show_Controls(FormControlGroups.ShowMain);
 
                     server = true;
                 }
@@ -170,13 +207,8 @@ namespace hatsune_miku
             process.Start();
             process.BeginOutputReadLine();
 
-            Output_ChatText.Visible = false;
-            Input_Chat.Visible = false;
-            Change_Channel.Visible = false;
-            Add_Image.Visible = false;
-
+            Hide_Show_Controls(FormControlGroups.HideMain);
             ServerChannelList.BringToFront();
-            ServerChannelList.Visible = true;
         }
 
         #region WinFormsEvents
@@ -256,10 +288,6 @@ namespace hatsune_miku
         #endregion
 
         #region ViewImageHandling
-
-        private readonly string[] urls = new string[10];
-        // max attachments allowed is 10
-
         private void CMViewImage_Click(object sender, EventArgs e)
         {
             var message = MessageUtils.GetMessage(client, messageIds[Output_ChatText.SelectedIndex], channel);
@@ -273,40 +301,30 @@ namespace hatsune_miku
             {
                 MessageBox.Show("Selected message has more than one attachment. Please select which attachments you would like to open.", "Multi-image message",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-                for (int i = 1; i <= message.Attachments.Count; i++)
+                for (int i = 0; i < message.Attachments.Count; i++)
                 {
-                    switch (i)
+                    switch (i + 1)
                     {
                         case 1:
-                            Multiple_ImagesLB.Items.Add($"1st file ({message.Attachments[i - 1].FileName})");
+                            Multiple_ImagesLB.Items.Add($"1st file ({message.Attachments[i].FileName})");
                             break;
                         case 2:
-                            Multiple_ImagesLB.Items.Add($"2nd file ({message.Attachments[i - 1].FileName})");
+                            Multiple_ImagesLB.Items.Add($"2nd file ({message.Attachments[i].FileName})");
                             break;
                         case 3:
-                            Multiple_ImagesLB.Items.Add($"3rd file ({message.Attachments[i - 1].FileName})");
+                            Multiple_ImagesLB.Items.Add($"3rd file ({message.Attachments[i].FileName})");
                             break;
                         default:
-                            Multiple_ImagesLB.Items.Add($"{i}th file ({message.Attachments[i - 1].FileName})");
+                            Multiple_ImagesLB.Items.Add($"{i}th file ({message.Attachments[i].FileName})");
                             break;
                     }
-
-                    urls[i - 1] = message.Attachments[i - 1].Url;
                 }
 
-                Output_ChatText.Visible = false;
-                Input_Chat.Visible = false;
-                Change_Channel.Visible = false;
-                Add_Image.Visible = false;
+                Hide_Show_Controls(FormControlGroups.HideMain);
 
                 Multiple_ImagesLB.BringToFront();
-                Multiple_ImagesLB.Visible = true;
-
                 Multiple_ImagesOpen.BringToFront();
-                Multiple_ImagesOpen.Visible = true;
-
                 Multiple_ImagesCancel.BringToFront();
-                Multiple_ImagesCancel.Visible = true;
             }
         }
 
@@ -315,9 +333,9 @@ namespace hatsune_miku
             bool allowFiles = false;
             bool allowFilesAnswered = false;
 
-            for (int i = 0; i < Multiple_ImagesLB.Items.Count; i++)
+            for (int i = 0; i < Multiple_ImagesLB.SelectedIndices.Count; i++)
             {
-                var attachment = MessageUtils.GetMessage(client, messageIds[Output_ChatText.SelectedIndex], channel).Attachments[i];
+                var attachment = MessageUtils.GetMessage(client, messageIds[Output_ChatText.SelectedIndex], channel).Attachments[Multiple_ImagesLB.SelectedIndices[i]];
 
                 // width == 0 means it's not an image
                 if (attachment.Width != 0)
@@ -328,53 +346,49 @@ namespace hatsune_miku
                 else
                 {
                     if (!allowFilesAnswered)
-                    {
                         if (MessageBox.Show(
-                            "One or more of the selected files is not an image.\n" +
-                            "Downloading/Viewing these files requires opening your browser; would you still like to open these files?", "Non-image in selection", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-                                            == DialogResult.Yes)
+                                "One or more of the selected files is not an image.\n" +
+                                "Downloading/Viewing these files requires opening your browser; would you still like to open these files?", "Non-image in selection", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                            == DialogResult.Yes)
                         {
                             allowFiles = true;
                             allowFilesAnswered = true;
                         }
-                    }
 
                     if (allowFiles)
                         Process.Start(attachment.Url);
                 }
             }
 
-            Output_ChatText.Visible = true;
-            Input_Chat.Visible = true;
-            Change_Channel.Visible = true;
-            Add_Image.Visible = true;
-
-            Multiple_ImagesLB.Visible = false;
-            Multiple_ImagesOpen.Visible = false;
-            Multiple_ImagesCancel.Visible = false;
+            Hide_Show_Controls(FormControlGroups.ShowMain);
 
             Multiple_ImagesLB.Items.Clear();
         }
 
         private void Multiple_ImagesCancel_Click(object sender, EventArgs e)
         {
-            Output_ChatText.Visible = true;
-            Input_Chat.Visible = true;
-            Change_Channel.Visible = true;
-            Add_Image.Visible = true;
-
-            Multiple_ImagesLB.Visible = false;
-            Multiple_ImagesOpen.Visible = false;
+            Hide_Show_Controls(FormControlGroups.ShowMain);
 
             Multiple_ImagesLB.Items.Clear();
         }
         #endregion
 
+        private void CMReact_Click(object sender, EventArgs e)
+        {
+            string oldInput = Input_Chat.Text;
+
+            //MessageBox.Show("Use the input ")
+        }
+
         private void Output_ChatCM_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (Output_ChatText.SelectedIndex == -1)
-                e.Cancel = true;
+            {
+                CMReact.Enabled = false;
+                CMViewImage.Enabled = false;
+            }
             else
+            {
                 switch (MessageUtils.GetMessage(client, messageIds[Output_ChatText.SelectedIndex], channel).
                     Attachments.Count)
                 {
@@ -390,6 +404,8 @@ namespace hatsune_miku
                         CMViewImage.Text = "View Images";
                         break;
                 }
+                CMReact.Enabled = true;
+            }
         }
 
         private int lastIndex = -1;
@@ -400,6 +416,11 @@ namespace hatsune_miku
                 Output_ChatText.ClearSelected();
 
             lastIndex = Output_ChatText.SelectedIndex;
+        }
+
+        private void toolStripTextBox1_Leave(object sender, EventArgs e)
+        {
+            MessageBox.Show("e");
         }
     }
     #endregion

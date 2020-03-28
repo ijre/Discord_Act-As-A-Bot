@@ -43,6 +43,7 @@
             this.Multiple_ImagesLB = new System.Windows.Forms.ListBox();
             this.Multiple_ImagesOpen = new System.Windows.Forms.Button();
             this.Multiple_ImagesCancel = new System.Windows.Forms.Button();
+            this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
             this.Output_ChatCM.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -52,21 +53,24 @@
             this.CMViewImage,
             this.CMReact});
             this.Output_ChatCM.Name = "Output_ChatCM";
-            this.Output_ChatCM.Size = new System.Drawing.Size(136, 48);
+            this.Output_ChatCM.Size = new System.Drawing.Size(181, 70);
             this.Output_ChatCM.Opening += new System.ComponentModel.CancelEventHandler(this.Output_ChatCM_Opening);
             // 
             // CMViewImage
             // 
             this.CMViewImage.Name = "CMViewImage";
-            this.CMViewImage.Size = new System.Drawing.Size(135, 22);
+            this.CMViewImage.Size = new System.Drawing.Size(180, 22);
             this.CMViewImage.Text = "View Image";
             this.CMViewImage.Click += new System.EventHandler(this.CMViewImage_Click);
             // 
             // CMReact
             // 
+            this.CMReact.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripTextBox1});
             this.CMReact.Name = "CMReact";
-            this.CMReact.Size = new System.Drawing.Size(135, 22);
+            this.CMReact.Size = new System.Drawing.Size(180, 22);
             this.CMReact.Text = "React";
+            this.CMReact.Click += new System.EventHandler(this.CMReact_Click);
             // 
             // ServerChannelList
             // 
@@ -97,9 +101,9 @@
             // Add_Image
             // 
             this.Add_Image.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.Add_Image.Location = new System.Drawing.Point(748, 275);
+            this.Add_Image.Location = new System.Drawing.Point(773, 278);
             this.Add_Image.Name = "Add_Image";
-            this.Add_Image.Size = new System.Drawing.Size(84, 84);
+            this.Add_Image.Size = new System.Drawing.Size(130, 120);
             this.Add_Image.TabIndex = 4;
             this.Add_Image.Text = "Add Image/File";
             this.Add_Image.UseVisualStyleBackColor = true;
@@ -109,12 +113,13 @@
             // Send_Button
             // 
             this.Send_Button.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.Send_Button.Location = new System.Drawing.Point(658, 275);
+            this.Send_Button.Location = new System.Drawing.Point(523, 278);
             this.Send_Button.Name = "Send_Button";
-            this.Send_Button.Size = new System.Drawing.Size(84, 84);
+            this.Send_Button.Size = new System.Drawing.Size(130, 120);
             this.Send_Button.TabIndex = 3;
             this.Send_Button.Text = "Send";
             this.Send_Button.UseVisualStyleBackColor = true;
+            this.Send_Button.Visible = false;
             this.Send_Button.Click += new System.EventHandler(this.Send_Button_Click);
             // 
             // Clear_Button
@@ -126,6 +131,7 @@
             this.Clear_Button.TabIndex = 14;
             this.Clear_Button.Text = "Clear Messages";
             this.Clear_Button.UseVisualStyleBackColor = true;
+            this.Clear_Button.Visible = false;
             this.Clear_Button.Click += new System.EventHandler(this.Clear_Button_Click);
             // 
             // Input_Chat
@@ -193,6 +199,14 @@
             this.Multiple_ImagesCancel.Visible = false;
             this.Multiple_ImagesCancel.Click += new System.EventHandler(this.Multiple_ImagesCancel_Click);
             // 
+            // toolStripTextBox1
+            // 
+            this.toolStripTextBox1.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.toolStripTextBox1.Name = "toolStripTextBox1";
+            this.toolStripTextBox1.Size = new System.Drawing.Size(100, 23);
+            this.toolStripTextBox1.Text = "Enter your reaction here";
+            this.toolStripTextBox1.Leave += new System.EventHandler(this.toolStripTextBox1_Leave);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -238,6 +252,7 @@
         private System.Windows.Forms.ListBox Multiple_ImagesLB;
         private System.Windows.Forms.Button Multiple_ImagesOpen;
         private System.Windows.Forms.Button Multiple_ImagesCancel;
+        private System.Windows.Forms.ToolStripTextBox toolStripTextBox1;
     }
 }
 
