@@ -1,4 +1,11 @@
-﻿using System;
+﻿// todo: add error handling for deleted messages (use MessageDeleted event, dont lambda)
+// todo: add ability to edit and delete messages
+// todo (maybe): add a new form that is always there which allows for live switching between servers/channels; it's two listboxes with the server on left channel on right, maybe get past messages n shit idk
+// todo (maybe 2): could change the layout so that it nearly mimics discord's lmao
+// you got this <3
+
+
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -17,6 +24,8 @@ namespace discord_puppet
     {
         private ulong channel;
         private ulong guild;
+
+        private readonly ulong[] messageIds = new ulong[500];
         private string file = "";
 
         public MainForm()
@@ -50,7 +59,8 @@ namespace discord_puppet
             await client.InitializeAsync();
 
             client.Ready += OnReady;
-            client.MessageCreated += OnMessage;
+            client.MessageCreated += OnMessageCreated;
+            client.MessageDeleted += OnMessageDeleted;
 
             bool server = true;
             ServerChannelList.DoubleClick += async (object sender, EventArgs e) =>
@@ -92,13 +102,28 @@ namespace discord_puppet
             };
         }
 
-        private readonly ulong[] messageIds = new ulong[500];
-
         #region DiscordEvents
-        private async Task<int> OnMessage(MessageCreateEventArgs e)
+        private Task OnReady(ReadyEventArgs e)
+        {
+#if _DEBUG
+            if (File.Exists("./deps/saknade_vänner.exe"))
+            {
+                File.Delete("./deps/saknade_vänner.exe");
+                File.Copy("../deps/saknade_vänner.exe", "./deps/saknade_vänner.exe");
+            }
+            else
+                File.Copy("../deps/saknade_vänner.exe", "./deps/saknade_vänner.exe");
+#endif
+
+            SelectServer_or_Channel();
+
+            return Task.CompletedTask;
+        }
+
+        private Task OnMessageCreated(MessageCreateEventArgs e)
         {
             if (e.Message.Channel.Id != channel)
-                return 1;
+                return Task.CompletedTask;
 
             var message = e.Message;
 
@@ -117,24 +142,21 @@ namespace discord_puppet
 
             messageIds[Output_ChatText.Items.Count - 1] = message.Id;
 
-            return 0;
+            return Task.CompletedTask;
         }
 
-        private async Task<int> OnReady(ReadyEventArgs e)
+        private Task OnMessageDeleted(MessageDeleteEventArgs e)
         {
-#if _DEBUG
-            if (File.Exists("./deps/saknade_vänner.exe"))
-            {
-                File.Delete("./deps/saknade_vänner.exe");
-                File.Copy("../deps/saknade_vänner.exe", "./deps/saknade_vänner.exe");
-            }
-            else
-                File.Copy("../deps/saknade_vänner.exe", "./deps/saknade_vänner.exe");
-#endif
+            var message = e.Message;
 
-            SelectServer_or_Channel();
+            for (int i = 0; i < messageIds.Length; i++)
+                if (messageIds[i] == message.Id)
+                {
+                    messageIds[i] = 00;
+                    Output_ChatText.Items[i] += " (MESSAGE DELETED)";
+                }
 
-            return 0;
+            return Task.CompletedTask;
         }
         #endregion
 
