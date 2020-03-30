@@ -17,6 +17,8 @@ namespace discord_puppet
     {
         private ulong channel;
         private ulong guild;
+
+        private readonly ulong[] messageIds = new ulong[500];
         private string file = "";
 
         public MainForm()
@@ -50,7 +52,9 @@ namespace discord_puppet
             await client.InitializeAsync();
 
             client.Ready += OnReady;
-            client.MessageCreated += OnMessage;
+            client.MessageCreated += OnMessageCreated;
+            client.MessageUpdated += OnMessageUpdated;
+            client.MessageDeleted += OnMessageDeleted;
 
             bool server = true;
             ServerChannelList.DoubleClick += async (object sender, EventArgs e) =>
@@ -85,6 +89,7 @@ namespace discord_puppet
                 {
                     channel = ulong.Parse(item2S.Substring(item2S.LastIndexOf("(") + 1, item2S.Length - item2S.LastIndexOf("(") - 2));
 
+                    ServerChannelList.Items.Clear();
                     ServerChannelList.Visible = false;
 
                     server = true;
@@ -92,35 +97,7 @@ namespace discord_puppet
             };
         }
 
-        private readonly ulong[] messageIds = new ulong[500];
-
-        #region DiscordEvents
-        private async Task<int> OnMessage(MessageCreateEventArgs e)
-        {
-            if (e.Message.Channel.Id != channel)
-                return 1;
-
-            var message = e.Message;
-
-            switch (message.Attachments.Count)
-            {
-                case 0:
-                    Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content}");
-                    break;
-                case 1:
-                    Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (IMAGE ATTACHED)");
-                    break;
-                default:
-                    Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (MULTIPLE IMAGES ATTACHED)");
-                    break;
-            }
-
-            messageIds[Output_ChatText.Items.Count - 1] = message.Id;
-
-            return 0;
-        }
-
-        private async Task<int> OnReady(ReadyEventArgs e)
+        private Task OnReady(ReadyEventArgs e)
         {
 #if _DEBUG
             if (File.Exists("./deps/saknade_vänner.exe"))
@@ -134,9 +111,8 @@ namespace discord_puppet
 
             SelectServer_or_Channel();
 
-            return 0;
+            return Task.CompletedTask;
         }
-        #endregion
 
         private void SelectServer_or_Channel()
         {
@@ -207,6 +183,64 @@ namespace discord_puppet
             }
         }
 
+        private void Output_ChatCM_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (Output_ChatText.SelectedIndex == -1 || messageIds[Output_ChatText.SelectedIndex] == 00)
+                Output_ChatCM.Enabled = false;
+            else
+            {
+                Output_ChatCM.Enabled = true;
+                var message = MessageUtils.GetMessage(client, messageIds[Output_ChatText.SelectedIndex], channel);
+
+                switch (message.Attachments.Count)
+                {
+                    case 0:
+                        CMViewImage.Enabled = false;
+                        break;
+                    case 1:
+                        CMViewImage.Enabled = true;
+                        CMViewImage.Text = "View Image";
+                        break;
+                    default:
+                        CMViewImage.Enabled = true;
+                        CMViewImage.Text = "View Images";
+                        break;
+                }
+
+                if (message.Author.Id != client.CurrentUser.Id)
+                {
+                    CMEditMessage.Enabled = false;
+
+                    var getRoles = client.GetGuildAsync(guild).Result.CurrentMember.Roles;
+                    var roles = getRoles.ToArray();
+
+                    for (int i = 0; i < roles.Count(); i++)
+                        if (roles.ToArray()[i].Permissions.HasPermission(Permissions.ManageMessages))
+                        {
+                            CMDeleteMessage.Enabled = true;
+                            break;
+                        }
+                        else
+                            CMDeleteMessage.Enabled = false;
+                }
+                else
+                {
+                    CMEditMessage.Enabled = true;
+                    CMDeleteMessage.Enabled = true;
+                }
+            }
+        }
+
+        private int lastIndex = -1;
+
+        private void Output_ChatText_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (Output_ChatText.SelectedIndex == lastIndex)
+                Output_ChatText.ClearSelected();
+
+            lastIndex = Output_ChatText.SelectedIndex;
+        }
+
         #region SendMessageHandling
         private async Task SendMessage()
         {
@@ -230,7 +264,7 @@ namespace discord_puppet
             else
                 await client.SendMessageAsync(guildObj.GetChannel(channel), Input_Chat.Text);
 
-            Input_Chat.Text = "";
+            Input_Chat.Clear();
         }
 
         private void Input_Chat_KeyDown(object sender, KeyEventArgs e)
@@ -239,9 +273,121 @@ namespace discord_puppet
                 SendMessage();
         }
 
+        private Task OnMessageCreated(MessageCreateEventArgs e)
+        {
+            if (e.Message.Channel.Id != channel)
+                return Task.CompletedTask;
+
+            var message = e.Message;
+
+            switch (message.Attachments.Count)
+            {
+                case 0:
+                    Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content}");
+                    break;
+                case 1:
+                    Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (IMAGE ATTACHED)");
+                    break;
+                default:
+                    Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (MULTIPLE IMAGES ATTACHED)");
+                    break;
+            }
+
+            messageIds[Output_ChatText.Items.Count - 1] = message.Id;
+
+            return Task.CompletedTask;
+        }
+        #endregion
+
+        #region EditMessageHandling
+        private string oldInput = "";
+        private void CMEditMessage_Click(object sender, EventArgs e)
+        {
+            oldInput = Input_Chat.Text;
+            Input_Chat.Clear();
+
+            Send_Button.Text = "Edit";
+            CancelEdit.Visible = true;
+            Output_ChatText.Enabled = false;
+
+            MessageBox.Show("Use the input box to submit your changes.");
+        }
+
         private void Send_Button_Click(object sender, EventArgs e)
         {
-            SendMessage();
+            if (Send_Button.Text == "Send")
+                SendMessage();
+            else
+            {
+                var message = MessageUtils.GetMessage(client, messageIds[Output_ChatText.SelectedIndex], channel);
+                message.ModifyAsync(Input_Chat.Text);
+
+                Input_Chat.Text = oldInput;
+                oldInput = null;
+
+                Send_Button.Text = "Send";
+                CancelEdit.Visible = false;
+                Output_ChatText.Enabled = true;
+            }
+        }
+
+        private void CancelEdit_Click(object sender, EventArgs e)
+        {
+            Input_Chat.Text = oldInput;
+            oldInput = null;
+
+            Send_Button.Text = "Send";
+            CancelEdit.Visible = false;
+            Output_ChatText.Enabled = true;
+        }
+
+        private Task OnMessageUpdated(MessageUpdateEventArgs e)
+        {
+            if (e.Message.Channel.Id != channel)
+                return Task.CompletedTask;
+
+            var message = e.Message;
+
+            for (int i = 0; i < messageIds.Length; i++)
+                if (messageIds[i] == message.Id)
+                    switch (message.Attachments.Count)
+                    {
+                        case 0:
+                            Output_ChatText.Items[i] = $"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (edited)";
+                            break;
+                        case 1:
+                            Output_ChatText.Items[i] = $"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (IMAGE ATTACHED) (edited)";
+                            break;
+                        default:
+                            Output_ChatText.Items[i] = $"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (MULTIPLE IMAGES ATTACHED) (edited)";
+                            break;
+                    }
+
+            return Task.CompletedTask;
+        }
+        #endregion
+
+        #region DeleteMessageHandling
+        private void CMDeleteMessage_Click(object sender, EventArgs e)
+        {
+            MessageUtils.GetMessage(client, messageIds[Output_ChatText.SelectedIndex], channel).DeleteAsync();
+        }
+
+        private Task OnMessageDeleted(MessageDeleteEventArgs e)
+        {
+            if (e.Message.Channel.Id != channel)
+                return Task.CompletedTask;
+
+            var message = e.Message;
+
+            for (int i = 0; i < messageIds.Length; i++)
+                if (messageIds[i] == message.Id)
+                {
+                    messageIds[i] = 00;
+                    Output_ChatText.Items[i] += " (MESSAGE DELETED)";
+                }
+
+            return Task.CompletedTask;
         }
         #endregion
 
@@ -252,7 +398,7 @@ namespace discord_puppet
 
             if (message.Attachments.Count == 1)
             {
-                IOF iof = new IOF(message.Attachments[0].Url);
+                IOF iof = new IOF(message.Attachments[0].Url, message.Attachments[0].FileName);
                 iof.Show();
             }
             else
@@ -301,7 +447,7 @@ namespace discord_puppet
                 // width == 0 means it's not an image
                 if (attachment.Width != 0)
                 {
-                    IOF iof = new IOF(attachment.Url);
+                    IOF iof = new IOF(attachment.Url, attachment.FileName);
                     iof.Show();
                 }
                 else
@@ -371,47 +517,9 @@ namespace discord_puppet
         private void CMReactText_Click(object sender, EventArgs e)
         {
             if (CMReactText.Text == "Input Emoji Here")
-                CMReactText.Text = "";
+                CMReactText.Clear();
         }
         #endregion
-
-        private void Output_ChatCM_Opening(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (Output_ChatText.SelectedIndex == -1)
-            {
-                CMReact.Enabled = false;
-                CMViewImage.Enabled = false;
-            }
-            else
-            {
-                switch (MessageUtils.GetMessage(client, messageIds[Output_ChatText.SelectedIndex], channel).
-                    Attachments.Count)
-                {
-                    case 0:
-                        CMViewImage.Enabled = false;
-                        break;
-                    case 1:
-                        CMViewImage.Enabled = true;
-                        CMViewImage.Text = "View Image";
-                        break;
-                    default:
-                        CMViewImage.Enabled = true;
-                        CMViewImage.Text = "View Images";
-                        break;
-                }
-                CMReact.Enabled = true;
-            }
-        }
-
-        private int lastIndex = -1;
-
-        private void Output_ChatText_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (Output_ChatText.SelectedIndex == lastIndex)
-                Output_ChatText.ClearSelected();
-
-            lastIndex = Output_ChatText.SelectedIndex;
-        }
     }
     #endregion
 }
