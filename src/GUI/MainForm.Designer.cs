@@ -44,6 +44,9 @@
             this.Multiple_ImagesCancel = new System.Windows.Forms.Button();
             this.Multiple_ImagesLB = new System.Windows.Forms.ListBox();
             this.ServerChannelList = new System.Windows.Forms.ListBox();
+            this.CMDeleteMessage = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMEditMessage = new System.Windows.Forms.ToolStripMenuItem();
+            this.CancelEdit = new System.Windows.Forms.Button();
             this.Output_ChatCM.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,15 +54,17 @@
             // 
             this.Output_ChatCM.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.CMViewImage,
-            this.CMReact});
+            this.CMReact,
+            this.CMEditMessage,
+            this.CMDeleteMessage});
             this.Output_ChatCM.Name = "Output_ChatCM";
-            this.Output_ChatCM.Size = new System.Drawing.Size(136, 48);
+            this.Output_ChatCM.Size = new System.Drawing.Size(181, 114);
             this.Output_ChatCM.Opening += new System.ComponentModel.CancelEventHandler(this.Output_ChatCM_Opening);
             // 
             // CMViewImage
             // 
             this.CMViewImage.Name = "CMViewImage";
-            this.CMViewImage.Size = new System.Drawing.Size(135, 22);
+            this.CMViewImage.Size = new System.Drawing.Size(180, 22);
             this.CMViewImage.Text = "View Image";
             this.CMViewImage.Click += new System.EventHandler(this.CMViewImage_Click);
             // 
@@ -68,12 +73,11 @@
             this.CMReact.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.CMReactText});
             this.CMReact.Name = "CMReact";
-            this.CMReact.Size = new System.Drawing.Size(135, 22);
+            this.CMReact.Size = new System.Drawing.Size(180, 22);
             this.CMReact.Text = "React";
             // 
             // CMReactText
             // 
-            this.CMReactText.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.CMReactText.Name = "CMReactText";
             this.CMReactText.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.CMReactText.Size = new System.Drawing.Size(100, 23);
@@ -202,6 +206,32 @@
             this.ServerChannelList.Size = new System.Drawing.Size(915, 550);
             this.ServerChannelList.TabIndex = 0;
             // 
+            // CMDeleteMessage
+            // 
+            this.CMDeleteMessage.Name = "CMDeleteMessage";
+            this.CMDeleteMessage.Size = new System.Drawing.Size(180, 22);
+            this.CMDeleteMessage.Text = "Delete Message";
+            this.CMDeleteMessage.Click += new System.EventHandler(this.CMDeleteMessage_Click);
+            // 
+            // CMEditMessage
+            // 
+            this.CMEditMessage.Name = "CMEditMessage";
+            this.CMEditMessage.Size = new System.Drawing.Size(180, 22);
+            this.CMEditMessage.Text = "Edit Message";
+            this.CMEditMessage.Click += new System.EventHandler(this.CMEditMessage_Click);
+            // 
+            // CancelEdit
+            // 
+            this.CancelEdit.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.CancelEdit.Location = new System.Drawing.Point(523, 404);
+            this.CancelEdit.Name = "CancelEdit";
+            this.CancelEdit.Size = new System.Drawing.Size(130, 45);
+            this.CancelEdit.TabIndex = 23;
+            this.CancelEdit.Text = "Cancel Edit";
+            this.CancelEdit.UseVisualStyleBackColor = true;
+            this.CancelEdit.Visible = false;
+            this.CancelEdit.Click += new System.EventHandler(this.CancelEdit_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -211,6 +241,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(915, 547);
+            this.Controls.Add(this.CancelEdit);
             this.Controls.Add(this.Multiple_ImagesCancel);
             this.Controls.Add(this.Clear_Button);
             this.Controls.Add(this.Add_Image);
@@ -248,6 +279,9 @@
         private System.Windows.Forms.ToolStripTextBox CMReactText;
         private System.Windows.Forms.ListBox Multiple_ImagesLB;
         private System.Windows.Forms.ListBox ServerChannelList;
+        private System.Windows.Forms.ToolStripMenuItem CMEditMessage;
+        private System.Windows.Forms.ToolStripMenuItem CMDeleteMessage;
+        private System.Windows.Forms.Button CancelEdit;
     }
 }
 
