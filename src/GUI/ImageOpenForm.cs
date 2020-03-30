@@ -6,7 +6,7 @@ namespace discord_puppet
 {
     public partial class IOF : Form
     {
-        public IOF(string url)
+        public IOF(string url, string name)
         {
             InitializeComponent();
 
@@ -17,6 +17,7 @@ namespace discord_puppet
 
             webBrowser1.DocumentCompleted += (object sender, WebBrowserDocumentCompletedEventArgs args) =>
             {
+                Text = name;
                 Height = webBrowser1.Document.Images[0].ScrollRectangle.Height + 70;
                 Width = webBrowser1.Document.Images[0].ScrollRectangle.Width + 70;
 
