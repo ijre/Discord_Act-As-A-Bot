@@ -34,7 +34,8 @@
             this.CMViewImage = new System.Windows.Forms.ToolStripMenuItem();
             this.CMReact = new System.Windows.Forms.ToolStripMenuItem();
             this.CMReactText = new System.Windows.Forms.ToolStripTextBox();
-            this.Change_Channel = new System.Windows.Forms.Button();
+            this.CMEditMessage = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMDeleteMessage = new System.Windows.Forms.ToolStripMenuItem();
             this.Add_Image = new System.Windows.Forms.Button();
             this.Send_Button = new System.Windows.Forms.Button();
             this.Clear_Button = new System.Windows.Forms.Button();
@@ -43,9 +44,6 @@
             this.Multiple_ImagesOpen = new System.Windows.Forms.Button();
             this.Multiple_ImagesCancel = new System.Windows.Forms.Button();
             this.Multiple_ImagesLB = new System.Windows.Forms.ListBox();
-            this.ServerChannelList = new System.Windows.Forms.ListBox();
-            this.CMDeleteMessage = new System.Windows.Forms.ToolStripMenuItem();
-            this.CMEditMessage = new System.Windows.Forms.ToolStripMenuItem();
             this.CancelEdit = new System.Windows.Forms.Button();
             this.Output_ChatCM.SuspendLayout();
             this.SuspendLayout();
@@ -58,13 +56,13 @@
             this.CMEditMessage,
             this.CMDeleteMessage});
             this.Output_ChatCM.Name = "Output_ChatCM";
-            this.Output_ChatCM.Size = new System.Drawing.Size(181, 114);
+            this.Output_ChatCM.Size = new System.Drawing.Size(157, 92);
             this.Output_ChatCM.Opening += new System.ComponentModel.CancelEventHandler(this.Output_ChatCM_Opening);
             // 
             // CMViewImage
             // 
             this.CMViewImage.Name = "CMViewImage";
-            this.CMViewImage.Size = new System.Drawing.Size(180, 22);
+            this.CMViewImage.Size = new System.Drawing.Size(156, 22);
             this.CMViewImage.Text = "View Image";
             this.CMViewImage.Click += new System.EventHandler(this.CMViewImage_Click);
             // 
@@ -73,11 +71,12 @@
             this.CMReact.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.CMReactText});
             this.CMReact.Name = "CMReact";
-            this.CMReact.Size = new System.Drawing.Size(180, 22);
+            this.CMReact.Size = new System.Drawing.Size(156, 22);
             this.CMReact.Text = "React";
             // 
             // CMReactText
             // 
+            this.CMReactText.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.CMReactText.Name = "CMReactText";
             this.CMReactText.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.CMReactText.Size = new System.Drawing.Size(100, 23);
@@ -85,16 +84,19 @@
             this.CMReactText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CMReactText_KeyDown);
             this.CMReactText.Click += new System.EventHandler(this.CMReactText_Click);
             // 
-            // Change_Channel
+            // CMEditMessage
             // 
-            this.Change_Channel.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.Change_Channel.Location = new System.Drawing.Point(12, 290);
-            this.Change_Channel.Name = "Change_Channel";
-            this.Change_Channel.Size = new System.Drawing.Size(130, 120);
-            this.Change_Channel.TabIndex = 7;
-            this.Change_Channel.Text = "Change Server/Channel";
-            this.Change_Channel.UseVisualStyleBackColor = true;
-            this.Change_Channel.Click += new System.EventHandler(this.Change_Channel_Click);
+            this.CMEditMessage.Name = "CMEditMessage";
+            this.CMEditMessage.Size = new System.Drawing.Size(156, 22);
+            this.CMEditMessage.Text = "Edit Message";
+            this.CMEditMessage.Click += new System.EventHandler(this.CMEditMessage_Click);
+            // 
+            // CMDeleteMessage
+            // 
+            this.CMDeleteMessage.Name = "CMDeleteMessage";
+            this.CMDeleteMessage.Size = new System.Drawing.Size(156, 22);
+            this.CMDeleteMessage.Text = "Delete Message";
+            this.CMDeleteMessage.Click += new System.EventHandler(this.CMDeleteMessage_Click);
             // 
             // Add_Image
             // 
@@ -121,7 +123,7 @@
             // Clear_Button
             // 
             this.Clear_Button.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.Clear_Button.Location = new System.Drawing.Point(262, 290);
+            this.Clear_Button.Location = new System.Drawing.Point(12, 282);
             this.Clear_Button.Name = "Clear_Button";
             this.Clear_Button.Size = new System.Drawing.Size(130, 120);
             this.Clear_Button.TabIndex = 14;
@@ -183,6 +185,8 @@
             // 
             // Multiple_ImagesLB
             // 
+            this.Multiple_ImagesLB.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.Multiple_ImagesLB.ForeColor = System.Drawing.Color.White;
             this.Multiple_ImagesLB.FormattingEnabled = true;
             this.Multiple_ImagesLB.Location = new System.Drawing.Point(0, 0);
             this.Multiple_ImagesLB.Name = "Multiple_ImagesLB";
@@ -191,34 +195,6 @@
             this.Multiple_ImagesLB.TabIndex = 20;
             this.Multiple_ImagesLB.TabStop = false;
             this.Multiple_ImagesLB.Visible = false;
-            // 
-            // ServerChannelList
-            // 
-            this.ServerChannelList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ServerChannelList.BackColor = System.Drawing.SystemColors.GrayText;
-            this.ServerChannelList.ForeColor = System.Drawing.Color.White;
-            this.ServerChannelList.FormattingEnabled = true;
-            this.ServerChannelList.HorizontalScrollbar = true;
-            this.ServerChannelList.Location = new System.Drawing.Point(0, 0);
-            this.ServerChannelList.Name = "ServerChannelList";
-            this.ServerChannelList.Size = new System.Drawing.Size(915, 550);
-            this.ServerChannelList.TabIndex = 0;
-            // 
-            // CMDeleteMessage
-            // 
-            this.CMDeleteMessage.Name = "CMDeleteMessage";
-            this.CMDeleteMessage.Size = new System.Drawing.Size(180, 22);
-            this.CMDeleteMessage.Text = "Delete Message";
-            this.CMDeleteMessage.Click += new System.EventHandler(this.CMDeleteMessage_Click);
-            // 
-            // CMEditMessage
-            // 
-            this.CMEditMessage.Name = "CMEditMessage";
-            this.CMEditMessage.Size = new System.Drawing.Size(180, 22);
-            this.CMEditMessage.Text = "Edit Message";
-            this.CMEditMessage.Click += new System.EventHandler(this.CMEditMessage_Click);
             // 
             // CancelEdit
             // 
@@ -249,8 +225,6 @@
             this.Controls.Add(this.Multiple_ImagesOpen);
             this.Controls.Add(this.Output_ChatText);
             this.Controls.Add(this.Input_Chat);
-            this.Controls.Add(this.Change_Channel);
-            this.Controls.Add(this.ServerChannelList);
             this.Controls.Add(this.Multiple_ImagesLB);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -258,6 +232,7 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Act As A Discord Bot";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Output_ChatCM.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -265,23 +240,22 @@
         }
 
         #endregion
-        private System.Windows.Forms.ContextMenuStrip Output_ChatCM;
-        private System.Windows.Forms.ToolStripMenuItem CMViewImage;
-        private System.Windows.Forms.ToolStripMenuItem CMReact;
-        private System.Windows.Forms.Button Change_Channel;
-        private System.Windows.Forms.Button Add_Image;
-        private System.Windows.Forms.Button Send_Button;
-        private System.Windows.Forms.Button Clear_Button;
-        private System.Windows.Forms.TextBox Input_Chat;
-        private System.Windows.Forms.ListBox Output_ChatText;
-        private System.Windows.Forms.Button Multiple_ImagesOpen;
-        private System.Windows.Forms.Button Multiple_ImagesCancel;
-        private System.Windows.Forms.ToolStripTextBox CMReactText;
-        private System.Windows.Forms.ListBox Multiple_ImagesLB;
-        private System.Windows.Forms.ListBox ServerChannelList;
-        private System.Windows.Forms.ToolStripMenuItem CMEditMessage;
-        private System.Windows.Forms.ToolStripMenuItem CMDeleteMessage;
-        private System.Windows.Forms.Button CancelEdit;
+
+        public System.Windows.Forms.ContextMenuStrip Output_ChatCM;
+        public System.Windows.Forms.ToolStripMenuItem CMViewImage;
+        public System.Windows.Forms.ToolStripMenuItem CMReact;
+        public System.Windows.Forms.Button Add_Image;
+        public System.Windows.Forms.Button Send_Button;
+        public System.Windows.Forms.Button Clear_Button;
+        public System.Windows.Forms.TextBox Input_Chat;
+        public System.Windows.Forms.ListBox Output_ChatText;
+        public System.Windows.Forms.Button Multiple_ImagesOpen;
+        public System.Windows.Forms.Button Multiple_ImagesCancel;
+        public System.Windows.Forms.ToolStripTextBox CMReactText;
+        public System.Windows.Forms.ListBox Multiple_ImagesLB;
+        public System.Windows.Forms.ToolStripMenuItem CMEditMessage;
+        public System.Windows.Forms.ToolStripMenuItem CMDeleteMessage;
+        public System.Windows.Forms.Button CancelEdit;
     }
 }
 
