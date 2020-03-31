@@ -269,7 +269,7 @@ namespace discord_puppet
 
         private void Input_Chat_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyData == Keys.Return)
+            if (e.KeyData == Keys.Return && Send_Button.Text == "Send")
                 SendMessage();
         }
 
