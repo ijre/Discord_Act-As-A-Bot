@@ -20,5 +20,10 @@ namespace discord_puppet.utils
                 return null;
             }
         }
+
+        public static ulong GetID(string _string)
+        {
+            return ulong.Parse(_string.Substring(_string.LastIndexOf("[") + 1, _string.Length - _string.LastIndexOf("[") - 2));
+        }
     }
 }
