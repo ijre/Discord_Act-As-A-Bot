@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -59,7 +60,7 @@ namespace discord_puppet
             }
         }
 
-        private void Output_ChatCM_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Output_ChatCM_Opening(object sender, CancelEventArgs e)
         {
             if (Output_ChatText.SelectedIndex == -1 || Output_ChatText.SelectedItem.ToString().EndsWith("{MESSAGE DELETED} []"))
                 Output_ChatCM.Enabled = false;
