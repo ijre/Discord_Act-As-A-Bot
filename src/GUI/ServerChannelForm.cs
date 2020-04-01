@@ -157,8 +157,10 @@ namespace discord_puppet
             process.BeginOutputReadLine();
         }
 
-        private async void DoStuffSync()
+        private async void DoStuffSync(/*bool server*/)
         {
+            //if (server)
+            //{
             string item2S = "";
             try
             {
@@ -179,22 +181,62 @@ namespace discord_puppet
                     Channels.Items.Add($"{chanArray[i].Name} [{chanArray[i].Id}]");
 
             display.guild = chosenGuild.Id;
+            //}
+            /*else
+            {
+                // todo: fix fatal bug within this else code
+                // details: attempting to right click on the messages printed (which are printed when you switch channels) will cause an indefinite hangup
+                // the only idea that i have is that it's caused by something in discord which doesn't allow you to interact with messages before your bot's startup
+                // ofc there's always the answer of "hey dingus you fucked up the programming" but yk
+
+                display.Output_ChatText.Items.Clear();
+                display.channel = MessageUtils.GetID(Channels.SelectedItem.ToString());
+
+                var getChannel = await client.GetChannelAsync(display.channel);
+                var getMessages = await getChannel.GetMessagesAsync();
+
+                IEnumerable<DiscordMessage> messages = from value in getMessages
+                                                       select value;
+                var messagesArray = messages.ToArray();
+
+                for (int i = messagesArray.Length - 1; 0 <= i; i--)
+                    switch (messagesArray[i].Attachments.Count)
+                    {
+                        case 0:
+                            display.Output_ChatText.Items.Add($"{messagesArray[i].Author.Username}#{messagesArray[i].Author.Discriminator}: {messagesArray[i].Content}   [{messagesArray[i].Id}]");
+                            break;
+                        case 1:
+                            display.Output_ChatText.Items.Add($"{messagesArray[i].Author.Username}#{messagesArray[i].Author.Discriminator}: {messagesArray[i].Content} (IMAGE ATTACHED)   [{messagesArray[i].Id}]");
+                            break;
+                        default:
+                            display.Output_ChatText.Items.Add($"{messagesArray[i].Author.Username}#{messagesArray[i].Author.Discriminator}: {messagesArray[i].Content} (MULTIPLE IMAGES ATTACHED)   [{messagesArray[i].Id}]");
+                            break;
+                    }
+            }*/
         }
 
-        private int lastIndex = -1;
+        private int lastIndexServers = -1;
 
         private void Servers_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Servers.SelectedIndex == lastIndex)
+            if (Servers.SelectedIndex == lastIndexServers)
                 return;
 
-            lastIndex = Servers.SelectedIndex;
+            lastIndexServers = Servers.SelectedIndex;
             DoStuffSync();
+            // DoStuffSync(true);
         }
+
+        private int lastIndexChannels = -1;
 
         private void Channels_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (Channels.SelectedIndex == lastIndexChannels)
+                return;
+
+            lastIndexChannels = Channels.SelectedIndex;
             display.channel = MessageUtils.GetID(Channels.SelectedItem.ToString());
+            // DoStuffSync(false);
         }
     }
 }
