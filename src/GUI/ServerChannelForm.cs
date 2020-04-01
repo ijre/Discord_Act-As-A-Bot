@@ -122,13 +122,13 @@ namespace discord_puppet
         private void SelectServer()
         {
 #if _DEBUG
-            if (File.Exists("./deps/saknade_vänner.exe"))
+            if (File.Exists("./deps/server_choose.exe"))
             {
-                File.Delete("./deps/saknade_vänner.exe");
-                File.Copy("../deps/saknade_vänner.exe", "./deps/saknade_vänner.exe");
+                File.Delete("./deps/server_choose.exe");
+                File.Copy("../deps/server_choose.exe", "./deps/server_choose.exe");
             }
             else
-                File.Copy("../deps/saknade_vänner.exe", "./deps/saknade_vänner.exe");
+                File.Copy("../deps/server_choose.exe", "./deps/server_choose.exe");
 #endif
 
             using Process process = new Process()
