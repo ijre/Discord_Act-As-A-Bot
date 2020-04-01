@@ -55,7 +55,7 @@ namespace discord_puppet
         #region DiscordEvents
         private Task OnMessageCreated(MessageCreateEventArgs e)
         {
-            if (e.Message.Channel.Id != display.channel)
+            if (e.Message.Channel.Id != display.channel.Id)
                 return Task.CompletedTask;
 
             var message = e.Message;
@@ -78,7 +78,7 @@ namespace discord_puppet
 
         private Task OnMessageUpdated(MessageUpdateEventArgs e)
         {
-            if (e.Message.Channel.Id != display.channel)
+            if (e.Message.Channel.Id != display.channel.Id)
                 return Task.CompletedTask;
 
             var message = e.Message;
@@ -103,7 +103,7 @@ namespace discord_puppet
 
         private Task OnMessageDeleted(MessageDeleteEventArgs e)
         {
-            if (e.Message.Channel.Id != display.channel)
+            if (e.Message.Channel.Id != display.channel.Id)
                 return Task.CompletedTask;
 
             var message = e.Message;
@@ -157,43 +157,37 @@ namespace discord_puppet
             process.BeginOutputReadLine();
         }
 
-        private async void DoStuffSync(/*bool server*/)
+        private async void DoStuffSync(bool server)
         {
-            //if (server)
-            //{
-            string item2S = "";
-            try
+            if (server)
             {
-                item2S = Servers.SelectedItem.ToString();
+                string item2S = "";
+                try
+                {
+                    item2S = Servers.SelectedItem.ToString();
+                }
+                catch (Exception ex)
+                {
+                    ExceptionUtils.IgnoreSpecificException(new NullReferenceException(), ex, true, "Fatal Error");
+                }
+
+                var chosenGuild = await client.GetGuildAsync(MessageUtils.GetID(item2S));
+                IEnumerable<DiscordChannel> channels = from value in await chosenGuild.GetChannelsAsync()
+                                                       select value;
+                DiscordChannel[] chanArray = channels.ToArray();
+
+                for (int i = 0; i < chanArray.Length; i++)
+                    if (chanArray[i].Type == ChannelType.Text && (chanArray[i].PermissionsFor(chosenGuild.CurrentMember) & Permissions.AccessChannels) != 0)
+                        Channels.Items.Add($"{chanArray[i].Name} [{chanArray[i].Id}]");
+
+                display.guild = chosenGuild;
             }
-            catch (Exception ex)
+            else
             {
-                ExceptionUtils.IgnoreSpecificException(new NullReferenceException(), ex, true, "Fatal Error");
-            }
-
-            var chosenGuild = await client.GetGuildAsync(MessageUtils.GetID(item2S));
-            IEnumerable<DiscordChannel> channels = from value in await chosenGuild.GetChannelsAsync()
-                                                   select value;
-            DiscordChannel[] chanArray = channels.ToArray();
-
-            for (int i = 0; i < chanArray.Length; i++)
-                if (chanArray[i].Type == ChannelType.Text)
-                    Channels.Items.Add($"{chanArray[i].Name} [{chanArray[i].Id}]");
-
-            display.guild = chosenGuild.Id;
-            //}
-            /*else
-            {
-                // todo: fix fatal bug within this else code
-                // details: attempting to right click on the messages printed (which are printed when you switch channels) will cause an indefinite hangup
-                // the only idea that i have is that it's caused by something in discord which doesn't allow you to interact with messages before your bot's startup
-                // ofc there's always the answer of "hey dingus you fucked up the programming" but yk
-
                 display.Output_ChatText.Items.Clear();
-                display.channel = MessageUtils.GetID(Channels.SelectedItem.ToString());
+                display.channel = client.GetChannelAsync(MessageUtils.GetID(Channels.SelectedItem.ToString())).Result;
 
-                var getChannel = await client.GetChannelAsync(display.channel);
-                var getMessages = await getChannel.GetMessagesAsync();
+                var getMessages = await display.channel.GetMessagesAsync();
 
                 IEnumerable<DiscordMessage> messages = from value in getMessages
                                                        select value;
@@ -212,7 +206,8 @@ namespace discord_puppet
                             display.Output_ChatText.Items.Add($"{messagesArray[i].Author.Username}#{messagesArray[i].Author.Discriminator}: {messagesArray[i].Content} (MULTIPLE IMAGES ATTACHED)   [{messagesArray[i].Id}]");
                             break;
                     }
-            }*/
+                display.Output_ChatText.Items.Add("((((((((((END OF PREVIOUS 100 MESSAGES)))))))))");
+            }
         }
 
         private int lastIndexServers = -1;
@@ -223,8 +218,7 @@ namespace discord_puppet
                 return;
 
             lastIndexServers = Servers.SelectedIndex;
-            DoStuffSync();
-            // DoStuffSync(true);
+            DoStuffSync(true);
         }
 
         private int lastIndexChannels = -1;
@@ -235,8 +229,7 @@ namespace discord_puppet
                 return;
 
             lastIndexChannels = Channels.SelectedIndex;
-            display.channel = MessageUtils.GetID(Channels.SelectedItem.ToString());
-            // DoStuffSync(false);
+            DoStuffSync(false);
         }
     }
 }

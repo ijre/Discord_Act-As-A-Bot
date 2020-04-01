@@ -45,24 +45,27 @@
             this.Multiple_ImagesCancel = new System.Windows.Forms.Button();
             this.Multiple_ImagesLB = new System.Windows.Forms.ListBox();
             this.CancelEdit = new System.Windows.Forms.Button();
+            this.CMGreyedOut = new System.Windows.Forms.ToolStripMenuItem();
             this.Output_ChatCM.SuspendLayout();
             this.SuspendLayout();
             // 
             // Output_ChatCM
             // 
             this.Output_ChatCM.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.CMGreyedOut,
             this.CMViewImage,
             this.CMReact,
             this.CMEditMessage,
             this.CMDeleteMessage});
             this.Output_ChatCM.Name = "Output_ChatCM";
-            this.Output_ChatCM.Size = new System.Drawing.Size(157, 92);
+            this.Output_ChatCM.Size = new System.Drawing.Size(234, 136);
+            this.Output_ChatCM.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.Output_ChatCM_Closing);
             this.Output_ChatCM.Opening += new System.ComponentModel.CancelEventHandler(this.Output_ChatCM_Opening);
             // 
             // CMViewImage
             // 
             this.CMViewImage.Name = "CMViewImage";
-            this.CMViewImage.Size = new System.Drawing.Size(156, 22);
+            this.CMViewImage.Size = new System.Drawing.Size(233, 22);
             this.CMViewImage.Text = "View Image";
             this.CMViewImage.Click += new System.EventHandler(this.CMViewImage_Click);
             // 
@@ -71,7 +74,7 @@
             this.CMReact.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.CMReactText});
             this.CMReact.Name = "CMReact";
-            this.CMReact.Size = new System.Drawing.Size(156, 22);
+            this.CMReact.Size = new System.Drawing.Size(233, 22);
             this.CMReact.Text = "React";
             // 
             // CMReactText
@@ -87,14 +90,14 @@
             // CMEditMessage
             // 
             this.CMEditMessage.Name = "CMEditMessage";
-            this.CMEditMessage.Size = new System.Drawing.Size(156, 22);
+            this.CMEditMessage.Size = new System.Drawing.Size(233, 22);
             this.CMEditMessage.Text = "Edit Message";
             this.CMEditMessage.Click += new System.EventHandler(this.CMEditMessage_Click);
             // 
             // CMDeleteMessage
             // 
             this.CMDeleteMessage.Name = "CMDeleteMessage";
-            this.CMDeleteMessage.Size = new System.Drawing.Size(156, 22);
+            this.CMDeleteMessage.Size = new System.Drawing.Size(233, 22);
             this.CMDeleteMessage.Text = "Delete Message";
             this.CMDeleteMessage.Click += new System.EventHandler(this.CMDeleteMessage_Click);
             // 
@@ -208,6 +211,14 @@
             this.CancelEdit.Visible = false;
             this.CancelEdit.Click += new System.EventHandler(this.CancelEdit_Click);
             // 
+            // CMGreyedOut
+            // 
+            this.CMGreyedOut.Name = "CMGreyedOut";
+            this.CMGreyedOut.Size = new System.Drawing.Size(233, 22);
+            this.CMGreyedOut.Text = "Why is everything greyed out?";
+            this.CMGreyedOut.Visible = false;
+            this.CMGreyedOut.Click += new System.EventHandler(this.CMGreyedOut_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -256,6 +267,7 @@
         public System.Windows.Forms.ToolStripMenuItem CMEditMessage;
         public System.Windows.Forms.ToolStripMenuItem CMDeleteMessage;
         public System.Windows.Forms.Button CancelEdit;
+        private System.Windows.Forms.ToolStripMenuItem CMGreyedOut;
     }
 }
 
