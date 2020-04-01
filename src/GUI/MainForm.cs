@@ -14,8 +14,8 @@ namespace discord_puppet
 {
     public partial class MainForm : Form
     {
-        public ulong guild;
-        public ulong channel;
+        public DiscordGuild guild;
+        public DiscordChannel channel;
 
         private readonly DiscordClient client;
         private string file = "";
@@ -60,13 +60,37 @@ namespace discord_puppet
             }
         }
 
+        #region ContextMenuEvents
+        private void CMGreyedOut_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("For some reason, Discord will not allow you to interact with messages sent before the connection of your bot.", "Discord is dumb, sorry.",
+                MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+        }
+
+        private void Output_ChatCM_Closing(object sender, ToolStripDropDownClosingEventArgs e)
+        {
+            CMGreyedOut.Visible = false;
+        }
+
         private void Output_ChatCM_Opening(object sender, CancelEventArgs e)
         {
-            if (Output_ChatText.SelectedIndex == -1 || Output_ChatText.SelectedItem.ToString().EndsWith("{MESSAGE DELETED} []"))
+            if (Output_ChatText.SelectedIndex <= 99)
+            {
+                CMGreyedOut.Visible = true;
+
+                CMViewImage.Enabled = false;
+                CMReact.Enabled = false;
+                CMEditMessage.Enabled = false;
+                CMDeleteMessage.Enabled = false;
+            }
+            else if (Output_ChatText.SelectedIndex == -1 || Output_ChatText.SelectedItem.ToString().EndsWith("{MESSAGE DELETED} []"))
                 Output_ChatCM.Enabled = false;
+            else if (Output_ChatText.SelectedIndex == 100) // index 100 is the "end of prev 100 messages" message
+                e.Cancel = true;
             else
             {
                 Output_ChatCM.Enabled = true;
+                CMReact.Enabled = true;
                 var message = MessageUtils.GetMessage(client, MessageUtils.GetID(Output_ChatText.SelectedItem.ToString()), channel);
 
                 switch (message.Attachments.Count)
@@ -88,7 +112,7 @@ namespace discord_puppet
                 {
                     CMEditMessage.Enabled = false;
 
-                    var getRoles = client.GetGuildAsync(guild).Result.CurrentMember.Roles;
+                    var getRoles = guild.CurrentMember.Roles;
                     var roles = getRoles.ToArray();
 
                     for (int i = 0; i < roles.Count(); i++)
@@ -107,6 +131,7 @@ namespace discord_puppet
                 }
             }
         }
+        #endregion
 
         private int lastIndex = -1;
 
@@ -128,19 +153,17 @@ namespace discord_puppet
                 return;
             }
 
-            var guildObj = await client.GetGuildAsync(guild);
-
             if (!string.IsNullOrWhiteSpace(file))
             {
                 using FileStream fstream = new FileStream(file, FileMode.Open);
 
-                await guildObj.GetChannel(channel).SendFileAsync(fstream, Input_Chat.Text);
+                await channel.SendFileAsync(fstream, Input_Chat.Text);
 
                 file = "";
                 Add_Image.Text = "Add Image/File";
             }
             else
-                await client.SendMessageAsync(guildObj.GetChannel(channel), Input_Chat.Text);
+                await client.SendMessageAsync(channel, Input_Chat.Text);
 
             Input_Chat.Clear();
         }
