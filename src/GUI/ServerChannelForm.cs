@@ -83,8 +83,8 @@ namespace discord_puppet
 
             var message = e.Message;
 
-            for (int i = 0; i < display.Output_ChatCM.Items.Count; i++)
-                if (MessageUtils.GetID(display.Output_ChatCM.Items[i].Text) == message.Id)
+            for (int i = 0; i < display.Output_ChatText.Items.Count; i++)
+                if (MessageUtils.GetID(display.Output_ChatText.Items[i].ToString()) == message.Id)
                     switch (message.Attachments.Count)
                     {
                         case 0:
@@ -108,10 +108,10 @@ namespace discord_puppet
 
             var message = e.Message;
 
-            for (int i = 0; i < display.Output_ChatCM.Items.Count; i++)
-                if (MessageUtils.GetID(display.Output_ChatCM.Items[i].Text) == message.Id)
+            for (int i = 0; i < display.Output_ChatText.Items.Count; i++)
+                if (MessageUtils.GetID(display.Output_ChatText.Items[i].ToString()) == message.Id)
                 {
-                    display.Output_ChatCM.Items[i].Text = display.Output_ChatCM.Items[i].Text.Substring(0, display.Output_ChatCM.Items[i].Text.LastIndexOf("[") - 1);
+                    display.Output_ChatText.Items[i] = display.Output_ChatText.Items[i].ToString().Substring(0, display.Output_ChatText.Items[i].ToString().LastIndexOf("[") - 1);
                     display.Output_ChatText.Items[i] += " {MESSAGE DELETED} []";
                 }
 
