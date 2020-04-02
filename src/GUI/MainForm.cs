@@ -1,6 +1,10 @@
-﻿using System;
+﻿// todo: ADD A GODDAMN CLOSE ALL FOR THE IMAGE VIEWER FFS YOU'VE LITERALLY THOUGHT ABOUT IT EVERY TIME YOU'VE TESTED IT CmonBruh
+// todo: add ability to send multiple files at once
+
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,6 +23,8 @@ namespace discord_puppet
 
         private readonly DiscordClient client;
         private string file = "";
+        private IOF iof;
+        private readonly IntPtr[] openedImages = new IntPtr[100];
 
         public MainForm(DiscordClient mainClient)
         {
@@ -70,12 +76,14 @@ namespace discord_puppet
         private void Output_ChatCM_Closing(object sender, ToolStripDropDownClosingEventArgs e)
         {
             CMGreyedOut.Visible = false;
+            Output_ChatCM.Size = new Size(234, 114);
         }
 
         private void Output_ChatCM_Opening(object sender, CancelEventArgs e)
         {
             if (Output_ChatText.SelectedIndex <= 99)
             {
+                Output_ChatCM.Size = new Size(234, 136);
                 CMGreyedOut.Visible = true;
 
                 CMViewImage.Enabled = false;
@@ -208,7 +216,7 @@ namespace discord_puppet
 
             if (message.Attachments.Count == 1)
             {
-                IOF iof = new IOF(message.Attachments[0].Url, message.Attachments[0].FileName);
+                iof = new IOF(message.Attachments[0].Url, message.Attachments[0].FileName);
                 iof.Show();
             }
             else
@@ -249,6 +257,13 @@ namespace discord_puppet
         {
             bool allowFiles = false;
             bool allowFilesAnswered = false;
+            ushort availableSpace = 0;
+            for (ushort i = 0; i < openedImages.Length; i++)
+                if (openedImages[i] == (IntPtr)0)
+                {
+                    availableSpace = i;
+                    break;
+                }
 
             for (int i = 0; i < Multiple_ImagesLB.SelectedIndices.Count; i++)
             {
@@ -258,7 +273,9 @@ namespace discord_puppet
                 // width == 0 means it's not an image
                 if (attachment.Width != 0)
                 {
-                    IOF iof = new IOF(attachment.Url, attachment.FileName);
+                    iof = new IOF(attachment.Url, attachment.FileName);
+
+                    openedImages[availableSpace] = iof.Handle;
                     iof.Show();
                 }
                 else
@@ -292,6 +309,13 @@ namespace discord_puppet
             Multiple_ImagesCancel.Visible = false;
 
             Multiple_ImagesLB.Items.Clear();
+        }
+
+        private void CloseAllImages_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < openedImages.Length; i++)
+                if (openedImages[i] != IntPtr.Zero)
+                    MessageBox.Show(FromHandle(openedImages[i]).FindForm().Text);
         }
         #endregion
 
@@ -362,6 +386,7 @@ namespace discord_puppet
                 Send_Button_Click(sender, e);
         }
         #endregion
+
         #endregion
     }
     #endregion
