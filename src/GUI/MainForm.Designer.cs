@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.Output_ChatCM = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.CMGreyedOut = new System.Windows.Forms.ToolStripMenuItem();
             this.CMViewImage = new System.Windows.Forms.ToolStripMenuItem();
             this.CMReact = new System.Windows.Forms.ToolStripMenuItem();
             this.CMReactText = new System.Windows.Forms.ToolStripTextBox();
@@ -45,7 +46,7 @@
             this.Multiple_ImagesCancel = new System.Windows.Forms.Button();
             this.Multiple_ImagesLB = new System.Windows.Forms.ListBox();
             this.CancelEdit = new System.Windows.Forms.Button();
-            this.CMGreyedOut = new System.Windows.Forms.ToolStripMenuItem();
+            this.CloseAllImages = new System.Windows.Forms.Button();
             this.Output_ChatCM.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,9 +59,17 @@
             this.CMEditMessage,
             this.CMDeleteMessage});
             this.Output_ChatCM.Name = "Output_ChatCM";
-            this.Output_ChatCM.Size = new System.Drawing.Size(234, 136);
+            this.Output_ChatCM.Size = new System.Drawing.Size(234, 114);
             this.Output_ChatCM.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.Output_ChatCM_Closing);
             this.Output_ChatCM.Opening += new System.ComponentModel.CancelEventHandler(this.Output_ChatCM_Opening);
+            // 
+            // CMGreyedOut
+            // 
+            this.CMGreyedOut.Name = "CMGreyedOut";
+            this.CMGreyedOut.Size = new System.Drawing.Size(233, 22);
+            this.CMGreyedOut.Text = "Why is everything greyed out?";
+            this.CMGreyedOut.Visible = false;
+            this.CMGreyedOut.Click += new System.EventHandler(this.CMGreyedOut_Click);
             // 
             // CMViewImage
             // 
@@ -142,6 +151,7 @@
             this.Input_Chat.BackColor = System.Drawing.SystemColors.GrayText;
             this.Input_Chat.ForeColor = System.Drawing.Color.White;
             this.Input_Chat.Location = new System.Drawing.Point(523, 12);
+            this.Input_Chat.Margin = new System.Windows.Forms.Padding(0);
             this.Input_Chat.Multiline = true;
             this.Input_Chat.Name = "Input_Chat";
             this.Input_Chat.Size = new System.Drawing.Size(380, 260);
@@ -157,6 +167,7 @@
             this.Output_ChatText.FormattingEnabled = true;
             this.Output_ChatText.HorizontalScrollbar = true;
             this.Output_ChatText.Location = new System.Drawing.Point(12, 12);
+            this.Output_ChatText.Margin = new System.Windows.Forms.Padding(0);
             this.Output_ChatText.Name = "Output_ChatText";
             this.Output_ChatText.Size = new System.Drawing.Size(380, 264);
             this.Output_ChatText.TabIndex = 19;
@@ -211,13 +222,16 @@
             this.CancelEdit.Visible = false;
             this.CancelEdit.Click += new System.EventHandler(this.CancelEdit_Click);
             // 
-            // CMGreyedOut
+            // CloseAllImages
             // 
-            this.CMGreyedOut.Name = "CMGreyedOut";
-            this.CMGreyedOut.Size = new System.Drawing.Size(233, 22);
-            this.CMGreyedOut.Text = "Why is everything greyed out?";
-            this.CMGreyedOut.Visible = false;
-            this.CMGreyedOut.Click += new System.EventHandler(this.CMGreyedOut_Click);
+            this.CloseAllImages.Location = new System.Drawing.Point(392, 9);
+            this.CloseAllImages.Margin = new System.Windows.Forms.Padding(0);
+            this.CloseAllImages.Name = "CloseAllImages";
+            this.CloseAllImages.Size = new System.Drawing.Size(131, 56);
+            this.CloseAllImages.TabIndex = 24;
+            this.CloseAllImages.Text = "Close All Images";
+            this.CloseAllImages.UseVisualStyleBackColor = true;
+            this.CloseAllImages.Click += new System.EventHandler(this.CloseAllImages_Click);
             // 
             // MainForm
             // 
@@ -228,6 +242,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(915, 547);
+            this.Controls.Add(this.CloseAllImages);
             this.Controls.Add(this.CancelEdit);
             this.Controls.Add(this.Multiple_ImagesCancel);
             this.Controls.Add(this.Clear_Button);
@@ -268,6 +283,7 @@
         public System.Windows.Forms.ToolStripMenuItem CMDeleteMessage;
         public System.Windows.Forms.Button CancelEdit;
         private System.Windows.Forms.ToolStripMenuItem CMGreyedOut;
+        private System.Windows.Forms.Button CloseAllImages;
     }
 }
 
