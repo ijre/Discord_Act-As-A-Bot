@@ -231,6 +231,7 @@
             this.CloseAllImages.TabIndex = 24;
             this.CloseAllImages.Text = "Close All Images";
             this.CloseAllImages.UseVisualStyleBackColor = true;
+            this.CloseAllImages.Visible = false;
             this.CloseAllImages.Click += new System.EventHandler(this.CloseAllImages_Click);
             // 
             // MainForm
