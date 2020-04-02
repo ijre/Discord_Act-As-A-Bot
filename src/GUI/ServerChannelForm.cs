@@ -43,11 +43,11 @@ namespace discord_puppet
             client.MessageCreated += OnMessageCreated;
             client.MessageUpdated += OnMessageUpdated;
             client.MessageDeleted += OnMessageDeleted;
+            client.Ready += OnReady;
 
             client.ConnectAsync();
             client.InitializeAsync();
 
-            SelectServer();
             display = new MainForm(client);
             display.Show();
         }
@@ -63,13 +63,13 @@ namespace discord_puppet
             switch (message.Attachments.Count)
             {
                 case 0:
-                    display.Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content}   [{message.Id}]");
+                    display.Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content}     [{message.Id}]");
                     break;
                 case 1:
-                    display.Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (IMAGE ATTACHED)   [{message.Id}]");
+                    display.Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (IMAGE ATTACHED)     [{message.Id}]");
                     break;
                 default:
-                    display.Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (MULTIPLE IMAGES ATTACHED)   [{message.Id}]");
+                    display.Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (MULTIPLE IMAGES ATTACHED)     [{message.Id}]");
                     break;
             }
 
@@ -84,17 +84,17 @@ namespace discord_puppet
             var message = e.Message;
 
             for (int i = 0; i < display.Output_ChatText.Items.Count; i++)
-                if (MessageUtils.GetID(display.Output_ChatText.Items[i].ToString()) == message.Id)
+                if (i != 100 && MessageUtils.GetID(display.Output_ChatText.Items[i].ToString()) == message.Id)
                     switch (message.Attachments.Count)
                     {
                         case 0:
-                            display.Output_ChatText.Items[i] = $"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (edited)   [{message.Id}]";
+                            display.Output_ChatText.Items[i] = $"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (edited)     [{message.Id}]";
                             break;
                         case 1:
-                            display.Output_ChatText.Items[i] = $"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (IMAGE ATTACHED) (edited)   [{message.Id}]";
+                            display.Output_ChatText.Items[i] = $"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (IMAGE ATTACHED) (edited)     [{message.Id}]";
                             break;
                         default:
-                            display.Output_ChatText.Items[i] = $"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (MULTIPLE IMAGES ATTACHED) (edited)   [{message.Id}]";
+                            display.Output_ChatText.Items[i] = $"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (MULTIPLE IMAGES ATTACHED) (edited)     [{message.Id}]";
                             break;
                     }
 
@@ -109,7 +109,7 @@ namespace discord_puppet
             var message = e.Message;
 
             for (int i = 0; i < display.Output_ChatText.Items.Count; i++)
-                if (MessageUtils.GetID(display.Output_ChatText.Items[i].ToString()) == message.Id)
+                if (i != 100 && MessageUtils.GetID(display.Output_ChatText.Items[i].ToString()) == message.Id)
                 {
                     display.Output_ChatText.Items[i] = display.Output_ChatText.Items[i].ToString().Substring(0, display.Output_ChatText.Items[i].ToString().LastIndexOf("[") - 1);
                     display.Output_ChatText.Items[i] += " {MESSAGE DELETED} []";
@@ -119,7 +119,7 @@ namespace discord_puppet
         }
         #endregion
 
-        private void SelectServer()
+        private Task OnReady(ReadyEventArgs e)
         {
 #if _DEBUG
             if (File.Exists("./deps/server_choose.exe"))
@@ -155,6 +155,8 @@ namespace discord_puppet
             };
             process.Start();
             process.BeginOutputReadLine();
+
+            return Task.CompletedTask;
         }
 
         private async void DoStuffSync(bool server)
