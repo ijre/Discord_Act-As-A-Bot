@@ -1,5 +1,6 @@
 .vs
 build
+Final Build*
 intermediates
 obj
 *.vcxproj.*
@@ -9,4 +10,3 @@ obj
 
 SD
 id*.txt
-Final Build*
