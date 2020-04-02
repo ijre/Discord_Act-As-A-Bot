@@ -1,13 +1,12 @@
-﻿// todo: ADD A GODDAMN CLOSE ALL FOR THE IMAGE VIEWER FFS YOU'VE LITERALLY THOUGHT ABOUT IT EVERY TIME YOU'VE TESTED IT CmonBruh
-// todo: add ability to send multiple files at once
+﻿// todo: add ability to send multiple files at once
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+// using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DSharpPlus;
@@ -23,9 +22,11 @@ namespace discord_puppet
         public DiscordChannel channel;
 
         private readonly DiscordClient client;
-        private string[] file = new string[10];
+        private readonly string[] file = new string[10];
+
         private IOF iof;
-        private readonly IntPtr[] openedImages = new IntPtr[100];
+        private readonly IntPtr[] handles = new IntPtr[100];
+        private int availableSpace;
 
         public MainForm(DiscordClient mainClient)
         {
@@ -49,8 +50,7 @@ namespace discord_puppet
         {
             if (Add_Image.Text.Contains("Remove"))
             {
-                for (int i = 0; i < file.Length; i++)
-                    file[i] = "";
+                Array.Clear(file, 0, file.Length);
 
                 Add_Image.Text = "Add Image/File";
                 return;
@@ -59,7 +59,7 @@ namespace discord_puppet
             using OpenFileDialog diag = new OpenFileDialog
             {
                 RestoreDirectory = true,
-                Multiselect = true
+                // Multiselect = true
             };
             diag.ShowDialog();
             if (diag.FileNames.Length > 10)
@@ -168,11 +168,11 @@ namespace discord_puppet
         {
             if (string.IsNullOrWhiteSpace(Input_Chat.Text) && string.IsNullOrWhiteSpace(file[0]))
             {
-                MessageBox.Show("Message cannot be empty.", "Empty Message Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Message cannot be empty unless you have a file attached.", "Empty Message Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            if (!string.IsNullOrWhiteSpace(file[0]) && string.IsNullOrWhiteSpace(file[1]))
+            if (!string.IsNullOrWhiteSpace(file[0]) /*&& string.IsNullOrWhiteSpace(file[1])*/)
             {
                 using FileStream fstream = new FileStream(file[0], FileMode.Open);
 
@@ -181,23 +181,20 @@ namespace discord_puppet
                 file[0] = "";
                 Add_Image.Text = "Add Image/File";
             }
-            else if (!string.IsNullOrWhiteSpace(file[0]) && !string.IsNullOrWhiteSpace(file[1]))
+            /*else if (!string.IsNullOrWhiteSpace(file[0]) && !string.IsNullOrWhiteSpace(file[1]))
             {
-                Dictionary<string, Stream> files = file.ToDictionary(fileArr => fileArr, stream => Stream.Null);
+                Dictionary<string, Stream> files = file.ToDictionary(new Func<string, Stream>((a => new FileStream(a, FileMode.Open))));
 
                 await channel.SendMultipleFilesAsync(files, Input_Chat.Text);
 
-                for (int i = 0; i < files.Count; i++)
-                    file[i] = "";
-
+                Array.Clear(file, 0, file.Length);
                 Add_Image.Text = "Add Image/File";
-            }
+            }*/
             else
                 await client.SendMessageAsync(channel, Input_Chat.Text);
 
             Input_Chat.Clear();
         }
-
         #endregion
 
         #region EditMessageHandling
@@ -240,6 +237,10 @@ namespace discord_puppet
             if (message.Attachments.Count == 1)
             {
                 iof = new IOF(message.Attachments[0].Url, message.Attachments[0].FileName);
+
+                handles[availableSpace] = iof.Handle;
+                availableSpace++;
+
                 iof.Show();
             }
             else
@@ -260,7 +261,7 @@ namespace discord_puppet
                             Multiple_ImagesLB.Items.Add($"3rd file ({message.Attachments[i].FileName})");
                             break;
                         default:
-                            Multiple_ImagesLB.Items.Add($"{i}th file ({message.Attachments[i].FileName})");
+                            Multiple_ImagesLB.Items.Add($"{i + 1}th file ({message.Attachments[i].FileName})");
                             break;
                     }
                 }
@@ -273,6 +274,8 @@ namespace discord_puppet
 
                 Multiple_ImagesCancel.BringToFront();
                 Multiple_ImagesCancel.Visible = true;
+
+                CloseAllImages.Visible = true;
             }
         }
 
@@ -280,13 +283,6 @@ namespace discord_puppet
         {
             bool allowFiles = false;
             bool allowFilesAnswered = false;
-            ushort availableSpace = 0;
-            for (ushort i = 0; i < openedImages.Length; i++)
-                if (openedImages[i] == (IntPtr)0)
-                {
-                    availableSpace = i;
-                    break;
-                }
 
             for (int i = 0; i < Multiple_ImagesLB.SelectedIndices.Count; i++)
             {
@@ -298,7 +294,9 @@ namespace discord_puppet
                 {
                     iof = new IOF(attachment.Url, attachment.FileName);
 
-                    openedImages[availableSpace] = iof.Handle;
+                    handles[availableSpace] = iof.Handle;
+                    availableSpace++;
+
                     iof.Show();
                 }
                 else
@@ -336,9 +334,19 @@ namespace discord_puppet
 
         private void CloseAllImages_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < openedImages.Length; i++)
-                if (openedImages[i] != IntPtr.Zero)
-                    MessageBox.Show(FromHandle(openedImages[i]).FindForm().Text);
+            for (int i = 0; i < handles.Length; i++)
+                if (handles[i] != IntPtr.Zero)
+                    try
+                    {
+                        // ReSharper disable once PossibleNullReferenceException
+                        FromHandle(handles[i]).FindForm().Close();
+                        handles[i] = IntPtr.Zero;
+                    }
+                    catch (NullReferenceException) { }
+
+            CloseAllImages.Visible = false;
+            availableSpace = 0;
+            Array.Clear(handles, 0, handles.Length);
         }
         #endregion
 
