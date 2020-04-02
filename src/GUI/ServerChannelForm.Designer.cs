@@ -54,7 +54,7 @@
             this.Servers.Location = new System.Drawing.Point(0, 0);
             this.Servers.Name = "Servers";
             this.Servers.Size = new System.Drawing.Size(251, 472);
-            this.Servers.TabIndex = 2;
+            this.Servers.TabIndex = 0;
             this.Servers.SelectedIndexChanged += new System.EventHandler(this.Servers_SelectedIndexChanged);
             // 
             // ServerChannelForm
