@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Windows.Forms;
 
 namespace discord_puppet
@@ -32,7 +31,7 @@ namespace discord_puppet
             };
         }
 
-        static bool ignoreNext = false;
+        static bool ignoreNext;
 
         private void WebBrowser1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
