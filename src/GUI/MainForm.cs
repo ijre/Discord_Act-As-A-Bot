@@ -1,4 +1,6 @@
-﻿// todo: add ability to send multiple files at once
+﻿// todo: put Send_Button_Click edit handling into separate function, call that with Enter key event
+// todo: make output chat scroll down when input is given
+// todo: figure out why bot cannot get messages which are sent before its connection
 
 using System;
 using System.ComponentModel;
@@ -6,7 +8,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-// using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DSharpPlus;
@@ -22,17 +24,26 @@ namespace discord_puppet
         public DiscordChannel channel;
 
         private readonly DiscordClient client;
-        private readonly string[] file = new string[10];
+        private readonly Dictionary<string, Stream> file = new Dictionary<string, Stream>();
 
         private IOF iof;
         private readonly IntPtr[] handles = new IntPtr[100];
         private int availableSpace;
+
+#if !_FINAL
+        private readonly DebugForm debuger;
+#endif
 
         public MainForm(DiscordClient mainClient)
         {
             InitializeComponent();
             Text = $"Act As A Discord Bot (v{Application.ProductVersion})";
             client = mainClient;
+
+#if !_FINAL
+            debuger = new DebugForm();
+            debuger.Show();
+#endif
         }
 
         #region WinFormsEvents
@@ -50,7 +61,7 @@ namespace discord_puppet
         {
             if (Add_Image.Text.Contains("Remove"))
             {
-                Array.Clear(file, 0, file.Length);
+                file.Clear();
 
                 Add_Image.Text = "Add Image/File";
                 return;
@@ -59,7 +70,7 @@ namespace discord_puppet
             using OpenFileDialog diag = new OpenFileDialog
             {
                 RestoreDirectory = true,
-                // Multiselect = true
+                Multiselect = true
             };
             diag.ShowDialog();
             if (diag.FileNames.Length > 10)
@@ -68,10 +79,10 @@ namespace discord_puppet
                 return;
             }
 
-            if (!string.IsNullOrWhiteSpace(diag.FileNames[0]))
+            if (!string.IsNullOrWhiteSpace(diag.FileName))
             {
                 for (int i = 0; i < diag.FileNames.Length; i++)
-                    file[i] = diag.FileNames[i];
+                    file.Add(diag.FileNames[i], new FileStream(diag.FileNames[i], FileMode.Open));
 
                 Add_Image.Text = "Remove Image/File";
             }
@@ -92,7 +103,7 @@ namespace discord_puppet
 
         private void Output_ChatCM_Opening(object sender, CancelEventArgs e)
         {
-            if (Output_ChatText.SelectedIndex <= 99)
+            /*if (Output_ChatText.SelectedIndex <= 99)
             {
                 Output_ChatCM.Size = new Size(234, 136);
                 CMGreyedOut.Visible = true;
@@ -102,7 +113,8 @@ namespace discord_puppet
                 CMEditMessage.Enabled = false;
                 CMDeleteMessage.Enabled = false;
             }
-            else if (Output_ChatText.SelectedIndex == -1 || Output_ChatText.SelectedItem.ToString().EndsWith("{MESSAGE DELETED} []"))
+            else */
+            if (Output_ChatText.SelectedIndex == -1 || Output_ChatText.SelectedItem.ToString().EndsWith("{MESSAGE DELETED} []"))
                 Output_ChatCM.Enabled = false;
             else if (Output_ChatText.SelectedIndex == 100) // index 100 is the "end of prev 100 messages" message
                 e.Cancel = true;
@@ -166,30 +178,18 @@ namespace discord_puppet
         #region SendMessageHandling
         private async Task SendMessage()
         {
-            if (string.IsNullOrWhiteSpace(Input_Chat.Text) && string.IsNullOrWhiteSpace(file[0]))
+            if (string.IsNullOrWhiteSpace(Input_Chat.Text) && file.Count == 0)
             {
                 MessageBox.Show("Message cannot be empty unless you have a file attached.", "Empty Message Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-            if (!string.IsNullOrWhiteSpace(file[0]) /*&& string.IsNullOrWhiteSpace(file[1])*/)
+            else if (file.Count <= 1)
             {
-                using FileStream fstream = new FileStream(file[0], FileMode.Open);
+                await channel.SendMultipleFilesAsync(file, Input_Chat.Text);
 
-                await channel.SendFileAsync(fstream, Input_Chat.Text);
-
-                file[0] = "";
+                file.Clear();
                 Add_Image.Text = "Add Image/File";
             }
-            /*else if (!string.IsNullOrWhiteSpace(file[0]) && !string.IsNullOrWhiteSpace(file[1]))
-            {
-                Dictionary<string, Stream> files = file.ToDictionary(new Func<string, Stream>((a => new FileStream(a, FileMode.Open))));
-
-                await channel.SendMultipleFilesAsync(files, Input_Chat.Text);
-
-                Array.Clear(file, 0, file.Length);
-                Add_Image.Text = "Add Image/File";
-            }*/
             else
                 await client.SendMessageAsync(channel, Input_Chat.Text);
 
