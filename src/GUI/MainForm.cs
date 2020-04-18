@@ -1,5 +1,4 @@
-﻿// todo: put Send_Button_Click edit handling into separate function, call that with Enter key event
-// todo: make output chat scroll down when input is given
+﻿// todo: make output chat scroll down when input is given if it's already at the bottom
 // todo: figure out why bot cannot get messages which are sent before its connection
 
 using System;
@@ -23,16 +22,17 @@ namespace discord_puppet
         public DiscordGuild guild;
         public DiscordChannel channel;
 
+#if !_FINAL
+        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
+        public readonly DebugForm debuger;
+#endif
+
         private readonly DiscordClient client;
         private readonly Dictionary<string, Stream> file = new Dictionary<string, Stream>();
 
         private IOF iof;
         private readonly IntPtr[] handles = new IntPtr[100];
         private int availableSpace;
-
-#if !_FINAL
-        private readonly DebugForm debuger;
-#endif
 
         public MainForm(DiscordClient mainClient)
         {
@@ -103,7 +103,7 @@ namespace discord_puppet
 
         private void Output_ChatCM_Opening(object sender, CancelEventArgs e)
         {
-            /*if (Output_ChatText.SelectedIndex <= 99)
+            if (Output_ChatText.SelectedIndex <= 99)
             {
                 Output_ChatCM.Size = new Size(234, 136);
                 CMGreyedOut.Visible = true;
@@ -113,8 +113,7 @@ namespace discord_puppet
                 CMEditMessage.Enabled = false;
                 CMDeleteMessage.Enabled = false;
             }
-            else */
-            if (Output_ChatText.SelectedIndex == -1 || Output_ChatText.SelectedItem.ToString().EndsWith("{MESSAGE DELETED} []"))
+            else if (Output_ChatText.SelectedIndex == -1 || Output_ChatText.SelectedItem.ToString().EndsWith("{MESSAGE DELETED} []"))
                 Output_ChatCM.Enabled = false;
             else if (Output_ChatText.SelectedIndex == 100) // index 100 is the "end of prev 100 messages" message
                 e.Cancel = true;
@@ -122,7 +121,7 @@ namespace discord_puppet
             {
                 Output_ChatCM.Enabled = true;
                 CMReact.Enabled = true;
-                var message = MessageUtils.GetMessage(client, MessageUtils.GetID(Output_ChatText.SelectedItem.ToString()), channel);
+                var message = MessageUtils.GetMessage(Output_ChatText.SelectedItem.ToString(), channel);
 
                 switch (message.Attachments.Count)
                 {
@@ -175,29 +174,71 @@ namespace discord_puppet
         }
 
         #region Handlers
+        #region MultiHandlingFunctions
+        private void Send_Button_Click(object sender, EventArgs e)
+        {
+            if (Send_Button.Text == "Send")
+                SendMessage();
+            else
+                EditMessage();
+        }
+
+        private void Input_Chat_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData != Keys.Return)
+                return;
+
+            if (Send_Button.Text == "Send")
+                SendMessage();
+            else
+                EditMessage();
+        }
+        #endregion
+
         #region SendMessageHandling
         private async Task SendMessage()
         {
-            if (string.IsNullOrWhiteSpace(Input_Chat.Text) && file.Count == 0)
+            try
             {
-                MessageBox.Show("Message cannot be empty unless you have a file attached.", "Empty Message Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            else if (file.Count <= 1)
-            {
-                await channel.SendMultipleFilesAsync(file, Input_Chat.Text);
+                if (string.IsNullOrWhiteSpace(Input_Chat.Text) && file.Count == 0)
+                {
+                    MessageBox.Show("Message cannot be empty unless you have a file attached.", "Empty Message Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
-                file.Clear();
-                Add_Image.Text = "Add Image/File";
+                if (file.Count <= 1)
+                {
+                    await channel.SendMultipleFilesAsync(file, Input_Chat.Text);
+
+                    file.Clear();
+                    Add_Image.Text = "Add Image/File";
+                }
+                else
+                    await client.SendMessageAsync(channel, Input_Chat.Text);
             }
-            else
-                await client.SendMessageAsync(channel, Input_Chat.Text);
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
             Input_Chat.Clear();
         }
         #endregion
 
         #region EditMessageHandling
+        private void EditMessage()
+        {
+            var message = MessageUtils.GetMessage(Output_ChatText.SelectedItem.ToString(), channel);
+            message.ModifyAsync(Input_Chat.Text);
+
+            Input_Chat.Text = oldInput;
+            oldInput = null;
+
+            Send_Button.Text = "Send";
+            CancelEdit.Visible = false;
+            Output_ChatText.Enabled = true;
+        }
+
         private string oldInput = "";
         private void CMEditMessage_Click(object sender, EventArgs e)
         {
@@ -225,14 +266,14 @@ namespace discord_puppet
         #region DeleteMessageHandling
         private void CMDeleteMessage_Click(object sender, EventArgs e)
         {
-            MessageUtils.GetMessage(client, MessageUtils.GetID(Output_ChatText.SelectedItem.ToString()), channel).DeleteAsync();
+            MessageUtils.GetMessage(Output_ChatText.SelectedItem.ToString(), channel).DeleteAsync();
         }
         #endregion
 
         #region ViewImageHandling
         private void CMViewImage_Click(object sender, EventArgs e)
         {
-            var message = MessageUtils.GetMessage(client, MessageUtils.GetID(Output_ChatText.SelectedItem.ToString()), channel);
+            var message = MessageUtils.GetMessage(Output_ChatText.SelectedItem.ToString(), channel);
 
             if (message.Attachments.Count == 1)
             {
@@ -286,7 +327,7 @@ namespace discord_puppet
 
             for (int i = 0; i < Multiple_ImagesLB.SelectedIndices.Count; i++)
             {
-                var attachment = MessageUtils.GetMessage(client, MessageUtils.GetID(Output_ChatText.SelectedItem.ToString()), channel)
+                var attachment = MessageUtils.GetMessage(Output_ChatText.SelectedItem.ToString(), channel)
                     .Attachments[Multiple_ImagesLB.SelectedIndices[i]];
 
                 // width == 0 means it's not an image
@@ -368,7 +409,7 @@ namespace discord_puppet
                     CMReactText.Text = CMReactText.Text.Insert(0, ":") + ":";
                 }
 
-                MessageUtils.GetMessage(client, MessageUtils.GetID(Output_ChatText.SelectedItem.ToString()), channel).
+                MessageUtils.GetMessage(Output_ChatText.SelectedItem.ToString(), channel).
                         CreateReactionAsync(DiscordEmoji.FromName(client, CMReactText.Text));
             }
             catch (Exception ex)
@@ -384,37 +425,6 @@ namespace discord_puppet
         {
             if (CMReactText.Text == "Input Emoji Here")
                 CMReactText.Clear();
-        }
-        #endregion
-
-        #region MultiHandlingFunctions
-        private void Send_Button_Click(object sender, EventArgs e)
-        {
-            if (Send_Button.Text == "Send")
-                SendMessage();
-            else
-            {
-                var message = MessageUtils.GetMessage(client, MessageUtils.GetID(Output_ChatText.SelectedItem.ToString()), channel);
-                message.ModifyAsync(Input_Chat.Text);
-
-                Input_Chat.Text = oldInput;
-                oldInput = null;
-
-                Send_Button.Text = "Send";
-                CancelEdit.Visible = false;
-                Output_ChatText.Enabled = true;
-            }
-        }
-
-        private void Input_Chat_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyData != Keys.Return)
-                return;
-
-            if (Send_Button.Text == "Send")
-                SendMessage();
-            else
-                Send_Button_Click(sender, e);
         }
         #endregion
 

@@ -73,6 +73,9 @@ namespace discord_puppet
                     break;
             }
 
+            if (display.Output_ChatText.Items.Count - 1 - display.Output_ChatText.TopIndex == 18)
+                display.Output_ChatText.TopIndex = display.Output_ChatText.Items.Count - 1;
+
             return Task.CompletedTask;
         }
 
