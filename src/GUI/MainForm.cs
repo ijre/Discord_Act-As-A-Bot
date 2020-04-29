@@ -1,7 +1,4 @@
-﻿// todo: make output chat scroll down when input is given if it's already at the bottom
-// todo: figure out why bot cannot get messages which are sent before its connection
-
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
