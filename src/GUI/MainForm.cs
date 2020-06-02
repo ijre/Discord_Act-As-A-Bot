@@ -24,7 +24,9 @@ namespace discord_puppet
 
             if (!Directory.Exists("./deps/"))
 #if !_DEBUG
+            {
                 MessageBox.Show("Could not find deps folder, this folder and its original contents are required for the program to run.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             else if (!File.Exists("./deps/id.txt") || !File.Exists("./deps/server_choose.exe"))
                 MessageBox.Show("id.txt or server_choose.exe are missing from deps folder; these two files are required for the program to run.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
@@ -39,6 +41,10 @@ namespace discord_puppet
                 Token = File.ReadAllText("../deps/id.txt")
 #endif
             });
+
+#if !_DEBUG
+            Servers.Items.Clear();
+#endif
 
             client.MessageCreated += OnMessageCreated;
             client.MessageUpdated += OnMessageUpdated;
@@ -102,7 +108,7 @@ namespace discord_puppet
 
         private Task OnReady(ReadyEventArgs e)
         {
-#if _DEBUG
+#if !_DEBUG
             if (File.Exists("./deps/server_choose.exe"))
             {
                 File.Delete("./deps/server_choose.exe");
@@ -110,7 +116,7 @@ namespace discord_puppet
             }
             else
                 File.Copy("../deps/server_choose.exe", "./deps/server_choose.exe");
-#endif
+
 
             using Process process = new Process()
             {
@@ -136,6 +142,9 @@ namespace discord_puppet
             };
             process.Start();
             process.BeginOutputReadLine();
+#else
+            MessageBox.Show("");
+#endif
 
             return Task.CompletedTask;
         }

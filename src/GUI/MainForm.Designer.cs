@@ -51,13 +51,15 @@
             this.Servers.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.Servers.ForeColor = System.Drawing.Color.White;
             this.Servers.FormattingEnabled = true;
+            this.Servers.Items.AddRange(new object[] {
+            "test serv [511026398429839371]"});
             this.Servers.Location = new System.Drawing.Point(0, 0);
             this.Servers.Name = "Servers";
             this.Servers.Size = new System.Drawing.Size(251, 472);
             this.Servers.TabIndex = 0;
             this.Servers.SelectedIndexChanged += new System.EventHandler(this.Servers_SelectedIndexChanged);
             // 
-            // ServerChannelForm
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -68,7 +70,7 @@
             this.Controls.Add(this.Channels);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "ServerChannelForm";
+            this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.ResumeLayout(false);
 
