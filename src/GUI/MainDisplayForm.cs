@@ -227,7 +227,7 @@ namespace discord_puppet
                     return;
                 }
 
-                if (file.Count <= 1)
+                if (file.Count >= 1)
                 {
                     await channel.SendMultipleFilesAsync(file, Input_Chat.Text);
 
