@@ -199,18 +199,17 @@ namespace discord_puppet
                 var messagesArray = messages.ToArray();
 
                 for (int i = messagesArray.Length - 1; 0 <= i; i--)
-                    switch (messagesArray[i].Attachments.Count)
-                    {
-                        case 0:
-                            display.Output_ChatText.Items.Add($"{messagesArray[i].Author.Username}#{messagesArray[i].Author.Discriminator}: {messagesArray[i].Content}   [{messagesArray[i].Id}]");
-                            break;
-                        case 1:
-                            display.Output_ChatText.Items.Add($"{messagesArray[i].Author.Username}#{messagesArray[i].Author.Discriminator}: {messagesArray[i].Content} (IMAGE ATTACHED)   [{messagesArray[i].Id}]");
-                            break;
-                        default:
-                            display.Output_ChatText.Items.Add($"{messagesArray[i].Author.Username}#{messagesArray[i].Author.Discriminator}: {messagesArray[i].Content} (MULTIPLE IMAGES ATTACHED)   [{messagesArray[i].Id}]");
-                            break;
-                    }
+                {
+                    string attachments = "";
+
+                    if (messagesArray[i].Attachments.Count == 1)
+                        attachments = " (IMAGE ATTACHED)";
+                    else if (messagesArray[i].Attachments.Count > 1)
+                        attachments = " (MULTIPLE IMAGES ATTACHED)";
+
+                    display.Output_ChatText.Items.Add($"{messagesArray[i].Author.Username}#{messagesArray[i].Author.Discriminator}: {messagesArray[i].Content}{attachments}    [{messagesArray[i].Id}]");
+                }
+
                 display.Output_ChatText.Items.Add("((((((((((END OF PREVIOUS 100 MESSAGES)))))))))");
             }
         }
