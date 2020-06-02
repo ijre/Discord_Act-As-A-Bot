@@ -109,15 +109,6 @@ namespace discord_puppet
         private Task OnReady(ReadyEventArgs e)
         {
 #if !_DEBUG
-            if (File.Exists("./deps/server_choose.exe"))
-            {
-                File.Delete("./deps/server_choose.exe");
-                File.Copy("../deps/server_choose.exe", "./deps/server_choose.exe");
-            }
-            else
-                File.Copy("../deps/server_choose.exe", "./deps/server_choose.exe");
-
-
             using Process process = new Process()
             {
                 EnableRaisingEvents = true,
