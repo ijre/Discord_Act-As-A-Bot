@@ -60,21 +60,10 @@ namespace discord_puppet
 
             var message = e.Message;
 
-            switch (message.Attachments.Count)
-            {
-                case 0:
-                    display.Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content}     [{message.Id}]");
-                    break;
-                case 1:
-                    display.Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (IMAGE ATTACHED)     [{message.Id}]");
-                    break;
-                default:
-                    display.Output_ChatText.Items.Add($"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (MULTIPLE IMAGES ATTACHED)     [{message.Id}]");
-                    break;
-            }
+            display.Output_ChatText.Items.Add(AddAttachmentText(message));
 
-            if (display.Output_ChatText.Items.Count - 1 - display.Output_ChatText.TopIndex == 18)
-                display.Output_ChatText.TopIndex = display.Output_ChatText.Items.Count - 1;
+            if (display.Output_ChatText.Items.Count - 1 - display.Output_ChatText.TopIndex == 18) // if we're scrolled to the very bottom of the chat
+                display.Output_ChatText.TopIndex = display.Output_ChatText.Items.Count - 1; // scroll to adjust to new message
 
             return Task.CompletedTask;
         }
@@ -88,18 +77,7 @@ namespace discord_puppet
 
             for (int i = 0; i < display.Output_ChatText.Items.Count; i++)
                 if (i != 100 && MessageUtils.GetID(display.Output_ChatText.Items[i].ToString()) == message.Id)
-                    switch (message.Attachments.Count)
-                    {
-                        case 0:
-                            display.Output_ChatText.Items[i] = $"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (edited)     [{message.Id}]";
-                            break;
-                        case 1:
-                            display.Output_ChatText.Items[i] = $"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (IMAGE ATTACHED) (edited)     [{message.Id}]";
-                            break;
-                        default:
-                            display.Output_ChatText.Items[i] = $"{message.Author.Username}#{message.Author.Discriminator}: {message.Content} (MULTIPLE IMAGES ATTACHED) (edited)     [{message.Id}]";
-                            break;
-                    }
+                    display.Output_ChatText.Items[i] = AddAttachmentText(message).Insert(display.Output_ChatText.Items[i].ToString().LastIndexOf("[") - 4, " (edited)");
 
             return Task.CompletedTask;
         }
@@ -114,8 +92,8 @@ namespace discord_puppet
             for (int i = 0; i < display.Output_ChatText.Items.Count; i++)
                 if (i != 100 && MessageUtils.GetID(display.Output_ChatText.Items[i].ToString()) == message.Id)
                 {
-                    display.Output_ChatText.Items[i] = display.Output_ChatText.Items[i].ToString().Substring(0, display.Output_ChatText.Items[i].ToString().LastIndexOf("[") - 1);
-                    display.Output_ChatText.Items[i] += " {MESSAGE DELETED} []";
+                    display.Output_ChatText.Items[i] = display.Output_ChatText.Items[i].ToString().Substring(0, display.Output_ChatText.Items[i].ToString().LastIndexOf("[") - 1); // delete everything past the message's body
+                    display.Output_ChatText.Items[i] += " {MESSAGE DELETED} []"; // and add a note that it's deleted
                 }
 
             return Task.CompletedTask;
@@ -199,18 +177,11 @@ namespace discord_puppet
                 var messagesArray = messages.ToArray();
 
                 for (int i = messagesArray.Length - 1; 0 <= i; i--)
-                {
-                    string attachments = "";
-
-                    if (messagesArray[i].Attachments.Count == 1)
-                        attachments = " (IMAGE ATTACHED)";
-                    else if (messagesArray[i].Attachments.Count > 1)
-                        attachments = " (MULTIPLE IMAGES ATTACHED)";
-
-                    display.Output_ChatText.Items.Add($"{messagesArray[i].Author.Username}#{messagesArray[i].Author.Discriminator}: {messagesArray[i].Content}{attachments}    [{messagesArray[i].Id}]");
-                }
+                    display.Output_ChatText.Items.Add(AddAttachmentText(messagesArray[i]));
 
                 display.Output_ChatText.Items.Add("((((((((((END OF PREVIOUS 100 MESSAGES)))))))))");
+
+                display.Output_ChatText.TopIndex = display.Output_ChatText.Items.Count - 1;
             }
         }
 
@@ -234,6 +205,18 @@ namespace discord_puppet
 
             lastIndexChannels = Channels.SelectedIndex;
             DoStuffSync(false);
+        }
+
+        private static string AddAttachmentText(DiscordMessage message)
+        {
+            string attachments = "";
+
+            if (message.Attachments.Count == 1)
+                attachments = " (IMAGE ATTACHED)";
+            else if (message.Attachments.Count > 1)
+                attachments = " (MULTIPLE IMAGES ATTACHED)";
+
+            return $"{message.Author.Username}#{message.Author.Discriminator}: {message.Content}{attachments}    [{message.Id}]";
         }
     }
 }
