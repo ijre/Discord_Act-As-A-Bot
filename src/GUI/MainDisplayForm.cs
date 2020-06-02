@@ -182,8 +182,12 @@ namespace discord_puppet
 
         private void Input_Chat_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyData == Keys.Back || string.IsNullOrWhiteSpace(Input_Chat.Text))
+            if (e.KeyData == Keys.Back
+                || e.KeyData == Keys.Shift || e.KeyData == Keys.Alt || e.KeyData == Keys.Control)
+            {
+                HandleTyping.Enabled = false;
                 return;
+            }
 
             if (e.KeyData == Keys.Return)
             {
@@ -200,17 +204,21 @@ namespace discord_puppet
         #endregion
 
         #region TypingEventHandling
-        private readonly string prevText = "";
+        private string prevText = "";
         private void HandleTyping_Tick(object sender, EventArgs e)
         {
             if (prevText != Input_Chat.Text)
                 channel.TriggerTypingAsync();
+
+            prevText = Input_Chat.Text;
         }
         #endregion
 
         #region SendMessageHandling
         private async Task SendMessage()
         {
+            Input_Chat.Enabled = false;
+
             try
             {
                 if (string.IsNullOrWhiteSpace(Input_Chat.Text) && file.Count == 0)
@@ -234,7 +242,10 @@ namespace discord_puppet
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+            Input_Chat.Enabled = true;
             Input_Chat.Clear();
+
+            Input_Chat.Focus(); // disabling pulls away focus
         }
         #endregion
 
