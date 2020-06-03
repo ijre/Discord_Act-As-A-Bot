@@ -187,7 +187,8 @@ namespace discord_puppet
         private void Input_Chat_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.Back
-                || e.KeyData == Keys.Shift || e.KeyData == Keys.Alt || e.KeyData == Keys.Control)
+                || e.KeyData == Keys.Shift || e.KeyData == Keys.Alt || e.KeyData == Keys.Control
+                || Send_Button.Text == "Edit")
             {
                 HandleTyping.Enabled = false;
                 return;
