@@ -111,9 +111,13 @@ namespace discord_puppet
                 CMDeleteMessage.Enabled = false;
             }
             else if (Output_ChatText.SelectedIndex == -1 || Output_ChatText.SelectedItem.ToString().EndsWith("{MESSAGE DELETED} []"))
+            {
                 Output_ChatCM.Enabled = false;
+            }
             else if (Output_ChatText.SelectedIndex == 100) // index 100 is the "end of prev 100 messages" message
+            {
                 e.Cancel = true;
+            }
             else
             {
                 Output_ChatCM.Enabled = true;
