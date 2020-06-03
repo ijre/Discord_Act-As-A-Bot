@@ -70,19 +70,21 @@ namespace discord_puppet
                 Multiselect = true
             };
             diag.ShowDialog();
+
+            if (string.IsNullOrWhiteSpace(diag.FileName))
+                return;
+
             if (diag.FileNames.Length > 10)
             {
                 MessageBox.Show("Discord only allows 10 attachments per message.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 return;
             }
 
-            if (!string.IsNullOrWhiteSpace(diag.FileName))
-            {
-                for (int i = 0; i < diag.FileNames.Length; i++)
-                    file.Add(diag.FileNames[i], new FileStream(diag.FileNames[i], FileMode.Open));
 
-                Add_Image.Text = "Remove Image/File";
-            }
+            for (int i = 0; i < diag.FileNames.Length; i++)
+                file.Add(diag.FileNames[i], new FileStream(diag.FileNames[i], FileMode.Open));
+
+            Add_Image.Text = "Remove Image/File";
         }
 
         #region ContextMenuEvents
