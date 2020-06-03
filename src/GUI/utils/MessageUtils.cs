@@ -1,26 +1,10 @@
 using System;
 using System.Windows.Forms;
-using DSharpPlus;
-using DSharpPlus.Entities;
 
 namespace discord_puppet.utils
 {
     public class MessageUtils
     {
-        public static DiscordMessage GetMessage(string message, DiscordChannel channel)
-        {
-            try
-            {
-                return channel.GetMessageAsync(GetID(message)).Result;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-
-                return null;
-            }
-        }
-
         public static ulong GetID(string _string)
         {
             try

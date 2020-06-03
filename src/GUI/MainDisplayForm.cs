@@ -124,7 +124,7 @@ namespace discord_puppet
             {
                 Output_ChatCM.Enabled = true;
                 CMReact.Enabled = true;
-                var message = MessageUtils.GetMessage(Output_ChatText.SelectedItem.ToString(), channel);
+                var message = GetMessage(Output_ChatText.SelectedItem.ToString());
 
                 switch (message.Attachments.Count)
                 {
@@ -259,7 +259,7 @@ namespace discord_puppet
         #region EditMessageHandling
         private void EditMessage()
         {
-            var message = MessageUtils.GetMessage(Output_ChatText.SelectedItem.ToString(), channel);
+            var message = GetMessage(Output_ChatText.SelectedItem.ToString());
             message.ModifyAsync(Input_Chat.Text);
 
             Input_Chat.Text = oldInput;
@@ -297,14 +297,14 @@ namespace discord_puppet
         #region DeleteMessageHandling
         private void CMDeleteMessage_Click(object sender, EventArgs e)
         {
-            MessageUtils.GetMessage(Output_ChatText.SelectedItem.ToString(), channel).DeleteAsync();
+            GetMessage(Output_ChatText.SelectedItem.ToString()).DeleteAsync();
         }
         #endregion
 
         #region ViewImageHandling
         private void CMViewImage_Click(object sender, EventArgs e)
         {
-            var message = MessageUtils.GetMessage(Output_ChatText.SelectedItem.ToString(), channel);
+            var message = GetMessage(Output_ChatText.SelectedItem.ToString());
 
             if (message.Attachments.Count == 1)
             {
@@ -358,7 +358,7 @@ namespace discord_puppet
 
             for (int i = 0; i < Multiple_ImagesLB.SelectedIndices.Count; i++)
             {
-                var attachment = MessageUtils.GetMessage(Output_ChatText.SelectedItem.ToString(), channel)
+                var attachment = GetMessage(Output_ChatText.SelectedItem.ToString())
                     .Attachments[Multiple_ImagesLB.SelectedIndices[i]];
 
                 // width == 0 means it's not an image
@@ -440,7 +440,7 @@ namespace discord_puppet
                     CMReactText.Text = CMReactText.Text.Insert(0, ":") + ":";
                 }
 
-                MessageUtils.GetMessage(Output_ChatText.SelectedItem.ToString(), channel).
+                GetMessage(Output_ChatText.SelectedItem.ToString()).
                         CreateReactionAsync(DiscordEmoji.FromName(client, CMReactText.Text));
             }
             catch (Exception ex)
@@ -457,9 +457,24 @@ namespace discord_puppet
             if (CMReactText.Text == "Input Emoji Here")
                 CMReactText.Clear();
         }
-        #endregion
+        #endregion // Reaction Handling
+        #endregion // Handlers
+        #endregion // WinForms Events
 
+        #region Helpers
+        private DiscordMessage GetMessage(string message)
+        {
+            try
+            {
+                return channel.GetMessageAsync(MessageUtils.GetID(message)).Result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+
+                return null;
+            }
+        }
         #endregion
     }
-    #endregion
 }
