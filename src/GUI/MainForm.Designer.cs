@@ -28,9 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.Channels = new System.Windows.Forms.ListBox();
             this.Servers = new System.Windows.Forms.ListBox();
+            this.MainForm_ThinkTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // Channels
@@ -59,6 +61,11 @@
             this.Servers.TabIndex = 0;
             this.Servers.SelectedIndexChanged += new System.EventHandler(this.Servers_SelectedIndexChanged);
             // 
+            // MainForm_ThinkTimer
+            // 
+            this.MainForm_ThinkTimer.Enabled = true;
+            this.MainForm_ThinkTimer.Tick += new System.EventHandler(this.MainForm_Think);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -73,8 +80,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Load += new System.EventHandler(this.ResizeHandler);
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.ResumeLayout(false);
 
         }
@@ -83,5 +89,6 @@
 
         private System.Windows.Forms.ListBox Channels;
         private System.Windows.Forms.ListBox Servers;
+        private System.Windows.Forms.Timer MainForm_ThinkTimer;
     }
 }

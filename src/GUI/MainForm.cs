@@ -56,15 +56,10 @@ namespace discord_puppet
             client.ConnectAsync();
             client.InitializeAsync();
 
-
             display = new MainDisplayForm(client);
 
             display.Move += ResizeHandler;
             display.ResizeEnd += ResizeHandler;
-
-            display.Show();
-
-            display.Location = new Point(display.Location.X + 33, display.Location.Y); // offset because display opens in the center, need to move else we get cutoff
         }
 
         #region DiscordEvents
@@ -181,6 +176,23 @@ namespace discord_puppet
             Size = new Size(defaultWidth, Channels.Height);
             Channels.Size = new Size(Channels.Width, Servers.Height);
         }
+
+        private bool focusedOn = true;
+        private void MainForm_Think(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+                return;
+
+            if (!focusedOn && display.ContainsFocus)
+            {
+                Focus();
+                display.Focus();
+
+                focusedOn = true;
+            }
+            else if (!display.ContainsFocus && !ContainsFocus)
+                focusedOn = false;
+        }
         #endregion
 
         #region Helpers
@@ -196,6 +208,7 @@ namespace discord_puppet
             return $"{message.Author.Username}#{message.Author.Discriminator}: {message.Content}{attachments}    [{message.Id}]";
         }
 
+        private bool init;
         private async void DoStuffSync(bool server)
         {
             if (server)
@@ -220,9 +233,22 @@ namespace discord_puppet
                         Channels.Items.Add($"{chanArray[i].Name} [{chanArray[i].Id}]");
 
                 display.guild = chosenGuild;
+
+                if (!init)
+                    init = true;
             }
             else
             {
+                if (init)
+                {
+                    display.Show();
+                    display.Location = new Point(display.Location.X + 33, display.Location.Y);
+
+                    init = false;
+                }
+                else
+                    display.Focus();
+
                 display.Output_ChatText.Items.Clear();
                 display.channel = client.GetChannelAsync(MessageUtils.GetID(Channels.SelectedItem.ToString())).Result;
 
