@@ -7,6 +7,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
 using DSharpPlus;
 using DSharpPlus.Entities;
 
@@ -440,8 +441,8 @@ namespace discord_puppet
                     CMReactText.Text = CMReactText.Text.Insert(0, ":") + ":";
                 }
 
-                GetMessage(Output_ChatText.SelectedItem.ToString()).
-                        CreateReactionAsync(DiscordEmoji.FromName(client, CMReactText.Text));
+                GetMessage(Output_ChatText.SelectedItem.ToString())
+                    .CreateReactionAsync(DiscordEmoji.FromName(client, CMReactText.Text));
             }
             catch (Exception ex)
             {
