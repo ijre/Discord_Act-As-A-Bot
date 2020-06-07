@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 using DSharpPlus;
 using DSharpPlus.Entities;
+using DSharpPlus.EventArgs;
 
 using discord_puppet.utils;
 
@@ -17,12 +18,12 @@ namespace discord_puppet
 {
     public partial class MainDisplayForm : Form
     {
-        public DiscordGuild guild;
-        public DiscordChannel channel;
+        private DiscordGuild guild;
+        private DiscordChannel channel;
 
 #if !_FINAL
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-        public readonly DebugForm debuger;
+        private readonly DebugForm debuger;
 #endif
 
         private readonly DiscordClient client;
@@ -32,17 +33,134 @@ namespace discord_puppet
         private readonly IntPtr[] handles = new IntPtr[100];
         private int availableSpace;
 
-        public MainDisplayForm(DiscordClient mainClient)
+        public MainDisplayForm()
         {
             InitializeComponent();
             Text = $"Act As A Discord Bot (v{Application.ProductVersion})";
-            client = mainClient;
 
 #if !_FINAL
             debuger = new DebugForm();
             debuger.Show();
 #endif
+
+            if (!Directory.Exists("./deps/"))
+#if !_DEBUG
+            {
+                MessageBox.Show("Could not find deps folder, this folder and its original contents are required for the program to run.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (!File.Exists("./deps/id.txt") || !File.Exists("./deps/server_choose.exe"))
+                MessageBox.Show("id.txt or server_choose.exe are missing from deps folder; these two files are required for the program to run.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+#else
+                Directory.CreateDirectory("./deps/");
+#endif
+
+#if !_OFF
+            client = new DiscordClient(new DiscordConfiguration
+            {
+#if !_DEBUG
+                Token = File.ReadAllText("./deps/id.txt")
+#else
+                Token = File.ReadAllText("../deps/id.txt")
+#endif
+            });
+#endif
+
+#if !_DEBUG
+            Servers.Items.Clear();
+#endif
+
+#if !_OFF
+            client.MessageCreated += OnMessageCreated;
+            client.MessageUpdated += OnMessageUpdated;
+            client.MessageDeleted += OnMessageDeleted;
+            client.Ready += OnReady;
+
+            client.ConnectAsync();
+            client.InitializeAsync();
+#endif
         }
+
+        #region DiscordEvents
+        private Task OnMessageCreated(MessageCreateEventArgs e)
+        {
+            if (e.Message.Channel.Id != channel.Id)
+                return Task.CompletedTask;
+
+            var message = e.Message;
+
+            Output_ChatText.Items.Add(AddAttachmentText(message));
+
+            if (Output_ChatText.Items.Count - 1 - Output_ChatText.TopIndex == 18) // if we're scrolled to the very bottom of the chat
+                Output_ChatText.TopIndex = Output_ChatText.Items.Count - 1; // scroll to adjust to new message
+
+            return Task.CompletedTask;
+        }
+
+        private Task OnMessageUpdated(MessageUpdateEventArgs e)
+        {
+            if (e.Message.Channel.Id != channel.Id)
+                return Task.CompletedTask;
+
+            var message = e.Message;
+
+            for (int i = 0; i < Output_ChatText.Items.Count; i++)
+                if (i != 100 && MessageUtils.GetID(Output_ChatText.Items[i].ToString()) == message.Id)
+                    Output_ChatText.Items[i] = AddAttachmentText(message).Insert(Output_ChatText.Items[i].ToString().LastIndexOf("[") - 4, " (edited)");
+
+            return Task.CompletedTask;
+        }
+
+        private Task OnMessageDeleted(MessageDeleteEventArgs e)
+        {
+            if (e.Message.Channel.Id != channel.Id)
+                return Task.CompletedTask;
+
+            var message = e.Message;
+
+            for (int i = 0; i < Output_ChatText.Items.Count; i++)
+                if (i != 100 && MessageUtils.GetID(Output_ChatText.Items[i].ToString()) == message.Id)
+                {
+                    Output_ChatText.Items[i] = Output_ChatText.Items[i].ToString().Substring(0, Output_ChatText.Items[i].ToString().LastIndexOf("[") - 1); // delete everything past the message's body
+                    Output_ChatText.Items[i] += " {MESSAGE DELETED} []"; // and add a note that it's deleted
+                }
+
+            return Task.CompletedTask;
+        }
+
+        private Task OnReady(ReadyEventArgs e)
+        {
+#if !_DEBUG
+            using Process process = new Process()
+            {
+                EnableRaisingEvents = true,
+                StartInfo =
+                {
+                    UseShellExecute = false,
+                    FileName = "./deps/server_choose.exe",
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
+                }
+            };
+            process.OutputDataReceived += (object sender, DataReceivedEventArgs e) =>
+            {
+                try
+                {
+                    Servers.Items.Add(e.Data);
+                }
+                catch (Exception ex)
+                {
+                    ExceptionUtils.IgnoreSpecificException(new ArgumentNullException(), ex);
+                }
+            };
+            process.Start();
+            process.BeginOutputReadLine();
+#else
+            MessageBox.Show("");
+#endif
+
+            return Task.CompletedTask;
+        }
+        #endregion
 
         #region WinFormsEvents
         private void Clear_Button_Click(object sender, EventArgs e)
@@ -175,6 +293,27 @@ namespace discord_puppet
                 Output_ChatText.ClearSelected();
 
             lastIndex = Output_ChatText.SelectedIndex;
+        }
+
+        private int lastIndexServers = -1;
+        private void Servers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Servers.SelectedIndex == lastIndexServers)
+                return;
+
+            lastIndexServers = Servers.SelectedIndex;
+            DoStuffSync(true);
+        }
+
+
+        private int lastIndexChannels = -1;
+        private void Channels_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Channels.SelectedIndex == lastIndexChannels)
+                return;
+
+            lastIndexChannels = Channels.SelectedIndex;
+            DoStuffSync(false);
         }
 
         #region Handlers
@@ -475,6 +614,63 @@ namespace discord_puppet
 
                 return null;
             }
+        }
+
+        private async void DoStuffSync(bool server)
+        {
+            if (server)
+            {
+                string item2S = "";
+                try
+                {
+                    item2S = Servers.SelectedItem.ToString();
+                }
+                catch (Exception ex)
+                {
+                    ExceptionUtils.IgnoreSpecificException(new NullReferenceException(), ex, true, "Fatal Error");
+                }
+
+                var chosenGuild = await client.GetGuildAsync(MessageUtils.GetID(item2S));
+                IEnumerable<DiscordChannel> channels = from value in await chosenGuild.GetChannelsAsync()
+                                                       select value;
+                DiscordChannel[] chanArray = channels.ToArray();
+
+                for (int i = 0; i < chanArray.Length; i++)
+                    if (chanArray[i].Type == ChannelType.Text && (chanArray[i].PermissionsFor(chosenGuild.CurrentMember) & Permissions.AccessChannels) != 0)
+                        Channels.Items.Add($"{chanArray[i].Name} [{chanArray[i].Id}]");
+
+                guild = chosenGuild;
+            }
+            else
+            {
+                Output_ChatText.Items.Clear();
+                channel = client.GetChannelAsync(MessageUtils.GetID(Channels.SelectedItem.ToString())).Result;
+
+                var getMessages = await channel.GetMessagesAsync();
+
+                IEnumerable<DiscordMessage> messages = from value in getMessages
+                                                       select value;
+                var messagesArray = messages.ToArray();
+
+                for (int i = messagesArray.Length - 1; 0 <= i; i--)
+                    Output_ChatText.Items.Add(AddAttachmentText(messagesArray[i]));
+
+                Output_ChatText.Items.Add("((((((((((END OF PREVIOUS 100 MESSAGES)))))))))");
+
+                Output_ChatText.TopIndex = Output_ChatText.Items.Count - 1;
+            }
+        }
+
+        private static string AddAttachmentText(DiscordMessage message)
+        {
+            string attachments = "";
+
+            if (message.Attachments.Count == 1)
+                attachments = " (IMAGE ATTACHED)";
+            else if (message.Attachments.Count > 1)
+                attachments = " (MULTIPLE IMAGES ATTACHED)";
+
+            return $"{message.Author.Username}#{message.Author.Discriminator}: {message.Content}{attachments}    [{message.Id}]";
         }
         #endregion
     }

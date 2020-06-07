@@ -48,6 +48,9 @@
             this.CancelEdit = new System.Windows.Forms.Button();
             this.CloseAllImages = new System.Windows.Forms.Button();
             this.HandleTyping = new System.Windows.Forms.Timer(this.components);
+            this.Servers = new System.Windows.Forms.ListBox();
+            this.Channels = new System.Windows.Forms.ListBox();
+            this.MemberList = new System.Windows.Forms.ListBox();
             this.Output_ChatCM.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -114,7 +117,7 @@
             // Add_Image
             // 
             this.Add_Image.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.Add_Image.Location = new System.Drawing.Point(773, 278);
+            this.Add_Image.Location = new System.Drawing.Point(1149, 278);
             this.Add_Image.Name = "Add_Image";
             this.Add_Image.Size = new System.Drawing.Size(130, 120);
             this.Add_Image.TabIndex = 4;
@@ -125,7 +128,7 @@
             // Send_Button
             // 
             this.Send_Button.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.Send_Button.Location = new System.Drawing.Point(523, 278);
+            this.Send_Button.Location = new System.Drawing.Point(899, 278);
             this.Send_Button.Name = "Send_Button";
             this.Send_Button.Size = new System.Drawing.Size(130, 120);
             this.Send_Button.TabIndex = 3;
@@ -136,7 +139,7 @@
             // Clear_Button
             // 
             this.Clear_Button.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.Clear_Button.Location = new System.Drawing.Point(12, 282);
+            this.Clear_Button.Location = new System.Drawing.Point(388, 282);
             this.Clear_Button.Name = "Clear_Button";
             this.Clear_Button.Size = new System.Drawing.Size(130, 120);
             this.Clear_Button.TabIndex = 14;
@@ -151,7 +154,7 @@
             this.Input_Chat.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.Input_Chat.BackColor = System.Drawing.SystemColors.GrayText;
             this.Input_Chat.ForeColor = System.Drawing.Color.White;
-            this.Input_Chat.Location = new System.Drawing.Point(523, 12);
+            this.Input_Chat.Location = new System.Drawing.Point(899, 12);
             this.Input_Chat.Margin = new System.Windows.Forms.Padding(0);
             this.Input_Chat.Multiline = true;
             this.Input_Chat.Name = "Input_Chat";
@@ -167,7 +170,7 @@
             this.Output_ChatText.ForeColor = System.Drawing.Color.White;
             this.Output_ChatText.FormattingEnabled = true;
             this.Output_ChatText.HorizontalScrollbar = true;
-            this.Output_ChatText.Location = new System.Drawing.Point(12, 12);
+            this.Output_ChatText.Location = new System.Drawing.Point(388, 12);
             this.Output_ChatText.Margin = new System.Windows.Forms.Padding(0);
             this.Output_ChatText.Name = "Output_ChatText";
             this.Output_ChatText.Size = new System.Drawing.Size(380, 264);
@@ -177,7 +180,7 @@
             // Multiple_ImagesOpen
             // 
             this.Multiple_ImagesOpen.BackColor = System.Drawing.SystemColors.Window;
-            this.Multiple_ImagesOpen.Location = new System.Drawing.Point(0, 506);
+            this.Multiple_ImagesOpen.Location = new System.Drawing.Point(-2, 506);
             this.Multiple_ImagesOpen.Name = "Multiple_ImagesOpen";
             this.Multiple_ImagesOpen.Size = new System.Drawing.Size(93, 44);
             this.Multiple_ImagesOpen.TabIndex = 21;
@@ -189,7 +192,7 @@
             // Multiple_ImagesCancel
             // 
             this.Multiple_ImagesCancel.BackColor = System.Drawing.SystemColors.Window;
-            this.Multiple_ImagesCancel.Location = new System.Drawing.Point(822, 506);
+            this.Multiple_ImagesCancel.Location = new System.Drawing.Point(1575, 506);
             this.Multiple_ImagesCancel.Name = "Multiple_ImagesCancel";
             this.Multiple_ImagesCancel.Size = new System.Drawing.Size(93, 44);
             this.Multiple_ImagesCancel.TabIndex = 22;
@@ -203,7 +206,7 @@
             this.Multiple_ImagesLB.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.Multiple_ImagesLB.ForeColor = System.Drawing.Color.White;
             this.Multiple_ImagesLB.FormattingEnabled = true;
-            this.Multiple_ImagesLB.Location = new System.Drawing.Point(0, 0);
+            this.Multiple_ImagesLB.Location = new System.Drawing.Point(376, 0);
             this.Multiple_ImagesLB.Name = "Multiple_ImagesLB";
             this.Multiple_ImagesLB.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.Multiple_ImagesLB.Size = new System.Drawing.Size(915, 550);
@@ -214,7 +217,7 @@
             // CancelEdit
             // 
             this.CancelEdit.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.CancelEdit.Location = new System.Drawing.Point(523, 404);
+            this.CancelEdit.Location = new System.Drawing.Point(899, 404);
             this.CancelEdit.Name = "CancelEdit";
             this.CancelEdit.Size = new System.Drawing.Size(130, 45);
             this.CancelEdit.TabIndex = 23;
@@ -225,7 +228,7 @@
             // 
             // CloseAllImages
             // 
-            this.CloseAllImages.Location = new System.Drawing.Point(392, 9);
+            this.CloseAllImages.Location = new System.Drawing.Point(768, 9);
             this.CloseAllImages.Margin = new System.Windows.Forms.Padding(0);
             this.CloseAllImages.Name = "CloseAllImages";
             this.CloseAllImages.Size = new System.Drawing.Size(131, 56);
@@ -239,6 +242,45 @@
             // 
             this.HandleTyping.Tick += new System.EventHandler(this.HandleTyping_Tick);
             // 
+            // Servers
+            // 
+            this.Servers.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.Servers.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.Servers.ForeColor = System.Drawing.Color.White;
+            this.Servers.FormattingEnabled = true;
+            this.Servers.Items.AddRange(new object[] {
+            "test serv [511026398429839371]"});
+            this.Servers.Location = new System.Drawing.Point(0, 0);
+            this.Servers.Name = "Servers";
+            this.Servers.Size = new System.Drawing.Size(180, 550);
+            this.Servers.TabIndex = 25;
+            this.Servers.SelectedIndexChanged += new System.EventHandler(this.Servers_SelectedIndexChanged);
+            // 
+            // Channels
+            // 
+            this.Channels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.Channels.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.Channels.ForeColor = System.Drawing.Color.White;
+            this.Channels.FormattingEnabled = true;
+            this.Channels.Location = new System.Drawing.Point(202, 0);
+            this.Channels.Name = "Channels";
+            this.Channels.Size = new System.Drawing.Size(180, 550);
+            this.Channels.TabIndex = 26;
+            this.Channels.SelectedIndexChanged += new System.EventHandler(this.Channels_SelectedIndexChanged);
+            // 
+            // MemberList
+            // 
+            this.MemberList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.MemberList.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.MemberList.ForeColor = System.Drawing.Color.White;
+            this.MemberList.FormattingEnabled = true;
+            this.MemberList.Items.AddRange(new object[] {
+            "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee#2036 [148082086731972608]"});
+            this.MemberList.Location = new System.Drawing.Point(1285, 0);
+            this.MemberList.Name = "MemberList";
+            this.MemberList.Size = new System.Drawing.Size(383, 550);
+            this.MemberList.TabIndex = 27;
+            // 
             // MainDisplayForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -247,7 +289,8 @@
             this.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(915, 547);
+            this.ClientSize = new System.Drawing.Size(1666, 547);
+            this.Controls.Add(this.Channels);
             this.Controls.Add(this.CloseAllImages);
             this.Controls.Add(this.CancelEdit);
             this.Controls.Add(this.Multiple_ImagesCancel);
@@ -258,6 +301,8 @@
             this.Controls.Add(this.Output_ChatText);
             this.Controls.Add(this.Input_Chat);
             this.Controls.Add(this.Multiple_ImagesLB);
+            this.Controls.Add(this.Servers);
+            this.Controls.Add(this.MemberList);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(931, 586);
@@ -272,25 +317,27 @@
         }
 
         #endregion
-
-        public System.Windows.Forms.ContextMenuStrip Output_ChatCM;
-        public System.Windows.Forms.ToolStripMenuItem CMViewImage;
-        public System.Windows.Forms.ToolStripMenuItem CMReact;
-        public System.Windows.Forms.Button Add_Image;
-        public System.Windows.Forms.Button Send_Button;
-        public System.Windows.Forms.Button Clear_Button;
-        public System.Windows.Forms.TextBox Input_Chat;
-        public System.Windows.Forms.ListBox Output_ChatText;
-        public System.Windows.Forms.Button Multiple_ImagesOpen;
-        public System.Windows.Forms.Button Multiple_ImagesCancel;
-        public System.Windows.Forms.ToolStripTextBox CMReactText;
-        public System.Windows.Forms.ListBox Multiple_ImagesLB;
-        public System.Windows.Forms.ToolStripMenuItem CMEditMessage;
-        public System.Windows.Forms.ToolStripMenuItem CMDeleteMessage;
-        public System.Windows.Forms.Button CancelEdit;
         private System.Windows.Forms.ToolStripMenuItem CMGreyedOut;
         private System.Windows.Forms.Button CloseAllImages;
         private System.Windows.Forms.Timer HandleTyping;
+        private System.Windows.Forms.ListBox Servers;
+        private System.Windows.Forms.ListBox Channels;
+        private System.Windows.Forms.ContextMenuStrip Output_ChatCM;
+        private System.Windows.Forms.ToolStripMenuItem CMViewImage;
+        private System.Windows.Forms.ToolStripMenuItem CMReact;
+        private System.Windows.Forms.Button Add_Image;
+        private System.Windows.Forms.Button Send_Button;
+        private System.Windows.Forms.Button Clear_Button;
+        private System.Windows.Forms.TextBox Input_Chat;
+        private System.Windows.Forms.ListBox Output_ChatText;
+        private System.Windows.Forms.Button Multiple_ImagesOpen;
+        private System.Windows.Forms.Button Multiple_ImagesCancel;
+        private System.Windows.Forms.ToolStripTextBox CMReactText;
+        private System.Windows.Forms.ListBox Multiple_ImagesLB;
+        private System.Windows.Forms.ToolStripMenuItem CMEditMessage;
+        private System.Windows.Forms.ToolStripMenuItem CMDeleteMessage;
+        private System.Windows.Forms.Button CancelEdit;
+        private System.Windows.Forms.ListBox MemberList;
     }
 }
 
