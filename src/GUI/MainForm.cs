@@ -183,6 +183,9 @@ namespace discord_puppet
 
         private void ResizeHandler(object sender, EventArgs e)
         {
+            if (display.WindowState == FormWindowState.Minimized)
+                return;
+
             const int defaultWidthMainForm = 550;
             const int defaultWidthMembers = 246;
 
