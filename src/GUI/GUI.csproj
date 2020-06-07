@@ -57,6 +57,18 @@
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Offline|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\build\Offline\</OutputPath>
+    <DefineConstants>TRACE;_DEBUG; _OFF</DefineConstants>
+    <NoWarn>4014, 1998</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -89,6 +101,12 @@
     <Compile Include="MainDisplayForm.Designer.cs">
       <DependentUpon>MainDisplayForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MemberListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MemberListForm.Designer.cs">
+      <DependentUpon>MemberListForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -112,6 +130,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainDisplayForm.resx">
       <DependentUpon>MainDisplayForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MemberListForm.resx">
+      <DependentUpon>MemberListForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
