@@ -481,9 +481,9 @@ namespace discord_puppet
 
                 Multiple_ImagesCancel.BringToFront();
                 Multiple_ImagesCancel.Visible = true;
-
-                CloseAllImages.Visible = true;
             }
+
+            CloseAllImages.Visible = true;
         }
 
         private void Multiple_ImagesOpen_Click(object sender, EventArgs e)
