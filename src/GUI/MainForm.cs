@@ -36,6 +36,7 @@ namespace discord_puppet
                 Directory.CreateDirectory("./deps/");
 #endif
 
+#if !_OFF
             client = new DiscordClient(new DiscordConfiguration
             {
 #if !_DEBUG
@@ -44,11 +45,13 @@ namespace discord_puppet
                 Token = File.ReadAllText("../deps/id.txt")
 #endif
             });
+#endif
 
 #if !_DEBUG
             Servers.Items.Clear();
 #endif
 
+#if !_OFF
             client.MessageCreated += OnMessageCreated;
             client.MessageUpdated += OnMessageUpdated;
             client.MessageDeleted += OnMessageDeleted;
@@ -56,6 +59,7 @@ namespace discord_puppet
 
             client.ConnectAsync();
             client.InitializeAsync();
+#endif
 
             display = new MainDisplayForm(client);
             members = new MemberListForm(client);
@@ -179,19 +183,20 @@ namespace discord_puppet
 
         private void ResizeHandler(object sender, EventArgs e)
         {
-            const int defaultWidth = 550;
+            const int defaultWidthMainForm = 550;
+            const int defaultWidthMembers = 246;
 
-            Location = new Point(display.Location.X - defaultWidth + 15, display.Location.Y);
+            Location = new Point(display.Location.X - defaultWidthMainForm + 15, display.Location.Y);
             members.Location = new Point(display.Location.X + display.Width - 16, display.Location.Y);
             // 15 is size of the window's border, which isnt represented by the control's width property
 
             Channels.Size = new Size(Channels.Width, display.Height);
-            Size = new Size(defaultWidth, Channels.Height);
+            Size = new Size(defaultWidthMainForm, Channels.Height);
             Channels.Size = new Size(Channels.Width, Servers.Height);
 
-            members.MemberList.Size = new Size(246, display.Height);
-            members.Size = new Size(246, members.MemberList.Height);
-            members.MemberList.Size = new Size(246, Servers.Height);
+            members.MemberList.Size = new Size(defaultWidthMembers, display.Height);
+            members.Size = new Size(defaultWidthMembers, members.MemberList.Height);
+            members.MemberList.Size = new Size(defaultWidthMembers, Servers.Height);
         }
 
         private bool focusedOn = true;
