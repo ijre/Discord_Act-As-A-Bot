@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DSharpPlus;
@@ -54,8 +55,15 @@ namespace discord_puppet
             client.ConnectAsync();
             client.InitializeAsync();
 
+
             display = new MainDisplayForm(client);
+
+            display.Move += ResizeHandler;
+            display.ResizeEnd += ResizeHandler;
+
             display.Show();
+
+            display.Location = new Point(display.Location.X + 33, display.Location.Y); // offset because display opens in the center, need to move else we get cutoff
         }
 
         #region DiscordEvents
@@ -104,7 +112,6 @@ namespace discord_puppet
 
             return Task.CompletedTask;
         }
-        #endregion
 
         private Task OnReady(ReadyEventArgs e)
         {
@@ -138,6 +145,54 @@ namespace discord_puppet
 #endif
 
             return Task.CompletedTask;
+        }
+        #endregion
+
+        #region WinForms Events
+        private int lastIndexServers = -1;
+        private void Servers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Servers.SelectedIndex == lastIndexServers)
+                return;
+
+            lastIndexServers = Servers.SelectedIndex;
+            DoStuffSync(true);
+        }
+
+
+        private int lastIndexChannels = -1;
+        private void Channels_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Channels.SelectedIndex == lastIndexChannels)
+                return;
+
+            lastIndexChannels = Channels.SelectedIndex;
+            DoStuffSync(false);
+        }
+
+        private void ResizeHandler(object sender, EventArgs e)
+        {
+            const int defaultWidth = 550;
+
+            Location = new Point((display.Location.X - defaultWidth) + 15, display.Location.Y);
+
+            Channels.Size = new Size(Channels.Width, display.Height);
+            Size = new Size(defaultWidth, Channels.Height);
+            Channels.Size = new Size(Channels.Width, Servers.Height);
+        }
+        #endregion
+
+        #region Helpers
+        private static string AddAttachmentText(DiscordMessage message)
+        {
+            string attachments = "";
+
+            if (message.Attachments.Count == 1)
+                attachments = " (IMAGE ATTACHED)";
+            else if (message.Attachments.Count > 1)
+                attachments = " (MULTIPLE IMAGES ATTACHED)";
+
+            return $"{message.Author.Username}#{message.Author.Discriminator}: {message.Content}{attachments}    [{message.Id}]";
         }
 
         private async void DoStuffSync(bool server)
@@ -184,39 +239,6 @@ namespace discord_puppet
                 display.Output_ChatText.TopIndex = display.Output_ChatText.Items.Count - 1;
             }
         }
-
-        private int lastIndexServers = -1;
-
-        private void Servers_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (Servers.SelectedIndex == lastIndexServers)
-                return;
-
-            lastIndexServers = Servers.SelectedIndex;
-            DoStuffSync(true);
-        }
-
-        private int lastIndexChannels = -1;
-
-        private void Channels_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (Channels.SelectedIndex == lastIndexChannels)
-                return;
-
-            lastIndexChannels = Channels.SelectedIndex;
-            DoStuffSync(false);
-        }
-
-        private static string AddAttachmentText(DiscordMessage message)
-        {
-            string attachments = "";
-
-            if (message.Attachments.Count == 1)
-                attachments = " (IMAGE ATTACHED)";
-            else if (message.Attachments.Count > 1)
-                attachments = " (MULTIPLE IMAGES ATTACHED)";
-
-            return $"{message.Author.Username}#{message.Author.Discriminator}: {message.Content}{attachments}    [{message.Id}]";
-        }
+        #endregion
     }
 }

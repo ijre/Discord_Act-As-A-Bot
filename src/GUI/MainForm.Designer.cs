@@ -68,10 +68,13 @@
             this.ClientSize = new System.Drawing.Size(534, 471);
             this.Controls.Add(this.Servers);
             this.Controls.Add(this.Channels);
+            this.DoubleBuffered = true;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            this.Load += new System.EventHandler(this.ResizeHandler);
             this.ResumeLayout(false);
 
         }
