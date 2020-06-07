@@ -6,7 +6,7 @@ obj
 *.vcxproj.*
 *.user
 .editorconfig
-*.DotSettings
+*DotSettings*
 
 SD
 id*.txt
