@@ -19,6 +19,7 @@ namespace discord_puppet
     {
         private readonly DiscordClient client;
         private readonly MainDisplayForm display;
+        private readonly MemberListForm members;
 
         public MainForm()
         {
@@ -57,9 +58,19 @@ namespace discord_puppet
             client.InitializeAsync();
 
             display = new MainDisplayForm(client);
+            members = new MemberListForm(client);
 
             display.Move += ResizeHandler;
             display.ResizeEnd += ResizeHandler;
+
+#if _OFF
+            StartPosition = FormStartPosition.Manual;
+
+            members.Show();
+
+            display.Show();
+            display.Location = new Point(display.Location.X + 33, display.Location.Y);
+#endif
         }
 
         #region DiscordEvents
@@ -170,28 +181,53 @@ namespace discord_puppet
         {
             const int defaultWidth = 550;
 
-            Location = new Point((display.Location.X - defaultWidth) + 15, display.Location.Y);
+            Location = new Point(display.Location.X - defaultWidth + 15, display.Location.Y);
+            members.Location = new Point(display.Location.X + display.Width - 16, display.Location.Y);
+            // 15 is size of the window's border, which isnt represented by the control's width property
 
             Channels.Size = new Size(Channels.Width, display.Height);
             Size = new Size(defaultWidth, Channels.Height);
             Channels.Size = new Size(Channels.Width, Servers.Height);
+
+            members.MemberList.Size = new Size(246, display.Height);
+            members.Size = new Size(246, members.MemberList.Height);
+            members.MemberList.Size = new Size(246, Servers.Height);
         }
 
         private bool focusedOn = true;
         private void MainForm_Think(object sender, EventArgs e)
         {
-            if (WindowState == FormWindowState.Minimized)
+            if (WindowState == FormWindowState.Minimized && members.WindowState == FormWindowState.Minimized)
                 return;
 
             if (!focusedOn && display.ContainsFocus)
             {
-                Focus();
+                if (WindowState != FormWindowState.Minimized)
+                    Focus();
+
+                if (members.WindowState != FormWindowState.Minimized)
+                    members.Focus();
+
                 display.Focus();
 
                 focusedOn = true;
             }
-            else if (!display.ContainsFocus && !ContainsFocus)
+            else if (!display.ContainsFocus && !ContainsFocus && !members.ContainsFocus)
                 focusedOn = false;
+        }
+
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                Text = "Server/Channel Changer";
+                ShowInTaskbar = true;
+            }
+            else
+            {
+                Text = "";
+                ShowInTaskbar = false;
+            }
         }
         #endregion
 
