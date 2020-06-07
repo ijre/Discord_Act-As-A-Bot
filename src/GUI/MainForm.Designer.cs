@@ -1,6 +1,6 @@
 ﻿namespace discord_puppet
 {
-    partial class MainDisplayForm
+    partial class MainForm
     {
         /// <summary>
         /// Variable nécessaire au concepteur.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainDisplayForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.Output_ChatCM = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.CMGreyedOut = new System.Windows.Forms.ToolStripMenuItem();
             this.CMViewImage = new System.Windows.Forms.ToolStripMenuItem();
@@ -116,7 +116,7 @@
             // 
             // Add_Image
             // 
-            this.Add_Image.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.Add_Image.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.Add_Image.Location = new System.Drawing.Point(1149, 278);
             this.Add_Image.Name = "Add_Image";
             this.Add_Image.Size = new System.Drawing.Size(130, 120);
@@ -127,7 +127,7 @@
             // 
             // Send_Button
             // 
-            this.Send_Button.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.Send_Button.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.Send_Button.Location = new System.Drawing.Point(899, 278);
             this.Send_Button.Name = "Send_Button";
             this.Send_Button.Size = new System.Drawing.Size(130, 120);
@@ -138,7 +138,7 @@
             // 
             // Clear_Button
             // 
-            this.Clear_Button.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.Clear_Button.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.Clear_Button.Location = new System.Drawing.Point(388, 282);
             this.Clear_Button.Name = "Clear_Button";
             this.Clear_Button.Size = new System.Drawing.Size(130, 120);
@@ -151,7 +151,7 @@
             // 
             this.Input_Chat.AcceptsReturn = true;
             this.Input_Chat.AcceptsTab = true;
-            this.Input_Chat.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.Input_Chat.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.Input_Chat.BackColor = System.Drawing.SystemColors.GrayText;
             this.Input_Chat.ForeColor = System.Drawing.Color.White;
             this.Input_Chat.Location = new System.Drawing.Point(899, 12);
@@ -164,7 +164,7 @@
             // 
             // Output_ChatText
             // 
-            this.Output_ChatText.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.Output_ChatText.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.Output_ChatText.BackColor = System.Drawing.SystemColors.GrayText;
             this.Output_ChatText.ContextMenuStrip = this.Output_ChatCM;
             this.Output_ChatText.ForeColor = System.Drawing.Color.White;
@@ -179,6 +179,7 @@
             // 
             // Multiple_ImagesOpen
             // 
+            this.Multiple_ImagesOpen.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.Multiple_ImagesOpen.BackColor = System.Drawing.SystemColors.Window;
             this.Multiple_ImagesOpen.Location = new System.Drawing.Point(-2, 506);
             this.Multiple_ImagesOpen.Name = "Multiple_ImagesOpen";
@@ -191,6 +192,7 @@
             // 
             // Multiple_ImagesCancel
             // 
+            this.Multiple_ImagesCancel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.Multiple_ImagesCancel.BackColor = System.Drawing.SystemColors.Window;
             this.Multiple_ImagesCancel.Location = new System.Drawing.Point(1575, 506);
             this.Multiple_ImagesCancel.Name = "Multiple_ImagesCancel";
@@ -203,6 +205,7 @@
             // 
             // Multiple_ImagesLB
             // 
+            this.Multiple_ImagesLB.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.Multiple_ImagesLB.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.Multiple_ImagesLB.ForeColor = System.Drawing.Color.White;
             this.Multiple_ImagesLB.FormattingEnabled = true;
@@ -216,7 +219,7 @@
             // 
             // CancelEdit
             // 
-            this.CancelEdit.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.CancelEdit.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.CancelEdit.Location = new System.Drawing.Point(899, 404);
             this.CancelEdit.Name = "CancelEdit";
             this.CancelEdit.Size = new System.Drawing.Size(130, 45);
@@ -228,6 +231,7 @@
             // 
             // CloseAllImages
             // 
+            this.CloseAllImages.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.CloseAllImages.Location = new System.Drawing.Point(768, 9);
             this.CloseAllImages.Margin = new System.Windows.Forms.Padding(0);
             this.CloseAllImages.Name = "CloseAllImages";
@@ -244,7 +248,7 @@
             // 
             // Servers
             // 
-            this.Servers.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.Servers.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.Servers.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.Servers.ForeColor = System.Drawing.Color.White;
             this.Servers.FormattingEnabled = true;
@@ -258,7 +262,7 @@
             // 
             // Channels
             // 
-            this.Channels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.Channels.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.Channels.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.Channels.ForeColor = System.Drawing.Color.White;
             this.Channels.FormattingEnabled = true;
@@ -270,7 +274,7 @@
             // 
             // MemberList
             // 
-            this.MemberList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.MemberList.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.MemberList.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.MemberList.ForeColor = System.Drawing.Color.White;
             this.MemberList.FormattingEnabled = true;
@@ -281,7 +285,7 @@
             this.MemberList.Size = new System.Drawing.Size(383, 550);
             this.MemberList.TabIndex = 27;
             // 
-            // MainDisplayForm
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -305,11 +309,10 @@
             this.Controls.Add(this.MemberList);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(931, 586);
-            this.Name = "MainDisplayForm";
+            this.MinimumSize = new System.Drawing.Size(1682, 39);
+            this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Act As A Discord Bot";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Output_ChatCM.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

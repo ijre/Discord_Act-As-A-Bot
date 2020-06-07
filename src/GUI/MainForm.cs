@@ -16,7 +16,7 @@ using discord_puppet.utils;
 
 namespace discord_puppet
 {
-    public partial class MainDisplayForm : Form
+    public partial class MainForm : Form
     {
         private DiscordGuild guild;
         private DiscordChannel channel;
@@ -33,7 +33,7 @@ namespace discord_puppet
         private readonly IntPtr[] handles = new IntPtr[100];
         private int availableSpace;
 
-        public MainDisplayForm()
+        public MainForm()
         {
             InitializeComponent();
             Text = $"Act As A Discord Bot (v{Application.ProductVersion})";
@@ -166,11 +166,6 @@ namespace discord_puppet
         private void Clear_Button_Click(object sender, EventArgs e)
         {
             Output_ChatText.Items.Clear();
-        }
-
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Application.Exit();
         }
 
         private void Add_Image_Click(object sender, EventArgs e)

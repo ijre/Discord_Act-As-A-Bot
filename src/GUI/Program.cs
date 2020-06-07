@@ -16,7 +16,7 @@ namespace discord_puppet
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainDisplayForm());
+            Application.Run(new MainForm());
         }
     }
 }

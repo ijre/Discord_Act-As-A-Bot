@@ -95,11 +95,11 @@
     <Compile Include="ImageOpenForm.Designer.cs">
       <DependentUpon>ImageOpenForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainDisplayForm.cs">
+    <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainDisplayForm.Designer.cs">
-      <DependentUpon>MainDisplayForm.cs</DependentUpon>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -116,8 +116,8 @@
     <EmbeddedResource Include="ImageOpenForm.resx">
       <DependentUpon>ImageOpenForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainDisplayForm.resx">
-      <DependentUpon>MainDisplayForm.cs</DependentUpon>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
