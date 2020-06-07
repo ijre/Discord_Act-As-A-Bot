@@ -141,11 +141,11 @@ namespace discord_puppet
                     CreateNoWindow = true
                 }
             };
-            process.OutputDataReceived += (object sender, DataReceivedEventArgs e) =>
+            process.OutputDataReceived += (object sender, DataReceivedEventArgs ee) =>
             {
                 try
                 {
-                    Servers.Items.Add(e.Data);
+                    Servers.Items.Add(ee.Data);
                 }
                 catch (Exception ex)
                 {
