@@ -89,6 +89,7 @@
             // 
             // CMReactText
             // 
+            this.CMReactText.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.CMReactText.Name = "CMReactText";
             this.CMReactText.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.CMReactText.Size = new System.Drawing.Size(100, 23);
