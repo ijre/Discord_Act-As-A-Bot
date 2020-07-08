@@ -11,9 +11,15 @@ Essentially, think of it like the opposite of selfbotting. Where selfbotting is 
 Well, it started as a joke between me and my best friend, about their roommate being Hatsune Miku, and we wanted to get the real Miku to confirm that yes, she is indeed their roommate.  
 That, and the novelty of it all. I knew from the very start that this was a ridiculous idea but I figured this might be of use to somebody, and at the very least it would be good practice for WinForms and programming in general.  
 # How to setup/use
-1. Download the Final.Build.7z archive from the [most recent release](https://github.com/ijre/Discord_Act-As-A-Bot/releases/latest)
-2. Extract the "Final Build" folder wherever you'd like  
+1. Download the Final.Build.7z archive from the [most recent release](https://github.com/ijre/Discord_Act-As-A-Bot/releases/latest).
+2. Extract the "Final Build" folder wherever you'd like.
 3. Go to https://discordapp.com/developers/applications/
-4. If you don't already have a bot token you wish to use, then make a new app, go to Bot at the left side, click Add Bot, after creation click Copy
-5. Go into the Final Build folder wherever you extracted it, go into the "deps" folder within that folder, and create a .txt file named "id", then put the token you copied as the only contents
-6. That should be all! If you have any errors when launching the program please go to the [issues page](https://github.com/ijre/Discord_Act-As-A-Bot/issues) and create a new issue
+4. If you don't already have a bot token you wish to use, then make a new app, go to Bot at the left side, click Add Bot, and after creation click Copy.
+5. Go into the Final Build folder wherever you extracted it, go into the "deps" folder within that folder, and create a .txt file named "id", then put the token you copied as the only contents.
+5. Afterwards, go into the OAuth2 section, and inside the `Scopes` box click on the "bot" checkbox. Then, inside the `Bot Permissions` box, select Administrator; you *can* select specific ones if you want though, as these are the roles "you" will have.
+6. Once you've selected your roles, go back to the `Scopes` box and click Copy next to where the giant link is located.
+7. If you wish to invite "yourself" to a server\*, or to have someone else add "you" to a server, open or give this link.
+8. That should be all! If you have any errors when launching the program please go to the [issues page](https://github.com/ijre/Discord_Act-As-A-Bot/issues) and create a new issue
+
+
+#### \*To add bots to a server, you must have the "Manage Server" permission.
