@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -105,7 +106,7 @@ namespace discord_puppet
             var message = e.Message;
 
             for (int i = 0; i < Output_ChatText.Items.Count; i++)
-                if (i != 100 && MessageUtils.GetID(Output_ChatText.Items[i].ToString()) == message.Id)
+                if (i != 100 && GetID(Output_ChatText.Items[i].ToString()) == message.Id)
                     Output_ChatText.Items[i] = AddAttachmentText(message).Insert(Output_ChatText.Items[i].ToString().LastIndexOf("[") - 4, " (edited)");
 
             return Task.CompletedTask;
@@ -119,7 +120,7 @@ namespace discord_puppet
             var message = e.Message;
 
             for (int i = 0; i < Output_ChatText.Items.Count; i++)
-                if (i != 100 && MessageUtils.GetID(Output_ChatText.Items[i].ToString()) == message.Id)
+                if (i != 100 && GetID(Output_ChatText.Items[i].ToString()) == message.Id)
                 {
                     Output_ChatText.Items[i] = Output_ChatText.Items[i].ToString().Substring(0, Output_ChatText.Items[i].ToString().LastIndexOf("[") - 1); // delete everything past the message's body
                     Output_ChatText.Items[i] += " {MESSAGE DELETED} []"; // and add a note that it's deleted
@@ -203,7 +204,8 @@ namespace discord_puppet
         }
 
         #region ContextMenuEvents
-        private void CMGreyedOut_Click(object sender, EventArgs e)
+        #region Output_ChatCM
+        private void Output_ChatCM_Greyed_Click(object sender, EventArgs e)
         {
             MessageBox.Show("For some reason, Discord will not allow you to interact with messages sent before the connection of your bot.", "Discord is dumb, sorry.",
                 MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
@@ -279,11 +281,28 @@ namespace discord_puppet
                 }
             }
         }
+        #endregion // Output_ChatCM
 
-        private void MemberListCM_Opening(object sender, CancelEventArgs e)
+        #region MemberListCM
+        private void KickReason_Enter(object sender, EventArgs e)
         {
-
+            if (KickReason.Text == "Reason? (Leave blank if none)")
+                KickReason.Clear();
         }
+
+        private void KickReason_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Return)
+                BootMember(false, KickReason.Text);
+        }
+
+        private async void BootMember(bool ban, string reason = "", int days = 0)
+        {
+            var member = await guild.GetMemberAsync(GetID(MemberList.SelectedItem.ToString()));
+
+            // if(!ban)
+        }
+        #endregion // MemberListCM
         #endregion // ContextMenuEvents
 
         #region ListBoxIndexChanges
@@ -616,13 +635,27 @@ namespace discord_puppet
         {
             try
             {
-                return channel.GetMessageAsync(MessageUtils.GetID(message)).Result;
+                return channel.GetMessageAsync(GetID(message)).Result;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
 
                 return null;
+            }
+        }
+
+        private static ulong GetID(string _string)
+        {
+            try
+            {
+                return ulong.Parse(_string.Substring(_string.LastIndexOf("[") + 1, _string.Length - _string.LastIndexOf("[") - 2));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+
+                return 0;
             }
         }
 
@@ -651,7 +684,7 @@ namespace discord_puppet
                     ExceptionUtils.IgnoreSpecificException(new NullReferenceException(), ex, true, "Fatal Error");
                 }
 
-                var chosenGuild = await client.GetGuildAsync(MessageUtils.GetID(item2S));
+                var chosenGuild = await client.GetGuildAsync(GetID(item2S));
                 IEnumerable<DiscordChannel> channels = from value in await chosenGuild.GetChannelsAsync()
                                                        select value;
                 DiscordChannel[] chanArray = channels.ToArray();
@@ -671,7 +704,7 @@ namespace discord_puppet
             else
             {
                 Output_ChatText.Items.Clear();
-                channel = client.GetChannelAsync(MessageUtils.GetID(Channels.SelectedItem.ToString())).Result;
+                channel = client.GetChannelAsync(GetID(Channels.SelectedItem.ToString())).Result;
 
                 var getMessages = await channel.GetMessagesAsync();
 

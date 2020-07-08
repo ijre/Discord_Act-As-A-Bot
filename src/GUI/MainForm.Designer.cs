@@ -52,7 +52,10 @@
             this.Channels = new System.Windows.Forms.ListBox();
             this.MemberList = new System.Windows.Forms.ListBox();
             this.MemberListCM = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.Kick = new System.Windows.Forms.ToolStripMenuItem();
+            this.KickReason = new System.Windows.Forms.ToolStripTextBox();
             this.Output_ChatCM.SuspendLayout();
+            this.MemberListCM.SuspendLayout();
             this.SuspendLayout();
             // 
             // Output_ChatCM
@@ -74,7 +77,7 @@
             this.CMGreyedOut.Size = new System.Drawing.Size(233, 22);
             this.CMGreyedOut.Text = "Why is everything greyed out?";
             this.CMGreyedOut.Visible = false;
-            this.CMGreyedOut.Click += new System.EventHandler(this.CMGreyedOut_Click);
+            this.CMGreyedOut.Click += new System.EventHandler(this.Output_ChatCM_Greyed_Click);
             // 
             // CMViewImage
             // 
@@ -93,6 +96,7 @@
             // 
             // CMReactText
             // 
+            this.CMReactText.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.CMReactText.Name = "CMReactText";
             this.CMReactText.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.CMReactText.Size = new System.Drawing.Size(100, 23);
@@ -290,9 +294,29 @@
             // 
             // MemberListCM
             // 
+            this.MemberListCM.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Kick});
             this.MemberListCM.Name = "MemberListCM";
             this.MemberListCM.Size = new System.Drawing.Size(181, 48);
-            this.MemberListCM.Opening += new System.ComponentModel.CancelEventHandler(this.MemberListCM_Opening);
+            // 
+            // Kick
+            // 
+            this.Kick.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.KickReason});
+            this.Kick.Name = "Kick";
+            this.Kick.Size = new System.Drawing.Size(180, 22);
+            this.Kick.Text = "Kick";
+            // 
+            // KickReason
+            // 
+            this.KickReason.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.KickReason.Name = "KickReason";
+            this.KickReason.Overflow = System.Windows.Forms.ToolStripItemOverflow.Always;
+            this.KickReason.Size = new System.Drawing.Size(165, 23);
+            this.KickReason.Text = "Reason? (Leave blank if none)";
+            this.KickReason.ToolTipText = "Reason for kick. Leave blank if none.";
+            this.KickReason.Enter += new System.EventHandler(this.KickReason_Enter);
+            this.KickReason.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KickReason_KeyDown);
             // 
             // MainForm
             // 
@@ -323,6 +347,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Act As A Discord Bot";
             this.Output_ChatCM.ResumeLayout(false);
+            this.MemberListCM.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -351,6 +376,8 @@
         private System.Windows.Forms.Button CancelEdit;
         private System.Windows.Forms.ListBox MemberList;
         private System.Windows.Forms.ContextMenuStrip MemberListCM;
+        private System.Windows.Forms.ToolStripMenuItem Kick;
+        private System.Windows.Forms.ToolStripTextBox KickReason;
     }
 }
 
