@@ -67,6 +67,7 @@ namespace discord_puppet
 
 #if !_DEBUG
             Servers.Items.Clear();
+            MemberList.Items.Clear();
 #endif
 
 #if !_OFF
@@ -278,10 +279,15 @@ namespace discord_puppet
                 }
             }
         }
+
+        private void MemberListCM_Opening(object sender, CancelEventArgs e)
+        {
+
+        }
         #endregion
 
+        #region ListBoxIndexChanges
         private int lastIndex = -1;
-
         private void Output_ChatText_MouseClick(object sender, MouseEventArgs e)
         {
             if (Output_ChatText.SelectedIndex == lastIndex)
@@ -310,6 +316,15 @@ namespace discord_puppet
             lastIndexChannels = Channels.SelectedIndex;
             DoStuffSync(false);
         }
+
+        private int lastIndexMemberList = -1;
+        private void MemberList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // ReSharper disable once RedundantCheckBeforeAssignment
+            if (MemberList.SelectedIndex != lastIndexMemberList)
+                lastIndexMemberList = MemberList.SelectedIndex;
+        }
+        #endregion
 
         #region Handlers
         #region MultiHandlingFunctions
@@ -620,6 +635,10 @@ namespace discord_puppet
                     lastIndexChannels = -1;
                     Channels.ClearSelected();
                     Channels.Items.Clear();
+
+                    lastIndexMemberList = -1;
+                    MemberList.ClearSelected();
+                    MemberList.Items.Clear();
                 }
 
                 string item2S = "";
@@ -640,6 +659,12 @@ namespace discord_puppet
                 for (int i = 0; i < chanArray.Length; i++)
                     if (chanArray[i].Type == ChannelType.Text && (chanArray[i].PermissionsFor(chosenGuild.CurrentMember) & Permissions.AccessChannels) != 0)
                         Channels.Items.Add($"{chanArray[i].Name} [{chanArray[i].Id}]");
+
+
+                var membersArray = chosenGuild.Members.ToArray();
+
+                for (int i = 0; i < membersArray.Length; i++)
+                    MemberList.Items.Add($"{membersArray[i].DisplayName}#{membersArray[i].Discriminator} [{membersArray[i].Id}]");
 
                 guild = chosenGuild;
             }

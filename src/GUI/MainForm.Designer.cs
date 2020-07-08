@@ -51,6 +51,7 @@
             this.Servers = new System.Windows.Forms.ListBox();
             this.Channels = new System.Windows.Forms.ListBox();
             this.MemberList = new System.Windows.Forms.ListBox();
+            this.MemberListCM = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.Output_ChatCM.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -92,7 +93,6 @@
             // 
             // CMReactText
             // 
-            this.CMReactText.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.CMReactText.Name = "CMReactText";
             this.CMReactText.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.CMReactText.Size = new System.Drawing.Size(100, 23);
@@ -277,6 +277,7 @@
             // 
             this.MemberList.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.MemberList.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.MemberList.ContextMenuStrip = this.MemberListCM;
             this.MemberList.ForeColor = System.Drawing.Color.White;
             this.MemberList.FormattingEnabled = true;
             this.MemberList.Items.AddRange(new object[] {
@@ -285,6 +286,13 @@
             this.MemberList.Name = "MemberList";
             this.MemberList.Size = new System.Drawing.Size(383, 550);
             this.MemberList.TabIndex = 27;
+            this.MemberList.SelectedIndexChanged += new System.EventHandler(this.MemberList_SelectedIndexChanged);
+            // 
+            // MemberListCM
+            // 
+            this.MemberListCM.Name = "MemberListCM";
+            this.MemberListCM.Size = new System.Drawing.Size(181, 48);
+            this.MemberListCM.Opening += new System.ComponentModel.CancelEventHandler(this.MemberListCM_Opening);
             // 
             // MainForm
             // 
@@ -342,6 +350,7 @@
         private System.Windows.Forms.ToolStripMenuItem CMDeleteMessage;
         private System.Windows.Forms.Button CancelEdit;
         private System.Windows.Forms.ListBox MemberList;
+        private System.Windows.Forms.ContextMenuStrip MemberListCM;
     }
 }
 
