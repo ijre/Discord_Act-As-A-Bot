@@ -161,7 +161,7 @@ namespace discord_puppet
 
             return Task.CompletedTask;
         }
-        #endregion
+        #endregion // DiscordEvents
 
         #region WinFormsEvents
         private void Clear_Button_Click(object sender, EventArgs e)
@@ -284,7 +284,7 @@ namespace discord_puppet
         {
 
         }
-        #endregion
+        #endregion // ContextMenuEvents
 
         #region ListBoxIndexChanges
         private int lastIndex = -1;
@@ -324,7 +324,7 @@ namespace discord_puppet
             if (MemberList.SelectedIndex != lastIndexMemberList)
                 lastIndexMemberList = MemberList.SelectedIndex;
         }
-        #endregion
+        #endregion // ListBoxIndexChanges
 
         #region Handlers
         #region MultiHandlingFunctions
@@ -701,6 +701,6 @@ namespace discord_puppet
 
             return $"{message.Author.Username}#{message.Author.Discriminator}: {message.Content}{attachments}    [{message.Id}]";
         }
-        #endregion
+        #endregion // Helpers
     }
 }
