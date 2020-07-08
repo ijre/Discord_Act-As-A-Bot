@@ -54,6 +54,9 @@
             this.MemberListCM = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.Kick = new System.Windows.Forms.ToolStripMenuItem();
             this.KickReason = new System.Windows.Forms.ToolStripTextBox();
+            this.Ban = new System.Windows.Forms.ToolStripMenuItem();
+            this.BanReason = new System.Windows.Forms.ToolStripTextBox();
+            this.BanRemoveMessagesDays = new System.Windows.Forms.ToolStripTextBox();
             this.Output_ChatCM.SuspendLayout();
             this.MemberListCM.SuspendLayout();
             this.SuspendLayout();
@@ -295,9 +298,11 @@
             // MemberListCM
             // 
             this.MemberListCM.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.Kick});
+            this.Kick,
+            this.Ban});
             this.MemberListCM.Name = "MemberListCM";
-            this.MemberListCM.Size = new System.Drawing.Size(181, 48);
+            this.MemberListCM.Size = new System.Drawing.Size(181, 70);
+            this.MemberListCM.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.MemberListCM_Closing);
             // 
             // Kick
             // 
@@ -315,8 +320,36 @@
             this.KickReason.Size = new System.Drawing.Size(165, 23);
             this.KickReason.Text = "Reason? (Leave blank if none)";
             this.KickReason.ToolTipText = "Reason for kick. Leave blank if none.";
-            this.KickReason.Enter += new System.EventHandler(this.KickReason_Enter);
             this.KickReason.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KickReason_KeyDown);
+            this.KickReason.Click += new System.EventHandler(this.KickReason_Click);
+            // 
+            // Ban
+            // 
+            this.Ban.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.BanReason,
+            this.BanRemoveMessagesDays});
+            this.Ban.Name = "Ban";
+            this.Ban.Size = new System.Drawing.Size(180, 22);
+            this.Ban.Text = "Ban";
+            this.Ban.Visible = false;
+            // 
+            // BanReason
+            // 
+            this.BanReason.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.BanReason.Name = "BanReason";
+            this.BanReason.Size = new System.Drawing.Size(165, 23);
+            this.BanReason.Text = "Reason? (Leave blank if none)";
+            this.BanReason.ToolTipText = "Reason for kick. Leave blank if none.";
+            this.BanReason.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BanReason_KeyDown);
+            this.BanReason.Click += new System.EventHandler(this.BanReason_Click);
+            // 
+            // BanRemoveMessagesDays
+            // 
+            this.BanRemoveMessagesDays.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.BanRemoveMessagesDays.Name = "BanRemoveMessagesDays";
+            this.BanRemoveMessagesDays.Size = new System.Drawing.Size(215, 23);
+            this.BanRemoveMessagesDays.Text = "How many days of messages to delete?";
+            this.BanRemoveMessagesDays.Click += new System.EventHandler(this.BanRemoveMessagesDays_Click);
             // 
             // MainForm
             // 
@@ -378,6 +411,9 @@
         private System.Windows.Forms.ContextMenuStrip MemberListCM;
         private System.Windows.Forms.ToolStripMenuItem Kick;
         private System.Windows.Forms.ToolStripTextBox KickReason;
+        private System.Windows.Forms.ToolStripMenuItem Ban;
+        private System.Windows.Forms.ToolStripTextBox BanReason;
+        private System.Windows.Forms.ToolStripTextBox BanRemoveMessagesDays;
     }
 }
 

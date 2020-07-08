@@ -1,4 +1,6 @@
-﻿using System;
+﻿// TODO: Implement banning for MemberList
+
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -284,10 +286,22 @@ namespace discord_puppet
         #endregion // Output_ChatCM
 
         #region MemberListCM
-        private void KickReason_Enter(object sender, EventArgs e)
+        private void MemberListCM_Closing(object sender, ToolStripDropDownClosingEventArgs e)
+        {
+            KickReason.Text = "Reason? (Leave blank if none)";
+            // BanReason.Text = "Reason? (Leave blank if none)";
+        }
+
+        private void KickReason_Click(object sender, EventArgs e)
         {
             if (KickReason.Text == "Reason? (Leave blank if none)")
                 KickReason.Clear();
+        }
+
+        private void BanReason_Click(object sender, EventArgs e)
+        {
+            if (BanReason.Text == "Reason? (Leave blank if none)")
+                BanReason.Clear();
         }
 
         private void KickReason_KeyDown(object sender, KeyEventArgs e)
@@ -296,11 +310,35 @@ namespace discord_puppet
                 BootMember(false, KickReason.Text);
         }
 
+        private void BanReason_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Return)
+                BootMember(true, KickReason.Text);
+        }
+
+        private void BanRemoveMessagesDays_Click(object sender, EventArgs e)
+        {
+            // How many days of messages to delete?
+        }
+
         private async void BootMember(bool ban, string reason = "", int days = 0)
         {
             var member = await guild.GetMemberAsync(GetID(MemberList.SelectedItem.ToString()));
 
-            // if(!ban)
+            try
+            {
+                if (!ban)
+                    await member.RemoveAsync(reason);
+                else
+                    await member.BanAsync(days, reason);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            MemberList.Items.RemoveAt(MemberList.SelectedIndex);
         }
         #endregion // MemberListCM
         #endregion // ContextMenuEvents
