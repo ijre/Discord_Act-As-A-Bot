@@ -324,7 +324,7 @@ namespace discord_puppet
         private void Input_Chat_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.Back
-                || e.KeyData == Keys.Shift || e.KeyData == Keys.Alt || e.KeyData == Keys.Control
+                || e.KeyData == Keys.Shift || e.KeyData == Keys.Alt || e.KeyData == Keys.Control || e.KeyData == Keys.Tab
                 || Send_Button.Text == "Edit")
             {
                 HandleTyping.Enabled = false;
@@ -615,6 +615,13 @@ namespace discord_puppet
         {
             if (server)
             {
+                if (Channels.Items.Count != 0)
+                {
+                    lastIndexChannels = -1;
+                    Channels.ClearSelected();
+                    Channels.Items.Clear();
+                }
+
                 string item2S = "";
                 try
                 {
@@ -653,6 +660,8 @@ namespace discord_puppet
                 Output_ChatText.Items.Add("((((((((((END OF PREVIOUS 100 MESSAGES)))))))))");
 
                 Output_ChatText.TopIndex = Output_ChatText.Items.Count - 1;
+
+                Input_Chat.Enabled = true;
             }
         }
 

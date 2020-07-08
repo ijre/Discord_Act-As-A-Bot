@@ -153,6 +153,7 @@
             this.Input_Chat.AcceptsTab = true;
             this.Input_Chat.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.Input_Chat.BackColor = System.Drawing.SystemColors.GrayText;
+            this.Input_Chat.Enabled = false;
             this.Input_Chat.ForeColor = System.Drawing.Color.White;
             this.Input_Chat.Location = new System.Drawing.Point(899, 12);
             this.Input_Chat.Margin = new System.Windows.Forms.Padding(0);
