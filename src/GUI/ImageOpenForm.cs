@@ -35,7 +35,7 @@ namespace discord_puppet
 
         private void WebBrowser1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            if (e.KeyCode.ToString() == "F11")
+            if (e.KeyCode == Keys.F11)
             {
                 if (FormBorderStyle == FormBorderStyle.Sizable && !ignoreNext)
                 {
@@ -54,7 +54,7 @@ namespace discord_puppet
                 else
                     ignoreNext = false;
             }
-            else if (e.KeyCode.ToString() == "Escape")
+            else if (e.KeyCode == Keys.Escape)
             {
                 if (FormBorderStyle == FormBorderStyle.None)
                 {
