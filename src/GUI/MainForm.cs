@@ -289,7 +289,6 @@ namespace discord_puppet
         private void MemberListCM_Closing(object sender, ToolStripDropDownClosingEventArgs e)
         {
             KickReason.Text = "Reason? (Leave blank if none)";
-            // BanReason.Text = "Reason? (Leave blank if none)";
         }
 
         private void KickReason_Click(object sender, EventArgs e)
@@ -304,21 +303,31 @@ namespace discord_puppet
                 BanReason.Clear();
         }
 
+        private void BanRemoveMessagesDays_Click(object sender, EventArgs e)
+        {
+            if (BanRemoveMessagesDays.Text == "How many days of messages to delete?")
+                BanRemoveMessagesDays.Clear();
+        }
+
         private void KickReason_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.Return)
                 BootMember(false, KickReason.Text);
         }
 
-        private void BanReason_KeyDown(object sender, KeyEventArgs e)
+        private void BanConfirm_Click(object sender, EventArgs e)
         {
-            if (e.KeyData == Keys.Return)
-                BootMember(true, KickReason.Text);
-        }
+            int days;
+            if (!int.TryParse(BanRemoveMessagesDays.Text, out days))
+            {
+                MessageBox.Show("Invalid input for amount of days", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            
+			BootMember(true, BanReason.Text, days);
 
-        private void BanRemoveMessagesDays_Click(object sender, EventArgs e)
-        {
-            // How many days of messages to delete?
+            BanReason.Text = "Reason? (Leave blank if none)";
+            BanRemoveMessagesDays.Text = "How many days of messages to delete?";
         }
 
         private async void BootMember(bool ban, string reason = "", int days = 0)
