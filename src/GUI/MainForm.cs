@@ -59,11 +59,7 @@ namespace discord_puppet
 
             client = new DiscordClient(new DiscordConfiguration
             {
-#if !_DEBUG
                 Token = File.ReadAllText("./deps/id.txt")
-#else
-                Token = File.ReadAllText("../deps/id.txt")
-#endif
             });
 
 #if !_DEBUG
