@@ -57,7 +57,6 @@ namespace discord_puppet
                 Directory.CreateDirectory("./deps/");
 #endif
 
-#if !_OFF
             client = new DiscordClient(new DiscordConfiguration
             {
 #if !_DEBUG
@@ -66,14 +65,12 @@ namespace discord_puppet
                 Token = File.ReadAllText("../deps/id.txt")
 #endif
             });
-#endif
 
 #if !_DEBUG
             Servers.Items.Clear();
             MemberList.Items.Clear();
 #endif
 
-#if !_OFF
             client.MessageCreated += OnMessageCreated;
             client.MessageUpdated += OnMessageUpdated;
             client.MessageDeleted += OnMessageDeleted;
@@ -81,7 +78,6 @@ namespace discord_puppet
 
             client.ConnectAsync();
             client.InitializeAsync();
-#endif
         }
 
         #region DiscordEvents
@@ -323,8 +319,8 @@ namespace discord_puppet
                 MessageBox.Show("Invalid input for amount of days", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            
-			BootMember(true, BanReason.Text, days);
+
+            BootMember(true, BanReason.Text, days);
 
             BanReason.Text = "Reason? (Leave blank if none)";
             BanRemoveMessagesDays.Text = "How many days of messages to delete?";
