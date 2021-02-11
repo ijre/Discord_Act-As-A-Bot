@@ -1,6 +1,4 @@
-﻿// TODO: Implement banning for MemberList
-
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -285,48 +283,42 @@ namespace discord_puppet
         #endregion // Output_ChatCM
 
         #region MemberListCM
-        private void MemberListCM_Closing(object sender, ToolStripDropDownClosingEventArgs e)
-        {
-            KickReason.Text = "Reason? (Leave blank if none)";
-        }
 
         private void KickReason_Click(object sender, EventArgs e)
         {
-            if (KickReason.Text == "Reason? (Leave blank if none)")
+            if (KickReason.Text.EndsWith("(Optional)"))
                 KickReason.Clear();
         }
 
         private void BanReason_Click(object sender, EventArgs e)
         {
-            if (BanReason.Text == "Reason? (Leave blank if none)")
+            if (BanReason.Text.EndsWith("(Optional)"))
                 BanReason.Clear();
         }
 
         private void BanRemoveMessagesDays_Click(object sender, EventArgs e)
         {
-            if (BanRemoveMessagesDays.Text == "How many days of messages to delete?")
+            if (BanRemoveMessagesDays.Text.EndsWith("(Optional)"))
                 BanRemoveMessagesDays.Clear();
         }
 
-        private void KickReason_KeyDown(object sender, KeyEventArgs e)
+        private void KickConfirm_Click(object sender, EventArgs e)
         {
-            if (e.KeyData == Keys.Return)
-                BootMember(false, KickReason.Text);
+            BootMember(false, KickReason.Text.EndsWith("(Optional)") ? "" : KickReason.Text);
         }
 
         private void BanConfirm_Click(object sender, EventArgs e)
         {
-            int days;
-            if (!int.TryParse(BanRemoveMessagesDays.Text, out days))
+            bool reasonChanged = !BanReason.Text.EndsWith("(Optional)");
+            bool daysChanged = !BanRemoveMessagesDays.Text.EndsWith("(Optional)");
+
+            if (!int.TryParse(BanRemoveMessagesDays.Text, out int days) && daysChanged)
             {
                 MessageBox.Show("Invalid input for amount of days", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            BootMember(true, BanReason.Text, days);
-
-            BanReason.Text = "Reason? (Leave blank if none)";
-            BanRemoveMessagesDays.Text = "How many days of messages to delete?";
+            BootMember(true, reasonChanged ? BanReason.Text : "", days);
         }
 
         private async void BootMember(bool ban, string reason = "", int days = 0)
@@ -343,10 +335,15 @@ namespace discord_puppet
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                goto ChangeText;
             }
 
             MemberList.Items.RemoveAt(MemberList.SelectedIndex);
+
+            ChangeText:
+
+            KickReason.Text = BanReason.Text = "Reason? (Optional)";
+            BanRemoveMessagesDays.Text = "Days of messages to clear? (Optional)";
         }
         #endregion // MemberListCM
         #endregion // ContextMenuEvents
@@ -746,7 +743,7 @@ namespace discord_puppet
                 }
 
 
-                var membersArray = chosenGuild.Members.ToArray();
+                var membersArray = (await chosenGuild.GetAllMembersAsync()).ToArray();
 
                 for (int i = 0; i < membersArray.Length; i++)
                 {
