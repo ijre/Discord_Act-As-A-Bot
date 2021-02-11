@@ -21,7 +21,8 @@ namespace discord_puppet
                 Width = webBrowser1.Document.Images[0].ScrollRectangle.Width + 70;
 
                 if (int.Parse(Screen.PrimaryScreen.Bounds.Width.ToString()) <= int.Parse(Size.Width.ToString())
-                || int.Parse(Screen.PrimaryScreen.Bounds.Height.ToString()) <= int.Parse(Size.Height.ToString()))
+                    ||
+                    int.Parse(Screen.PrimaryScreen.Bounds.Height.ToString()) <= int.Parse(Size.Height.ToString()))
                 {
                     Height = Screen.PrimaryScreen.Bounds.Height / 2;
                     Width = Screen.PrimaryScreen.Bounds.Width / 2;
@@ -52,7 +53,9 @@ namespace discord_puppet
                     ignoreNext = true;
                 }
                 else
+                {
                     ignoreNext = false;
+                }
             }
             else if (e.KeyCode == Keys.Escape)
             {
@@ -64,9 +67,13 @@ namespace discord_puppet
                     ignoreNext = true;
                 }
                 else if (!ignoreNext)
+                {
                     Hide();
+                }
                 else
+                {
                     ignoreNext = false;
+                }
             }
         }
     }

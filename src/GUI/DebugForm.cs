@@ -12,11 +12,13 @@ namespace discord_puppet
 
         private ushort total = 1;
 
-        public void DebugAdd(string[] data, bool forceFocus = true)
+        public void DAdd(string[] data, bool forceFocus = true)
         {
             string buff = "";
             for (int i = 0; i < data.Length; i++)
+            {
                 buff += $"{i}. {data[i]} ";
+            }
 
             DebugOutput.AppendText($"DebugAdd() called ({total}):\r\n{buff}\r\n");
 

@@ -34,8 +34,10 @@ namespace discord_puppet.utils
                 return true;
 
             if (messageBox)
+            {
                 MessageBox.Show(string.IsNullOrEmpty(body) ? exceptionCaught.Message : body, title,
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
             return false;
         }

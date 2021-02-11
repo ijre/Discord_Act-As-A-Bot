@@ -7,7 +7,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -21,20 +20,20 @@ namespace discord_puppet
 {
     public partial class MainForm : Form
     {
-        private DiscordGuild guild;
-        private DiscordChannel channel;
+        private DiscordGuild Guild;
+        private DiscordChannel Channel;
 
 #if !_FINAL
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-        private readonly DebugForm debuger;
+        private readonly DebugForm Debug;
 #endif
 
-        private readonly DiscordClient client;
-        private readonly Dictionary<string, Stream> file = new Dictionary<string, Stream>();
+        private readonly DiscordClient Client;
+        private readonly Dictionary<string, Stream> Files = new Dictionary<string, Stream>();
 
-        private IOF iof;
-        private readonly IntPtr[] handles = new IntPtr[100];
-        private int availableSpace;
+        private IOF IOF;
+        private readonly IntPtr[] Handles = new IntPtr[100];
+        private int AvailableSpace;
 
         public MainForm()
         {
@@ -42,8 +41,8 @@ namespace discord_puppet
             Text = $"Act As A Discord Bot (v{Application.ProductVersion})";
 
 #if !_FINAL
-            debuger = new DebugForm();
-            debuger.Show();
+            Debug = new DebugForm();
+            Debug.Show();
 #endif
 
             if (!Directory.Exists("./deps/"))
@@ -57,9 +56,9 @@ namespace discord_puppet
                 Directory.CreateDirectory("./deps/");
 #endif
 
-            client = new DiscordClient(new DiscordConfiguration
+            Client = new DiscordClient(new DiscordConfiguration
             {
-                Token = File.ReadAllText("./deps/id.txt")
+                Token = System.IO.File.ReadAllText("./deps/id.txt")
             });
 
 #if !_DEBUG
@@ -67,19 +66,19 @@ namespace discord_puppet
             MemberList.Items.Clear();
 #endif
 
-            client.MessageCreated += OnMessageCreated;
-            client.MessageUpdated += OnMessageUpdated;
-            client.MessageDeleted += OnMessageDeleted;
-            client.Ready += OnReady;
+            Client.MessageCreated += OnMessageCreated;
+            Client.MessageUpdated += OnMessageUpdated;
+            Client.MessageDeleted += OnMessageDeleted;
+            Client.Ready += OnReady;
 
-            client.ConnectAsync();
-            client.InitializeAsync();
+            Client.ConnectAsync();
+            Client.InitializeAsync();
         }
 
         #region DiscordEvents
         private Task OnMessageCreated(MessageCreateEventArgs e)
         {
-            if (e.Message.Channel.Id != channel.Id)
+            if (e.Message.Channel.Id != Channel.Id)
                 return Task.CompletedTask;
 
             var message = e.Message;
@@ -94,31 +93,35 @@ namespace discord_puppet
 
         private Task OnMessageUpdated(MessageUpdateEventArgs e)
         {
-            if (e.Message.Channel.Id != channel.Id)
+            if (e.Message.Channel.Id != Channel.Id)
                 return Task.CompletedTask;
 
             var message = e.Message;
 
             for (int i = 0; i < Output_ChatText.Items.Count; i++)
+            {
                 if (i != 100 && GetID(Output_ChatText.Items[i].ToString()) == message.Id)
                     Output_ChatText.Items[i] = AddAttachmentText(message).Insert(Output_ChatText.Items[i].ToString().LastIndexOf("[") - 4, " (edited)");
+            }
 
             return Task.CompletedTask;
         }
 
         private Task OnMessageDeleted(MessageDeleteEventArgs e)
         {
-            if (e.Message.Channel.Id != channel.Id)
+            if (e.Message.Channel.Id != Channel.Id)
                 return Task.CompletedTask;
 
             var message = e.Message;
 
             for (int i = 0; i < Output_ChatText.Items.Count; i++)
-                if (i != 100 && GetID(Output_ChatText.Items[i].ToString()) == message.Id)
-                {
-                    Output_ChatText.Items[i] = Output_ChatText.Items[i].ToString().Substring(0, Output_ChatText.Items[i].ToString().LastIndexOf("[") - 1); // delete everything past the message's body
-                    Output_ChatText.Items[i] += " {MESSAGE DELETED} []"; // and add a note that it's deleted
-                }
+            {
+                if (i == 100 || GetID(Output_ChatText.Items[i].ToString()) != message.Id)
+                    continue;
+
+                Output_ChatText.Items[i] = Output_ChatText.Items[i].ToString().Substring(0, Output_ChatText.Items[i].ToString().LastIndexOf("[") - 1); // delete everything past the message's body
+                Output_ChatText.Items[i] += " {MESSAGE DELETED} []"; // and add a note that it's deleted
+            }
 
             return Task.CompletedTask;
         }
@@ -168,7 +171,7 @@ namespace discord_puppet
         {
             if (Add_Image.Text.Contains("Remove"))
             {
-                file.Clear();
+                Files.Clear();
 
                 Add_Image.Text = "Add Image/File";
                 return;
@@ -192,7 +195,9 @@ namespace discord_puppet
 
 
             for (int i = 0; i < diag.FileNames.Length; i++)
-                file.Add(diag.FileNames[i], new FileStream(diag.FileNames[i], FileMode.Open));
+            {
+                Files.Add(diag.FileNames[i], new FileStream(diag.FileNames[i], FileMode.Open));
+            }
 
             Add_Image.Text = "Remove Image/File";
         }
@@ -252,21 +257,23 @@ namespace discord_puppet
                         break;
                 }
 
-                if (message.Author.Id != client.CurrentUser.Id)
+                if (message.Author.Id != Client.CurrentUser.Id)
                 {
                     CMEditMessage.Enabled = false;
 
-                    var getRoles = guild.CurrentMember.Roles;
+                    var getRoles = Guild.CurrentMember.Roles;
                     var roles = getRoles.ToArray();
 
                     for (int i = 0; i < roles.Count(); i++)
+                    {
                         if (roles.ToArray()[i].Permissions.HasPermission(Permissions.ManageMessages))
                         {
                             CMDeleteMessage.Enabled = true;
                             break;
                         }
-                        else
-                            CMDeleteMessage.Enabled = false;
+
+                        CMDeleteMessage.Enabled = false;
+                    }
                 }
                 else
                 {
@@ -324,7 +331,7 @@ namespace discord_puppet
 
         private async void BootMember(bool ban, string reason = "", int days = 0)
         {
-            var member = await guild.GetMemberAsync(GetID(MemberList.SelectedItem.ToString()));
+            var member = await Guild.GetMemberAsync(GetID(MemberList.SelectedItem.ToString()));
 
             try
             {
@@ -423,7 +430,7 @@ namespace discord_puppet
         private void HandleTyping_Tick(object sender, EventArgs e)
         {
             if (prevText != Input_Chat.Text)
-                channel.TriggerTypingAsync();
+                Channel.TriggerTypingAsync();
 
             prevText = Input_Chat.Text;
         }
@@ -436,21 +443,21 @@ namespace discord_puppet
 
             try
             {
-                if (string.IsNullOrWhiteSpace(Input_Chat.Text) && file.Count == 0)
+                if (string.IsNullOrWhiteSpace(Input_Chat.Text) && Files.Count == 0)
                 {
                     MessageBox.Show("Message cannot be empty unless you have a file attached.", "Empty Message Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                if (file.Count >= 1)
+                if (Files.Count >= 1)
                 {
-                    await channel.SendMultipleFilesAsync(file, Input_Chat.Text);
+                    await Channel.SendMultipleFilesAsync(Files, Input_Chat.Text);
 
-                    file.Clear();
+                    Files.Clear();
                     Add_Image.Text = "Add Image/File";
                 }
                 else
-                    await client.SendMessageAsync(channel, Input_Chat.Text);
+                    await Client.SendMessageAsync(Channel, Input_Chat.Text);
             }
             catch (Exception ex)
             {
@@ -516,12 +523,12 @@ namespace discord_puppet
 
             if (message.Attachments.Count == 1)
             {
-                iof = new IOF(message.Attachments[0].Url, message.Attachments[0].FileName);
+                IOF = new IOF(message.Attachments[0].Url, message.Attachments[0].FileName);
 
-                handles[availableSpace] = iof.Handle;
-                availableSpace++;
+                Handles[AvailableSpace] = IOF.Handle;
+                AvailableSpace++;
 
-                iof.Show();
+                IOF.Show();
             }
             else
             {
@@ -572,12 +579,12 @@ namespace discord_puppet
                 // width == 0 means it's not an image
                 if (attachment.Width != 0)
                 {
-                    iof = new IOF(attachment.Url, attachment.FileName);
+                    IOF = new IOF(attachment.Url, attachment.FileName);
 
-                    handles[availableSpace] = iof.Handle;
-                    availableSpace++;
+                    Handles[AvailableSpace] = IOF.Handle;
+                    AvailableSpace++;
 
-                    iof.Show();
+                    IOF.Show();
                 }
                 else
                 {
@@ -614,19 +621,23 @@ namespace discord_puppet
 
         private void CloseAllImages_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < handles.Length; i++)
-                if (handles[i] != IntPtr.Zero)
-                    try
-                    {
-                        // ReSharper disable once PossibleNullReferenceException
-                        FromHandle(handles[i]).FindForm().Close();
-                        handles[i] = IntPtr.Zero;
-                    }
-                    catch (NullReferenceException) { }
+            for (int i = 0; i < Handles.Length; i++)
+            {
+                if (Handles[i] == IntPtr.Zero)
+                    continue;
+
+                try
+                {
+                    // ReSharper disable once PossibleNullReferenceException
+                    FromHandle(Handles[i]).FindForm().Close();
+                    Handles[i] = IntPtr.Zero;
+                }
+                catch (NullReferenceException) { }
+            }
 
             CloseAllImages.Visible = false;
-            availableSpace = 0;
-            Array.Clear(handles, 0, handles.Length);
+            AvailableSpace = 0;
+            Array.Clear(Handles, 0, Handles.Length);
         }
         #endregion
 
@@ -649,7 +660,7 @@ namespace discord_puppet
                 }
 
                 GetMessage(Output_ChatText.SelectedItem.ToString())
-                    .CreateReactionAsync(DiscordEmoji.FromName(client, CMReactText.Text));
+                    .CreateReactionAsync(DiscordEmoji.FromName(Client, CMReactText.Text));
             }
             catch (Exception ex)
             {
@@ -674,7 +685,7 @@ namespace discord_puppet
         {
             try
             {
-                return channel.GetMessageAsync(GetID(message)).Result;
+                return Channel.GetMessageAsync(GetID(message)).Result;
             }
             catch (Exception ex)
             {
@@ -723,36 +734,42 @@ namespace discord_puppet
                     ExceptionUtils.IgnoreSpecificException(new NullReferenceException(), ex, true, "Fatal Error");
                 }
 
-                var chosenGuild = await client.GetGuildAsync(GetID(item2S));
+                var chosenGuild = await Client.GetGuildAsync(GetID(item2S));
                 IEnumerable<DiscordChannel> channels = from value in await chosenGuild.GetChannelsAsync()
                                                        select value;
                 DiscordChannel[] chanArray = channels.ToArray();
 
                 for (int i = 0; i < chanArray.Length; i++)
+                {
                     if (chanArray[i].Type == ChannelType.Text && (chanArray[i].PermissionsFor(chosenGuild.CurrentMember) & Permissions.AccessChannels) != 0)
                         Channels.Items.Add($"{chanArray[i].Name} [{chanArray[i].Id}]");
+                }
 
 
                 var membersArray = chosenGuild.Members.ToArray();
 
                 for (int i = 0; i < membersArray.Length; i++)
+                {
                     MemberList.Items.Add($"{membersArray[i].DisplayName}#{membersArray[i].Discriminator} [{membersArray[i].Id}]");
+                }
 
-                guild = chosenGuild;
+                Guild = chosenGuild;
             }
             else
             {
                 Output_ChatText.Items.Clear();
-                channel = client.GetChannelAsync(GetID(Channels.SelectedItem.ToString())).Result;
+                Channel = Client.GetChannelAsync(GetID(Channels.SelectedItem.ToString())).Result;
 
-                var getMessages = await channel.GetMessagesAsync();
+                var getMessages = await Channel.GetMessagesAsync();
 
                 IEnumerable<DiscordMessage> messages = from value in getMessages
                                                        select value;
                 var messagesArray = messages.ToArray();
 
                 for (int i = messagesArray.Length - 1; 0 <= i; i--)
+                {
                     Output_ChatText.Items.Add(AddAttachmentText(messagesArray[i]));
+                }
 
                 Output_ChatText.Items.Add("((((((((((END OF PREVIOUS 100 MESSAGES)))))))))");
 
