@@ -216,7 +216,26 @@ namespace discord_puppet
 
         private void Output_ChatCM_Opening(object sender, CancelEventArgs e)
         {
-            if (Output_ChatText.SelectedIndex <= 99)
+            int endOfNotif = 0;
+
+            if (Output_ChatText.Items.Count >= 100)
+            {
+                endOfNotif = 100;
+            }
+            else
+            {
+                for (int i = 0; i < Output_ChatText.Items.Count; i++)
+                {
+                    if (Output_ChatText.Items[i].ToString().Contains("["))
+                        continue;
+
+                    endOfNotif = i;
+                    break;
+                }
+            }
+
+
+            if (Output_ChatText.SelectedIndex < endOfNotif)
             {
                 Output_ChatCM.Size = new Size(234, 136);
                 CMGreyedOut.Visible = true;
@@ -230,7 +249,7 @@ namespace discord_puppet
             {
                 Output_ChatCM.Enabled = false;
             }
-            else if (Output_ChatText.SelectedIndex == 100) // index 100 is the "end of prev 100 messages" message
+            else if (Output_ChatText.SelectedIndex == endOfNotif) // last entry unless there's a new message is the "end of prev messages" notif
             {
                 e.Cancel = true;
             }
@@ -768,7 +787,7 @@ namespace discord_puppet
                     Output_ChatText.Items.Add(AddAttachmentText(messagesArray[i]));
                 }
 
-                Output_ChatText.Items.Add("((((((((((END OF PREVIOUS 100 MESSAGES)))))))))");
+                Output_ChatText.Items.Add("((((((((((END OF PREVIOUS MESSAGES)))))))))");
 
                 Output_ChatText.TopIndex = Output_ChatText.Items.Count - 1;
 
