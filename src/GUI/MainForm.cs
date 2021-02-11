@@ -670,7 +670,7 @@ namespace discord_puppet
 
         private void CMReactText_Click(object sender, EventArgs e)
         {
-            if (CMReactText.Text == "Input Emoji Here")
+            if (CMReactText.Text.EndsWith("Here"))
                 CMReactText.Clear();
         }
         #endregion // Reaction Handling
