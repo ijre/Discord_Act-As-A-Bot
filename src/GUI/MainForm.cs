@@ -58,7 +58,7 @@ namespace discord_puppet
 
             Client = new DiscordClient(new DiscordConfiguration
             {
-                Token = System.IO.File.ReadAllText("./deps/id.txt")
+                Token = File.ReadAllText("./deps/id.txt")
             });
 
 #if !_DEBUG
@@ -78,7 +78,7 @@ namespace discord_puppet
         #region DiscordEvents
         private Task OnMessageCreated(MessageCreateEventArgs e)
         {
-            if (e.Message.Channel.Id != Channel.Id)
+            if (Guild == null || Channel == null || e.Message.Channel.Id != Channel.Id)
                 return Task.CompletedTask;
 
             var message = e.Message;
@@ -93,7 +93,7 @@ namespace discord_puppet
 
         private Task OnMessageUpdated(MessageUpdateEventArgs e)
         {
-            if (e.Message.Channel.Id != Channel.Id)
+            if (Guild == null || Channel == null || e.Message.Channel.Id != Channel.Id)
                 return Task.CompletedTask;
 
             var message = e.Message;
@@ -109,7 +109,7 @@ namespace discord_puppet
 
         private Task OnMessageDeleted(MessageDeleteEventArgs e)
         {
-            if (e.Message.Channel.Id != Channel.Id)
+            if (Guild == null || Channel == null || e.Message.Channel.Id != Channel.Id)
                 return Task.CompletedTask;
 
             var message = e.Message;
@@ -368,7 +368,7 @@ namespace discord_puppet
                 return;
 
             lastIndexServers = Servers.SelectedIndex;
-            DoStuffSync(true);
+            PopulateServOrChanList(true);
         }
 
 
@@ -379,7 +379,7 @@ namespace discord_puppet
                 return;
 
             lastIndexChannels = Channels.SelectedIndex;
-            DoStuffSync(false);
+            PopulateServOrChanList(false);
         }
 
         private int lastIndexMemberList = -1;
@@ -709,7 +709,7 @@ namespace discord_puppet
             }
         }
 
-        private async void DoStuffSync(bool server)
+        private async void PopulateServOrChanList(bool server)
         {
             if (server)
             {
