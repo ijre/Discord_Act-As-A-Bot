@@ -296,7 +296,6 @@
             this.MemberList.Name = "MemberList";
             this.MemberList.Size = new System.Drawing.Size(383, 550);
             this.MemberList.TabIndex = 27;
-            this.MemberList.SelectedIndexChanged += new System.EventHandler(this.MemberList_SelectedIndexChanged);
             // 
             // MemberListCM
             // 
@@ -304,7 +303,8 @@
             this.Kick,
             this.Ban});
             this.MemberListCM.Name = "MemberListCM";
-            this.MemberListCM.Size = new System.Drawing.Size(181, 70);
+            this.MemberListCM.Size = new System.Drawing.Size(97, 48);
+            this.MemberListCM.Opening += new System.ComponentModel.CancelEventHandler(this.MemberListCM_Opening);
             // 
             // Kick
             // 
@@ -312,7 +312,7 @@
             this.KickReason,
             this.KickConfirm});
             this.Kick.Name = "Kick";
-            this.Kick.Size = new System.Drawing.Size(180, 22);
+            this.Kick.Size = new System.Drawing.Size(96, 22);
             this.Kick.Text = "Kick";
             // 
             // KickReason
@@ -339,7 +339,7 @@
             this.BanRemoveMessagesDays,
             this.BanConfirm});
             this.Ban.Name = "Ban";
-            this.Ban.Size = new System.Drawing.Size(180, 22);
+            this.Ban.Size = new System.Drawing.Size(96, 22);
             this.Ban.Text = "Ban";
             // 
             // BanReason

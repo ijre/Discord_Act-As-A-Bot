@@ -278,19 +278,7 @@ namespace discord_puppet
                 {
                     CMEditMessage.Enabled = false;
 
-                    var getRoles = Guild.CurrentMember.Roles;
-                    var roles = getRoles.ToArray();
-
-                    for (int i = 0; i < roles.Count(); i++)
-                    {
-                        if (roles.ToArray()[i].Permissions.HasPermission(Permissions.ManageMessages))
-                        {
-                            CMDeleteMessage.Enabled = true;
-                            break;
-                        }
-
-                        CMDeleteMessage.Enabled = false;
-                    }
+                    CMDeleteMessage.Enabled = HavePermission(Permissions.ManageMessages);
                 }
                 else
                 {
@@ -302,6 +290,11 @@ namespace discord_puppet
         #endregion // Output_ChatCM
 
         #region MemberListCM
+        private void MemberListCM_Opening(object sender, CancelEventArgs e)
+        {
+            Kick.Enabled = HavePermission(Permissions.KickMembers);
+            Ban.Enabled = HavePermission(Permissions.BanMembers);
+        }
 
         private void KickReason_Click(object sender, EventArgs e)
         {
@@ -396,14 +389,6 @@ namespace discord_puppet
 
             lastIndexChannels = Channels.SelectedIndex;
             PopulateServOrChanList(false);
-        }
-
-        private int lastIndexMemberList = -1;
-        private void MemberList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // ReSharper disable once RedundantCheckBeforeAssignment
-            if (MemberList.SelectedIndex != lastIndexMemberList)
-                lastIndexMemberList = MemberList.SelectedIndex;
         }
         #endregion // ListBoxIndexChanges
 
@@ -735,7 +720,6 @@ namespace discord_puppet
                     Channels.ClearSelected();
                     Channels.Items.Clear();
 
-                    lastIndexMemberList = -1;
                     MemberList.ClearSelected();
                     MemberList.Items.Clear();
                 }
@@ -757,7 +741,7 @@ namespace discord_puppet
 
                 for (int i = 0; i < chanArray.Length; i++)
                 {
-                    if (chanArray[i].Type == ChannelType.Text && (chanArray[i].PermissionsFor(chosenGuild.CurrentMember) & Permissions.AccessChannels) != 0)
+                    if (chanArray[i].Type == ChannelType.Text && HavePermission(Permissions.AccessChannels, chanArray[i], chosenGuild))
                         Channels.Items.Add($"{chanArray[i].Name} [{chanArray[i].Id}]");
                 }
 
@@ -805,6 +789,16 @@ namespace discord_puppet
                 attachments = " (MULTIPLE IMAGES ATTACHED)";
 
             return $"{message.Author.Username}#{message.Author.Discriminator}: {message.Content}{attachments}    [{message.Id}]";
+        }
+
+        private bool HavePermission(Permissions perm, DiscordChannel inChannel = null, DiscordGuild inGuild = null)
+        {
+            inGuild ??= Guild;
+            var roles = inGuild.CurrentMember.Roles.ToArray();
+
+            return roles.Any(role => role.Permissions.HasPermission(Permissions.Administrator)
+            ||
+            role.Permissions.HasPermission(perm)) && (inChannel == null || (inChannel.PermissionsFor(inGuild.CurrentMember) & perm) != 0);
         }
         #endregion // Helpers
     }
