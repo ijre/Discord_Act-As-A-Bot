@@ -6,22 +6,22 @@
 
 std::string idGet()
 {
-	std::fstream idFile;
-	if (std::filesystem::exists("./deps/id.txt"))
-		idFile.open("./deps/id.txt");
-	else
-		idFile.open("../deps/id.txt");
-	std::string id;
-	idFile >> id;
-	idFile.close();
-	return id;
+  std::fstream idFile;
+  if (std::filesystem::exists("./deps/id.txt"))
+    idFile.open("./deps/id.txt");
+  else
+    idFile.open("../deps/id.txt");
+  std::string id;
+  idFile >> id;
+  idFile.close();
+  return id;
 }
 
 using namespace SleepyDiscord;
 class ClientClass : public DiscordClient
 {
 public:
-	using DiscordClient::DiscordClient;
+  using DiscordClient::DiscordClient;
 };
 
 ClientClass client(idGet(), 2);
